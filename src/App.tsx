@@ -14,6 +14,7 @@ import Button from "@mui/material/Button";
 import { useStore } from "./state/store";
 import { MultipleSelectCheckmarks } from "./components/Dropdown";
 import { mapConfigFilterSpec } from "./config/map";
+import { Demography } from "./components/Demography";
 export const MapWidget = () => {
   const executeQuery = useStore((state) => state.executeQuery);
   const isLoaded = useStore((state) => state.loadingState === "loaded");
@@ -118,8 +119,9 @@ export const MapWidget = () => {
 };
 const componentMapping = {
   map: MapWidget,
-  demography: () => <p>demo coming soon</p>,
+  demography: Demography,
   timeseries: () => <p>Timeseries coming soon</p>,
+  about: () => <p>About coming soon</p>
 } as const;
 
 const selectConfig = [

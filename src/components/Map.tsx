@@ -6,10 +6,15 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { MVTLayer } from "@deck.gl/geo-layers";
 import * as d3 from "d3";
 import GlMap, {
+  // @ts-ignore
   FullscreenControl,
+  // @ts-ignore
   NavigationControl,
+  // @ts-ignore
   ScaleControl,
+  // @ts-ignore
   useControl,
+  // @ts-ignore
   AttributionControl,
 } from "react-map-gl";
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox";
@@ -33,6 +38,28 @@ const DEFAULT_MVT_LAYER_SETTINGS = {
   beforeId: "not-cali",
   opacity: 0.8,
 };
+
+const getMvtLayer = (
+  geography: string,
+  layer: string,
+  fill: any,
+  handleHover: MVTLayer['onHover']
+) => {
+  return new MVTLayer({
+    ...DEFAULT_MVT_LAYER_SETTINGS as any,
+    id: layer,
+    visible: geography === layer,
+    data: getMapboxApi(layer),
+    getFillColor: fill,
+    onClick: (info: any) => {
+      console.log(info);
+    },
+    onHover: handleHover,
+    updateTriggers: {
+      getFillColor: [fill],
+    },
+  });
+}
 
 const randomString = () => Math.random().toString(36).substring(7);
 export function DeckGLOverlay(
@@ -332,38 +359,13 @@ export const MainMapView: React.FC = () => {
     }
   };
 
-  const layers = [
-    new MVTLayer({
-      ...DEFAULT_MVT_LAYER_SETTINGS,
-      id: "townships",
-      visible: geography === "Townships",
-      data: getMapboxApi("Townships"),
-      // @ts-ignore
-      getFillColor: fill,
-      onClick: (info: any) => {
-        console.log(info);
-      },
-      onHover: handleHover,
-      updateTriggers: {
-        getFillColor: [fill],
-      },
-    }),
-    new MVTLayer({
-      ...DEFAULT_MVT_LAYER_SETTINGS,
-      id: "sections",
-      visible: geography === "Sections",
-      data: getMapboxApi("Sections"),
-      // @ts-ignore
-      getFillColor: fill,
-      onClick: (info: any) => {
-        console.log(info);
-      },
-      onHover: handleHover,
-      updateTriggers: {
-        getFillColor: [fill],
-      },
-    }),
-  ];
+  const layers = mapConfig.map(f => getMvtLayer(
+    geography,
+    f.layer,
+    fill,
+    handleHover
+  ))
+
   useEffect(() => {
     if (loadingState === "unloaded") executeQuery();
   }, [loadingState, executeQuery]);
@@ -378,7 +380,7 @@ export const MainMapView: React.FC = () => {
         {!!(
           loadingState === "loaded" &&
           zoom < 8 &&
-          geography === "Sections"
+          (geography === "Sections" || geography === 'Tracts')
         ) && (
           <Alert
             variant="outlined"
@@ -463,12 +465,12 @@ export const MainMapView: React.FC = () => {
           attributionControl={false}
           onMouseLeave={() => setTooltip(undefined)}
           // hash={true}
-          mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN as string}
+          mapboxAccessToken={ import.meta.env.VITE_MAPBOX_TOKEN as string}
           mapStyle="mapbox://styles/cpr2024/clyfwrigb01ca01qj6eg720be?fresh=true"
           initialViewState={INITIAL_VIEW_STATE}
           // @ts-ignore
           projection={"mercator"}
-          onMoveEnd={(e) => {
+          onMoveEnd={(e: any) => {
             setZoom(Math.round(e.viewState.zoom));
           }}
           reuseMaps={true}

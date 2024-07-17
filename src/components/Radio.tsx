@@ -12,6 +12,7 @@ export const RadioButtonsGroup: React.FC<{
   value: string | string[] | number | number[] | null;
 }> = ({ spec, onChange, value }) => {
   const options = useOptions(spec);
+  
   return (
     <FormControl>
       <FormLabel id="demo-radio-buttons-group-label">{spec.label}</FormLabel>

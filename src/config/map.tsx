@@ -25,7 +25,7 @@ export const mapConfig: {
 
 export const mapConfigFilterSpec: FilterSpec = {
   queryParam: "na",
-  label: "Geogrphy",
+  label: "Geography",
   component: "dropdown",
   options: {
     type: 'static',

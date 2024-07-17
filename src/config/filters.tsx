@@ -1,5 +1,7 @@
 import { type FilterSpec } from "../types/state";
 
+export type FilterValue = string | string[] | number | number[] | null;
+
 type FilterSection = {
   title: string;
   defaultOpen: boolean;
@@ -58,7 +60,7 @@ const ingredientSection: FilterSection = {
         // @ts-ignore
         endpoint: `6567630eaeb11300087fbd80`,
       },
-      component: "dropdown",
+      component: "autocomplete",
     },
     {
       queryParam: "ai_type_specific",
@@ -98,125 +100,125 @@ const ingredientSection: FilterSection = {
     },
   ],
 };
-const geographyFilters: FilterSection = {
-  title: "Geography",
-  defaultOpen: false,
-  filters: [
-    {
-      queryParam: "county",
-      label: "County",
-      options: {
-        type: "dynamic",
-        value: "FIPS",
-        label: "Area Name",
-        // @ts-ignore
-        endpoint: `6567683eafda330008b8c256`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "townshiprange",
-      label: "Township Range",
-      options: {
-        type: "dynamic",
-        value: "TownshipRange",
-        label: "TownshipRange",
-        // @ts-ignore
-        endpoint: `6569009ee5a32a0008930614`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "schooldistrict",
-      label: "School District",
-      options: {
-        type: "dynamic",
-        value: "FIPS",
-        label: "Area Name",
-        // @ts-ignore
-        endpoint: `656789dcb678c50008c54a00`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "tract",
-      label: "Census Tract",
-      options: {
-        type: "dynamic",
-        value: "FIPS",
-        label: "FIPS",
-        // @ts-ignore
-        endpoint: `656763f6aeb11300087fbd84`,
-      },
-      component: "autocomplete",
-    },
-  ],
-};
-const demographyFilters: FilterSection = {
-  title: "Demographics",
-  defaultOpen: false,
-  filters: [
-    {
-      queryParam: "pctblack",
-      label: "Percent Black or African American",
-      options: {
-        type: "static",
-        values: [
-          {
-            value: 0,
-            label: "0%",
-          },
-          {
-            value: 100,
-            label: "100%",
-          },
-        ],
-      },
-      component: "range",
-    },
-    {
-      queryParam: "pcthispanic",
-      label: "Percent Hispanic or Latino",
-      options: {
-        type: "static",
-        values: [
-          {
-            value: "0",
-            label: "0%",
-          },
-          {
-            value: "100",
-            label: "100%",
-          },
-        ],
-      },
-      component: "range",
-    },
-    {
-      queryParam: "income",
-      label: "Median Household Income",
-      options: {
-        type: "static",
-        values: [
-          {
-            value: "0",
-            label: "0",
-          },
-          {
-            value: "150000",
-            label: "150000",
-          },
-        ],
-      },
-      component: "range",
-    },
-  ],
-};
+// const geographyFilters: FilterSection = {
+//   title: "Geography",
+//   defaultOpen: false,
+//   filters: [
+//     {
+//       queryParam: "county",
+//       label: "County",
+//       options: {
+//         type: "dynamic",
+//         value: "FIPS",
+//         label: "Area Name",
+//         // @ts-ignore
+//         endpoint: `6567683eafda330008b8c256`,
+//       },
+//       component: "autocomplete",
+//     },
+//     {
+//       queryParam: "townshiprange",
+//       label: "Township Range",
+//       options: {
+//         type: "dynamic",
+//         value: "TownshipRange",
+//         label: "TownshipRange",
+//         // @ts-ignore
+//         endpoint: `6569009ee5a32a0008930614`,
+//       },
+//       component: "autocomplete",
+//     },
+//     {
+//       queryParam: "schooldistrict",
+//       label: "School District",
+//       options: {
+//         type: "dynamic",
+//         value: "FIPS",
+//         label: "Area Name",
+//         // @ts-ignore
+//         endpoint: `656789dcb678c50008c54a00`,
+//       },
+//       component: "autocomplete",
+//     },
+//     {
+//       queryParam: "tract",
+//       label: "Census Tract",
+//       options: {
+//         type: "dynamic",
+//         value: "FIPS",
+//         label: "FIPS",
+//         // @ts-ignore
+//         endpoint: `656763f6aeb11300087fbd84`,
+//       },
+//       component: "autocomplete",
+//     },
+//   ],
+// };
+// const demographyFilters: FilterSection = {
+//   title: "Demographics",
+//   defaultOpen: false,
+//   filters: [
+//     {
+//       queryParam: "pctblack",
+//       label: "Percent Black or African American",
+//       options: {
+//         type: "static",
+//         values: [
+//           {
+//             value: 0,
+//             label: "0%",
+//           },
+//           {
+//             value: 100,
+//             label: "100%",
+//           },
+//         ],
+//       },
+//       component: "range",
+//     },
+//     {
+//       queryParam: "pcthispanic",
+//       label: "Percent Hispanic or Latino",
+//       options: {
+//         type: "static",
+//         values: [
+//           {
+//             value: "0",
+//             label: "0%",
+//           },
+//           {
+//             value: "100",
+//             label: "100%",
+//           },
+//         ],
+//       },
+//       component: "range",
+//     },
+//     {
+//       queryParam: "income",
+//       label: "Median Household Income",
+//       options: {
+//         type: "static",
+//         values: [
+//           {
+//             value: "0",
+//             label: "0",
+//           },
+//           {
+//             value: "150000",
+//             label: "150000",
+//           },
+//         ],
+//       },
+//       component: "range",
+//     },
+//   ],
+// };
 
 
 export const allFilterSections: FilterSection[] = [
   dateSection,
   ingredientSection,
-  geographyFilters,
-  demographyFilters,
+  // geographyFilters,
+  // demographyFilters,
 ]

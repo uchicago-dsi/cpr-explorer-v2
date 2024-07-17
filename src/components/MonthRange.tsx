@@ -4,8 +4,9 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { FilterSpec } from "../types/state";
+import { FilterSpec, FilterState } from "../types/state";
 import dayjs from "dayjs";
+import { FilterValue } from "../config/filters";
 
 const pickerLang = {
   months: [
@@ -34,9 +35,12 @@ const zfill = (num: number, size: number) => {
 
 export const MonthPicker: React.FC<{
   spec: FilterSpec;
-  onChange: (value: string | string[] | number | number[] | null) => void;
-  value: string | string[] | number | number[] | null;
-}> = ({ spec, onChange, value }) => {
+  onChange: (value: FilterValue, valueLabels: FilterValue) => void;
+  state?: FilterState
+}> = ({ spec, onChange, state }) => {
+  const value = (state?.value || []) as any[];
+  // const valueLabels = (state?.valueLabels || []) as any[];
+
   const innerValue = value as [string, string];
 
   const handleChange = (
@@ -49,7 +53,7 @@ export const MonthPicker: React.FC<{
       type === "month"
         ? `${innerValue[index].split("-")[0]}-${zfill(_newValue + 1, 2)}`
         : `${_newValue}-${innerValue[index].split("-")[1]}`;
-    onChange(stateValue);
+    onChange(stateValue, stateValue);
   };
 
   const [max, min] = [

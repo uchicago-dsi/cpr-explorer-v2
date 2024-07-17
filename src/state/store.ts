@@ -3,6 +3,7 @@ import { FilterState, State } from "../types/state";
 import { allFilterSections } from "../config/filters";
 import { mapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
+// import { devtools } from 'zustand/middleware'
 
 export let staticData: any = [];
 
@@ -53,7 +54,9 @@ const findExistingFilter = (
   return filters.find(search);
 };
 
-export const useStore = create<State>((set, get) => ({
+export const useStore = create<State>(
+  // devtools<State>(
+    (set, get) => ({
   timestamp: 0,
   loadingState: "unloaded" as State["loadingState"],
   geography: mapConfig[0].layer!,
@@ -67,6 +70,8 @@ export const useStore = create<State>((set, get) => ({
       .map((filter) => ({
         queryParam: filter.queryParam,
         value: filter.default || null,
+        label: filter.label,
+        valueLabels: filter.default || null,
       }))
   ),
   filterKeys: [],
@@ -128,4 +133,5 @@ export const useStore = create<State>((set, get) => ({
     }
   },
   setMapLayer: (mapLayer) => set({ mapLayer }),
-}));
+}))
+// )

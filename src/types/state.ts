@@ -22,8 +22,9 @@ export type FilterSpec = {
   format?: 'percent' | 'dollars'
 }
 
-export type FilterState = Pick<FilterSpec, 'queryParam'> & {
+export type FilterState = Pick<FilterSpec, 'queryParam' | 'label'> & {
   value: string | string[] | number | number[] | null;
+  valueLabels: string | string[] | number | number[] | null;
 }
 
 export type State = {

@@ -6,8 +6,9 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
-import { FilterSpec } from "../types/state";
+import { FilterSpec, FilterState } from "../types/state";
 import { useOptions } from "../hooks/useOptions";
+import { FilterValue } from "../config/filters";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -20,29 +21,46 @@ const MenuProps = {
   },
 };
 
+const recursivelyFlattenArray = (arr: any[]): any[] => {
+  return arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(recursivelyFlattenArray(val)) : acc.concat(val), []);
+}
+// const filterUnique = (arr: any[]) => {
+//   return arr.filter((value, index) => arr.indexOf(value) === index);
+// }
+
 export const MultipleSelectCheckmarks: React.FC<{
   spec: FilterSpec;
-  value: (string | number)[];
-  onChange: (value: string | string[] | number | number[] | null) => void;
+  state?: FilterState;
+  onChange: (value: FilterValue, valueLabels: FilterValue) => void;
   multiple?: boolean;
-}> = ({ spec, value, onChange, multiple=true }) => {
+}> = ({ spec, state, onChange, multiple=true }) => {
   const options = useOptions(spec);
+  const value = (state?.value || []) as any[];
+  const valueLabels = (state?.valueLabels || []) as any[];
   const currentOptions = value
-  // options.filter((o) => value.includes(o.value));
-  const handleChange = (event: SelectChangeEvent<any>) => {
+  console.log('DROPDOWN', state)
+  const handleChange = (_event: SelectChangeEvent<any>, _e: any) => {
+    const newValue = _e.props.value
+    const newLabel = _e.props.label || _e.props.value
     if (!multiple) {
-      onChange(event.target.value);
-      return
+      onChange(newValue, newLabel);
     }
-    
-    const valueInSelection = value.includes(event.target.value);
+    const valueInSelection = value.includes(newValue);
     if (valueInSelection) {
       // @ts-ignore
-      onChange(value.filter((v) => v !== event.target.value));
+      const indexOfValue = value.indexOf(newValue);
+      const newValueList = value.slice(0, indexOfValue).concat(value.slice(indexOfValue + 1));
+      const newLabelList = valueLabels.slice(0, indexOfValue).concat(valueLabels.slice(indexOfValue + 1));
+      // @ts-ignore
+      onChange(newValueList, newLabelList);
     } else {
-      onChange([...(value || []), event.target.value]);
+      onChange(
+        [...(value || []), newValue],
+        [...(valueLabels || []), newLabel]
+      );
     }
   };
+  
   return (
     <div>
       <FormControl sx={{ my: 1, width: '100%' }}>

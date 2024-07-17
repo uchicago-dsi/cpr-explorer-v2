@@ -46,7 +46,7 @@ export const MapWidget = () => {
         minHeight={"80vh"}
         overflow="auto"
       >
-        <Button 
+        {!isLoaded && <Button 
           variant="contained"
           onClick={executeQuery}
           disabled={isLoaded}
@@ -58,7 +58,7 @@ export const MapWidget = () => {
           }}
         >
           Run Query
-          </Button>
+          </Button>}
           <hr/>
         <h3>
           Geography
@@ -77,7 +77,7 @@ export const MapWidget = () => {
                   multiple={false}
                   spec={mapConfigFilterSpec}
                   onChange={(value) => setGeography(value as string)}
-                  value={geography as any}
+                  state={{value: geography, label: geography} as any}
                 />
               </AccordionDetails>
             </Accordion>

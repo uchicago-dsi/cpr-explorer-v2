@@ -44,5 +44,12 @@ export type State = {
   setQueryEndpoint: (endpoint: string) => void;
   executeQuery: () => void;
   timestamp: number;
+
+  tooltip?: {
+    x: any;
+    y: any;
+    data: any;
+  },
+  setTooltip: (tooltip: State['tooltip']) => void;
 }
 

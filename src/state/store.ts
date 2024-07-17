@@ -3,7 +3,7 @@ import { FilterState, State } from "../types/state";
 import { allFilterSections } from "../config/filters";
 import { mapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
-// import { devtools } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 
 export let staticData: any = [];
 
@@ -53,9 +53,11 @@ const findExistingFilter = (
     : (row: any) => row.queryParam === filterKey;
   return filters.find(search);
 };
+type WrapperFn = <T extends any>(fn: T) => T
+const wrapper: WrapperFn = process.env.NODE_ENV === 'development' ? devtools as WrapperFn : (fn) => fn
 
 export const useStore = create<State>(
-  // devtools<State>(
+  wrapper(
     (set, get) => ({
   timestamp: 0,
   loadingState: "unloaded" as State["loadingState"],
@@ -75,6 +77,8 @@ export const useStore = create<State>(
       }))
   ),
   filterKeys: [],
+  tooltip: undefined,
+  setTooltip: (tooltip) => set({ tooltip }),
   setFilter: (filter: FilterState & {index?: number}) =>
     set((state) => {
       const filterKey = filter.queryParam
@@ -134,4 +138,4 @@ export const useStore = create<State>(
   },
   setMapLayer: (mapLayer) => set({ mapLayer }),
 }))
-// )
+)

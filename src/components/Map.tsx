@@ -10,7 +10,7 @@ import GlMap, {
   NavigationControl,
   ScaleControl,
   useControl,
-  AttributionControl
+  AttributionControl,
 } from "react-map-gl";
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox";
 import { mapConfig } from "../config/map";
@@ -21,6 +21,18 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
 import { cleanLabel } from "../utils/cleanLabel";
+
+const DEFAULT_MVT_LAYER_SETTINGS = {
+  pickable: true,
+  getLineColor: [0, 0, 0, 255],
+  getLineWidth: 5,
+  // autoHighlight: true,
+  lineWidthMinPixels: 1,
+  minZoom: 4,
+  getLineDashArray: [3, 3],
+  beforeId: "not-cali",
+  opacity: 0.8,
+};
 
 const randomString = () => Math.random().toString(36).substring(7);
 export function DeckGLOverlay(
@@ -87,6 +99,7 @@ const getScaleQuintile = (
   return {
     color,
     colors,
+    mappedData,
     quantiles: d3Scale.quantiles(),
   };
 };
@@ -201,7 +214,7 @@ const Legend: React.FC<{
           >
             {[0, 2, 4].includes(index) && (
               <p style={{ margin: 0 }}>
-                {index + 1} 
+                {index + 1}
                 {/* @ts-ignore */}
                 {numberthDict[index]} Quintile
               </p>
@@ -237,18 +250,56 @@ const Legend: React.FC<{
   );
 };
 
+export const MapTooltip: React.FC<{mappedData: any, geographyConfig: any}> = ({mappedData, geographyConfig}) => {
+  const tooltip = useStore((state) => state.tooltip);
+  if (!tooltip) return null;
+  const idCol = geographyConfig.tileId
+  const _value = mappedData[tooltip.data[idCol]]
+  const value = isNaN(_value) ? 'No Use In Data' : compactFormatter(_value)
+  return (
+    <Box
+      component={"div"}
+      sx={{
+        position: "absolute",
+        left: tooltip.x,
+        top: tooltip.y,
+        padding: "0.5rem",
+        background: "rgba(255,255,255,0.95)",
+        borderRadius: "0.5rem",
+        // shadow
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        zIndex: 1000,
+        fontSize: "0.75rem",
+        transform: 'translate(0.5rem, 0.5rem)',
+        pointerEvents: 'none'
+      }}
+    >
+      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <li><b>Lbs of Chemical Used:</b> {value}</li>
+        {Object.entries(tooltip.data).map(([key, value]) => (
+          <li key={key}>
+            <b>{key}:</b> {value as any}
+          </li>
+        ))}
+      </ul>
+    </Box>
+  );
+};
+
 export const MainMapView: React.FC = () => {
-  const state = useStore((state) => state);
-  const geography = state.geography;
+  const geography = useStore((state) => state.geography);
   const geographyConfig = mapConfig.find((c) => c.layer === geography)!;
-  const loadingState = state.loadingState;
-  const uiFilters = state.uiFilters;
-  const timestamp = state.timestamp;
+  const loadingState = useStore((state) => state.loadingState);
+  const uiFilters = useStore((state) => state.uiFilters);
+  const timestamp = useStore((state) => state.timestamp);
+  const executeQuery = useStore((state) => state.executeQuery);
+  const setTooltip = useStore((state) => state.setTooltip);
   const [zoom, setZoom] = React.useState(INITIAL_VIEW_STATE.zoom);
   const mapId = useRef(randomString());
   const {
     color: fill,
     colors,
+    mappedData,
     quantiles,
   } = useMemo(() => {
     if (loadingState === "loaded") {
@@ -263,12 +314,27 @@ export const MainMapView: React.FC = () => {
         color: (_: any) => [120, 120, 120],
         colors: [],
         quantiles: [],
+        mappedData: {}
       };
     }
   }, [timestamp, loadingState]);
+  const handleHover: MVTLayer["onHover"] = (info: any) => {
+    if (info.object) {
+      setTooltip({
+        x: info.x,
+        y: info.y,
+        data: info.object.properties,
+      });
+      return true;
+    } else {
+      setTooltip(undefined);
+      return false;
+    }
+  };
 
   const layers = [
     new MVTLayer({
+      ...DEFAULT_MVT_LAYER_SETTINGS,
       id: "townships",
       visible: geography === "Townships",
       data: getMapboxApi("Townships"),
@@ -277,19 +343,13 @@ export const MainMapView: React.FC = () => {
       onClick: (info: any) => {
         console.log(info);
       },
-      pickable: true,
-      getLineColor: [0, 0, 0, 255],
-      getLineWidth: 5,
-      lineWidthMinPixels: 1,
-      minZoom: 4,
-      getLineDashArray: [3, 3],
-      beforeId: "not-cali",
-      opacity: 0.8,
+      onHover: handleHover,
       updateTriggers: {
         getFillColor: [fill],
       },
     }),
     new MVTLayer({
+      ...DEFAULT_MVT_LAYER_SETTINGS,
       id: "sections",
       visible: geography === "Sections",
       data: getMapboxApi("Sections"),
@@ -298,149 +358,161 @@ export const MainMapView: React.FC = () => {
       onClick: (info: any) => {
         console.log(info);
       },
-      pickable: true,
-      getLineColor: [0, 0, 0, 255],
-      getLineWidth: 5,
-      lineWidthMinPixels: 1,
-      minZoom: 4,
-      getLineDashArray: [3, 3],
-      beforeId: "not-cali",
-      opacity: 0.8,
+      onHover: handleHover,
       updateTriggers: {
         getFillColor: [fill],
       },
     }),
   ];
   useEffect(() => {
-    if (state.loadingState === "unloaded") state.executeQuery();
-  }, [state.loadingState, state.executeQuery]);
+    if (loadingState === "unloaded") executeQuery();
+  }, [loadingState, executeQuery]);
 
   return (
-    <Box
-      component="section"
-      sx={{ width: "100%", height: "100%", position: "relative" }}
-    >
-      <LoadingStateShade loadingState={loadingState} />
-      {!!(loadingState === 'loaded' && zoom < 8 && geography === "Sections") && (
-        <Alert
-          variant="outlined"
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            right: 0,
-            transform: "translateX(-50%)",
-            pointerEvents: "none",
-            zIndex: 1000,
-            margin: "1rem",
-            width: "50%",
-            background: "rgba(255,255,255,0.95)",
-            // shadow
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          }}
-          severity="info"
-        >
-          Zoom in to view data
-        </Alert>
-      )}
+    <>
       <Box
-        component={"div"}
-        sx={{
-          position: "absolute",
-          top: "0.5rem",
-          right: "0.5rem",
-          maxHeight: "calc(100% - 3rem)",
-          maxWidth: "min(40%, 15rem)",
-          fontSize: "0.75rem",
-          zIndex: 1000,
-          padding: "0.5rem",
-          background: "rgba(255,255,255,0.95)",
-          borderRadius: "0.5rem",
-          // shadow
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        }}
+        component="section"
+        sx={{ width: "100%", height: "100%", position: "relative" }}
       >
-        <p
-          style={{
-            padding: 0,
-            margin: 0,
-            fontWeight: "bold",
-            textDecoration: "underline",
-          }}
-        >
-          Data Filters
-        </p>
-        <ul
-          style={{
-            listStyle: "none",
-            padding: 0,
-            margin: 0,
-            maxWidth: "50ch",
-          }}
-        >
-          <li><b>Geography:</b> {geography}</li>
-          {uiFilters.filter(f => f.value && (!Array.isArray(f.value) || f.value.length)).map((f, i) => (
-            <li key={`filter-${i}`}>
-              <b>{f.label}:</b>{" "}
-              {!Array.isArray(f.valueLabels)
-                ? cleanLabel(f.valueLabels)
-                : Array.isArray(f.queryParam)
-                ? f.valueLabels.join(" to ")
-                : f.valueLabels.map(cleanLabel)
-                  .sort((a,b) => a.localeCompare(b))
-                  .join(", ")}
-            </li>
-          ))}
-        </ul>
-      </Box>
-      <GlMap
-        maxBounds={[-130, 30, -104, 45.0]}
-        attributionControl={false}
-        // hash={true}
-        mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN as string}
-        mapStyle="mapbox://styles/cpr2024/clyfwrigb01ca01qj6eg720be?fresh=true"
-        initialViewState={INITIAL_VIEW_STATE}
-        // @ts-ignore
-        projection={"mercator"}
-        onMoveEnd={(e) => {
-          setZoom(Math.round(e.viewState.zoom));
-        }}
-        reuseMaps={true}
-      >
-        <NavigationControl position="top-left" />
-        <FullscreenControl containerId={mapId.current} position="top-left" />
-        <AttributionControl position="bottom-right" 
-          customAttribution="Data Sources:
-            CA Dept of Pesticide Regulation PUR 2017-2022, 
-            ACS 2021 5-Year esimates 2021"
-        />
-        <ScaleControl unit="imperial" position="bottom-right" />
-        <DeckGLOverlay layers={layers} interleaved={true} />
-      </GlMap>
-      {!!quantiles.length && (
+        <LoadingStateShade loadingState={loadingState} />
+        {!!(
+          loadingState === "loaded" &&
+          zoom < 8 &&
+          geography === "Sections"
+        ) && (
+          <Alert
+            variant="outlined"
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              right: 0,
+              transform: "translateX(-50%)",
+              pointerEvents: "none",
+              zIndex: 1000,
+              margin: "1rem",
+              width: "50%",
+              background: "rgba(255,255,255,0.95)",
+              // shadow
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+            severity="info"
+          >
+            Zoom in to view data
+          </Alert>
+        )}
         <Box
-          component="div"
+          component={"div"}
           sx={{
             position: "absolute",
-            left: "0.5rem",
-            bottom: "3rem",
-            margin: "0",
-            padding: "0.5rem",
+            top: "0.5rem",
+            right: "0.5rem",
+            maxHeight: "calc(100% - 3rem)",
+            maxWidth: "min(40%, 15rem)",
             fontSize: "0.75rem",
+            zIndex: 1000,
+            padding: "0.5rem",
             background: "rgba(255,255,255,0.95)",
             borderRadius: "0.5rem",
             // shadow
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            zIndex: 1000,
           }}
         >
-          <Legend
-            colors={colors}
-            breaks={quantiles}
-            title="Pounds of Chemical Used (Quintiles)"
-          />
+          <p
+            style={{
+              padding: 0,
+              margin: 0,
+              fontWeight: "bold",
+              textDecoration: "underline",
+            }}
+          >
+            Data Filters
+          </p>
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+              maxWidth: "50ch",
+            }}
+          >
+            <li>
+              <b>Geography:</b> {geography}
+            </li>
+            {uiFilters
+              .filter(
+                (f) => f.value && (!Array.isArray(f.value) || f.value.length)
+              )
+              .map((f, i) => (
+                <li key={`filter-${i}`}>
+                  <b>{f.label}:</b>{" "}
+                  {!Array.isArray(f.valueLabels)
+                    ? cleanLabel(f.valueLabels)
+                    : Array.isArray(f.queryParam)
+                    ? f.valueLabels.join(" to ")
+                    : f.valueLabels
+                        .map(cleanLabel)
+                        .sort((a, b) => a.localeCompare(b))
+                        .join(", ")}
+                </li>
+              ))}
+          </ul>
         </Box>
-      )}
-    </Box>
+        <GlMap
+          maxBounds={[-130, 30, -104, 45.0]}
+          attributionControl={false}
+          onMouseLeave={() => setTooltip(undefined)}
+          // hash={true}
+          mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN as string}
+          mapStyle="mapbox://styles/cpr2024/clyfwrigb01ca01qj6eg720be?fresh=true"
+          initialViewState={INITIAL_VIEW_STATE}
+          // @ts-ignore
+          projection={"mercator"}
+          onMoveEnd={(e) => {
+            setZoom(Math.round(e.viewState.zoom));
+          }}
+          reuseMaps={true}
+        >
+          <NavigationControl position="top-left" />
+          <FullscreenControl containerId={mapId.current} position="top-left" />
+          <AttributionControl
+            position="bottom-right"
+            customAttribution="Data Sources:
+            CA Dept of Pesticide Regulation PUR 2017-2022, 
+            ACS 2021 5-Year esimates 2021"
+          />
+          <ScaleControl unit="imperial" position="bottom-right" />
+          <DeckGLOverlay layers={layers} interleaved={true} />
+        </GlMap>
+        {!!quantiles.length && (
+          <Box
+            component="div"
+            sx={{
+              position: "absolute",
+              left: "0.5rem",
+              bottom: "3rem",
+              margin: "0",
+              padding: "0.5rem",
+              fontSize: "0.75rem",
+              background: "rgba(255,255,255,0.95)",
+              borderRadius: "0.5rem",
+              // shadow
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              zIndex: 1000,
+            }}
+          >
+            <Legend
+              colors={colors}
+              breaks={quantiles}
+              title="Pounds of Chemical Used (Quintiles)"
+            />
+          </Box>
+        )}
+      <MapTooltip 
+        geographyConfig={geographyConfig}
+        mappedData={mappedData}
+      />
+      </Box>
+    </>
   );
 };

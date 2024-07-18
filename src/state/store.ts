@@ -174,7 +174,7 @@ export const useStore = create<State>(
 const timeoutDuration = 500;
 let timeoutFn: any = null;
 
-const unsub = useStore.subscribe((state, prev) => {
+useStore.subscribe((state, prev) => {
   const somethingChanged =
     state.uiFilters !== prev.uiFilters ||
     state.alwaysApplyFilters !== prev.alwaysApplyFilters ||

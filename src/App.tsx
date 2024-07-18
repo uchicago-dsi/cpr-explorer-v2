@@ -15,12 +15,18 @@ import { useStore } from "./state/store";
 import { MultipleSelectCheckmarks } from "./components/Dropdown";
 import { mapConfigFilterSpec } from "./config/map";
 import { Demography } from "./components/Demography";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
 export const MapWidget = () => {
   const executeQuery = useStore((state) => state.executeQuery);
   const isLoaded = useStore((state) => state.loadingState === "loaded");
   const geography = useStore((state) => state.geography);
   const setGeography = useStore((state) => state.setGeography);
-  
+  const alwaysApplyChanges = useStore((state) => state.alwaysApplyFilters);
+  const toggleAlwaysApplyFilters = useStore((state) => state.toggleAlwaysApplyFilters);
+
   return (
     <Box
       component="main"
@@ -47,64 +53,66 @@ export const MapWidget = () => {
         minHeight={"80vh"}
         overflow="auto"
       >
-        {!isLoaded && <Button 
-          variant="contained"
-          onClick={executeQuery}
-          disabled={isLoaded}
-          sx={{
-            textTransform: "none",
-            position: "sticky",
-            top: "1rem",
-            zIndex: isLoaded ? 0 : 100,
-          }}
-        >
-          Run Query
+        {!!(!isLoaded || alwaysApplyChanges) && (
+          <Box component="div" sx={{ 
+              display: "flex", justifyContent: "center",
+               position: "sticky",
+               flexDirection: "column",
+               top: "1rem",
+               zIndex: isLoaded ? 0 : 100,
+             }}>
+
+          {!!(!isLoaded && !alwaysApplyChanges) && <Button
+            variant="contained"
+            onClick={executeQuery}
+            disabled={isLoaded}
+            sx={{
+              textTransform: "none"}}
+          >
+            Apply Changes
           </Button>}
-          <hr/>
-        <h3>
-          Geography
-        </h3>
-
-        <Accordion defaultExpanded={true}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1-content"
-                id="panel1-header"
-              >
-                Geographies
-              </AccordionSummary>
-              <AccordionDetails>
-                <MultipleSelectCheckmarks
-                  multiple={false}
-                  spec={mapConfigFilterSpec}
-                  onChange={(value) => setGeography(value as string)}
-                  state={{value: geography, label: geography} as any}
+          <FormGroup
+            sx={{
+              position: "sticky",
+              top: "1rem",
+              zIndex: 100,
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={alwaysApplyChanges}
+                  onClick={toggleAlwaysApplyFilters}
                 />
-              </AccordionDetails>
-            </Accordion>
-        <h3>
-          Data Filters
-        </h3>
+              }
+              label="Automatically Apply Changes"
+            />
+          </FormGroup>
+          </Box>
+        )}
+        <hr />
+        <h3>Geography</h3>
 
-        {allFilterSections.map((section) => (
+        <MultipleSelectCheckmarks
+          multiple={false}
+          spec={mapConfigFilterSpec}
+          onChange={(value) => setGeography(value as string)}
+          state={{ value: geography, label: geography } as any}
+        />
+        <hr style={{ margin: "0.5rem 0", width: "100%" }} />
+        {allFilterSections.map((section, i) => (
           <div key={section.title}>
-            <Accordion defaultExpanded={section.defaultOpen}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1-content"
-                id="panel1-header"
-              >
-                {section.title}
-              </AccordionSummary>
-              <AccordionDetails>
-                {section.filters.map((filter) => (
-                  <FilterControl
-                    key={JSON.stringify(filter.queryParam)}
-                    spec={filter}
-                  />
-                ))}
-              </AccordionDetails>
-            </Accordion>
+            {" "}
+            <h3>{section.title}</h3>
+            {section.filters.map((filter) => (
+              <FilterControl
+                key={JSON.stringify(filter.queryParam)}
+                spec={filter}
+              />
+            ))}
+            {i + 1 === allFilterSections.length ? null : (
+              <hr style={{ margin: "1rem 0 0 0", width: "100%" }} />
+            )}
           </div>
         ))}
       </Box>
@@ -121,7 +129,7 @@ const componentMapping = {
   map: MapWidget,
   demography: Demography,
   timeseries: () => <p>Timeseries coming soon</p>,
-  about: () => <p>About coming soon</p>
+  about: () => <p>About coming soon</p>,
 } as const;
 
 const selectConfig = [
@@ -153,7 +161,7 @@ function App() {
           flexDirection: "row",
           gap: 2,
           px: "1rem",
-          py:0,
+          py: 0,
           background: "white",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           borderRadius: "0.5rem",
@@ -171,13 +179,12 @@ function App() {
               key={config.value}
               onClick={() => setCurrentView(config.value as any)}
               sx={{
-                py:2,
-                px:2,
+                py: 2,
+                px: 2,
                 maxHeight: "1rem",
                 fontWeight: currentView === config.value ? "bold" : "normal",
                 background:
                   currentView === config.value ? "rgba(0,0,0,0.1)" : "white",
-              
               }}
             >
               {config.label}

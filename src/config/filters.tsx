@@ -36,7 +36,7 @@ const dateSection: FilterSection = {
 };
 
 const ingredientSection: FilterSection = {
-  title: "Active Ingredients, Classes, and Products",
+  title: "Data Filters",
   defaultOpen: false,
   filters: [
     {
@@ -98,6 +98,17 @@ const ingredientSection: FilterSection = {
       },
       component: "autocomplete",
     },
+    {
+      queryParam: "site",
+      label: "Site",
+      options: {
+        type: "dynamic",
+        value: "site_code",
+        label: "site_name",
+        endpoint: "65676456aeb11300087fbd85"
+      },
+      component: "autocomplete",
+    }
   ],
 };
 // const geographyFilters: FilterSection = {

@@ -239,8 +239,13 @@ export const AutoComplete: React.FC<{
         defaultValue={value}
         disableListWrap
         onClose={handleClose}
-        onFocus={() => setOpen(true)}
-        onBlur={() => setTextValue("")}
+        onFocus={() => {
+          setOpen(true);
+          setTextValue("");
+        }}
+        onBlur={() => {
+          setTextValue(valueLabels.join(", "));
+        }}
         open={open}
         inputValue={textValue}
         onOpen={() => setOpen(true)}
@@ -265,12 +270,7 @@ export const AutoComplete: React.FC<{
           e.preventDefault();
         }}
         renderInput={(params) => {
-          return (
-            <TextField
-              {...params}
-              label={spec.label}
-            />
-          );
+          return <TextField {...params} label={spec.label} />;
         }}
         renderOption={(props, option, state) =>
           [props, option, state.index] as React.ReactNode

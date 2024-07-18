@@ -28,7 +28,9 @@ export type FilterState = Pick<FilterSpec, 'queryParam' | 'label'> & {
 }
 
 export type State = {
-  loadingState: 'unloaded' | 'settings-changed' | 'loading' | 'loaded' | 'error'
+  loadingState: 'unloaded' | 'settings-changed' | 'loading' | 'loaded' | 'error' | 'no-data'
+  alwaysApplyFilters: boolean;
+  toggleAlwaysApplyFilters: () => void;
   geography: string;
   mapLayer: string
   view: string;

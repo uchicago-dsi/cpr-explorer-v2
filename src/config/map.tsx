@@ -12,7 +12,7 @@ export const mapConfig: {
     tileset: "cpr2024.cioych4l",
     endpoint: "6568f10116faa30008555612",
     tileId: "TownshipRange",
-    dataId: "townshiprange"
+    dataId: "TownshipRange"
   },
   {
     layer: "Counties",

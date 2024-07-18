@@ -26,6 +26,10 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
 import { cleanLabel } from "../utils/cleanLabel";
+import Button from "@mui/material/Button";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 const DEFAULT_MVT_LAYER_SETTINGS = {
   pickable: true,
@@ -43,10 +47,10 @@ const getMvtLayer = (
   geography: string,
   layer: string,
   fill: any,
-  handleHover: MVTLayer['onHover']
+  handleHover: MVTLayer["onHover"]
 ) => {
   return new MVTLayer({
-    ...DEFAULT_MVT_LAYER_SETTINGS as any,
+    ...(DEFAULT_MVT_LAYER_SETTINGS as any),
     id: layer,
     visible: geography === layer,
     data: getMapboxApi(layer),
@@ -59,7 +63,7 @@ const getMvtLayer = (
       getFillColor: [fill],
     },
   });
-}
+};
 
 const randomString = () => Math.random().toString(36).substring(7);
 export function DeckGLOverlay(
@@ -158,6 +162,11 @@ const LoadingStateContainer: React.FC<{ children: React.ReactNode }> = ({
 const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }> = ({
   loadingState,
 }) => {
+  const executeQuery = useStore((state) => state.executeQuery);
+  const toggleAlwaysApplyFilters = useStore(
+    (state) => state.toggleAlwaysApplyFilters
+  );
+  const alwaysApplyFilters = useStore((state) => state.alwaysApplyFilters);
   if (loadingState === "loading") {
     return (
       <LoadingStateContainer>
@@ -175,11 +184,66 @@ const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }> = ({
       </LoadingStateContainer>
     );
   }
+  if (loadingState === "no-data") {
+    return (
+      <LoadingStateContainer>
+        <Alert variant="outlined" severity="error">
+          No data matches the selected filters
+        </Alert>
+      </LoadingStateContainer>
+    );
+  }
+  if (loadingState === "settings-changed" && alwaysApplyFilters) {
+    return (
+      <LoadingStateContainer>
+        <Alert
+          variant="outlined"
+          severity="info"
+          sx={{
+            background: "white",
+          }}
+        >
+          <p>Settings updated. Applying changes...</p>
+        </Alert>
+      </LoadingStateContainer>
+    );
+  }
   if (loadingState === "settings-changed") {
     return (
       <LoadingStateContainer>
-        <Alert variant="outlined" severity="info">
-          Settings changed, please run query to view data.
+        <Alert
+          variant="outlined"
+          severity="info"
+          sx={{
+            background: "white",
+          }}
+        >
+          <p>
+            Settings updated. Click 'Apply Changes' to refresh the data view.
+          </p>
+
+          <Button
+            variant="contained"
+            onClick={executeQuery}
+            sx={{
+              textTransform: "none",
+              position: "sticky",
+              top: "1rem",
+            }}
+          >
+            Apply Changes
+          </Button>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={alwaysApplyFilters}
+                  onClick={toggleAlwaysApplyFilters}
+                />
+              }
+              label="Automatically Apply Changes"
+            />
+          </FormGroup>
         </Alert>
       </LoadingStateContainer>
     );
@@ -277,12 +341,15 @@ const Legend: React.FC<{
   );
 };
 
-export const MapTooltip: React.FC<{mappedData: any, geographyConfig: any}> = ({mappedData, geographyConfig}) => {
+export const MapTooltip: React.FC<{
+  mappedData: any;
+  geographyConfig: any;
+}> = ({ mappedData, geographyConfig }) => {
   const tooltip = useStore((state) => state.tooltip);
   if (!tooltip) return null;
-  const idCol = geographyConfig.tileId
-  const _value = mappedData[tooltip.data[idCol]]
-  const value = isNaN(_value) ? 'No Use In Data' : compactFormatter(_value)
+  const idCol = geographyConfig.tileId;
+  const _value = mappedData[tooltip.data[idCol]];
+  const value = isNaN(_value) ? "No Use In Data" : compactFormatter(_value);
   return (
     <Box
       component={"div"}
@@ -297,12 +364,14 @@ export const MapTooltip: React.FC<{mappedData: any, geographyConfig: any}> = ({m
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         zIndex: 1000,
         fontSize: "0.75rem",
-        transform: 'translate(0.5rem, 0.5rem)',
-        pointerEvents: 'none'
+        transform: "translate(0.5rem, 0.5rem)",
+        pointerEvents: "none",
       }}
     >
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        <li><b>Lbs of Chemical Used:</b> {value}</li>
+        <li>
+          <b>Lbs of Chemical Used:</b> {value}
+        </li>
         {Object.entries(tooltip.data).map(([key, value]) => (
           <li key={key}>
             <b>{key}:</b> {value as any}
@@ -341,7 +410,7 @@ export const MainMapView: React.FC = () => {
         color: (_: any) => [120, 120, 120],
         colors: [],
         quantiles: [],
-        mappedData: {}
+        mappedData: {},
       };
     }
   }, [timestamp, loadingState]);
@@ -359,15 +428,13 @@ export const MainMapView: React.FC = () => {
     }
   };
 
-  const layers = mapConfig.map(f => getMvtLayer(
-    geography,
-    f.layer,
-    fill,
-    handleHover
-  ))
+  const layers = mapConfig.map((f) =>
+    getMvtLayer(geography, f.layer, fill, handleHover)
+  );
 
   useEffect(() => {
     if (loadingState === "unloaded") executeQuery();
+    if (loadingState === "settings-changed") setTooltip(undefined);
   }, [loadingState, executeQuery]);
 
   return (
@@ -375,12 +442,13 @@ export const MainMapView: React.FC = () => {
       <Box
         component="section"
         sx={{ width: "100%", height: "100%", position: "relative" }}
+        onMouseLeave={() => setTooltip(undefined)}
       >
         <LoadingStateShade loadingState={loadingState} />
         {!!(
           loadingState === "loaded" &&
           zoom < 8 &&
-          (geography === "Sections" || geography === 'Tracts')
+          (geography === "Sections" || geography === "Tracts")
         ) && (
           <Alert
             variant="outlined"
@@ -463,9 +531,8 @@ export const MainMapView: React.FC = () => {
         <GlMap
           maxBounds={[-130, 30, -104, 45.0]}
           attributionControl={false}
-          onMouseLeave={() => setTooltip(undefined)}
           // hash={true}
-          mapboxAccessToken={ import.meta.env.VITE_MAPBOX_TOKEN as string}
+          mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN as string}
           mapStyle="mapbox://styles/cpr2024/clyfwrigb01ca01qj6eg720be?fresh=true"
           initialViewState={INITIAL_VIEW_STATE}
           // @ts-ignore
@@ -510,10 +577,7 @@ export const MainMapView: React.FC = () => {
             />
           </Box>
         )}
-      <MapTooltip 
-        geographyConfig={geographyConfig}
-        mappedData={mappedData}
-      />
+        <MapTooltip geographyConfig={geographyConfig} mappedData={mappedData} />
       </Box>
     </>
   );

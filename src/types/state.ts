@@ -1,6 +1,7 @@
 export type OptionLabel = {
   value: string | number;
   label: string;
+  filterKeys?: string[];
 }
 
 export type DynamicOptionSpec = OptionLabel & {
@@ -34,12 +35,17 @@ export type State = {
   geography: string;
   mapLayer: string
   view: string;
+  setView: (view: string) => void;
   setGeography: (geography: string) => void;
   setMapLayer: (mapLayer: string) => void;
 
+  timeseriesType: string;
+  setTimeseriesType: (type: string) => void;
+  
   queriedFilters: FilterState[];
   uiFilters: FilterState[];
   filterKeys: string[];
+  setFilterKeys: (keys: string[]) => void;
   setFilter: (filter: FilterState) => void;
   
   queryEndpoint: string;

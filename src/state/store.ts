@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { FilterState, State } from "../types/state";
-import { allFilterSections } from "../config/filters";
+import { allFilterSections, timeseriesViews } from "../config/filters";
 import { mapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
 import { devtools } from "zustand/middleware";
@@ -10,6 +10,7 @@ export let staticData: any = [];
 const constructQuery = (
   endpoint: string,
   filters: FilterState[],
+  filterKeys: string[] = [],
   useMsgpack: boolean = true
 ) => {
   const url = new URL(endpoint);
@@ -17,6 +18,9 @@ const constructQuery = (
     url.searchParams.set("format", "msgpack");
   }
   filters.forEach((filter) => {
+    if (filterKeys.length > 0 && !filterKeys.includes(filter.label as string)) {
+      return;
+    }
     const queryIsCompound = Array.isArray(filter.queryParam);
     const valueIsCompound = Array.isArray(filter.value);
     const valueIsGood =
@@ -68,7 +72,9 @@ const findExistingFilter = (
 };
 type WrapperFn = <T extends any>(fn: T) => T;
 const wrapper: WrapperFn =
-  process.env.NODE_ENV === "development" ? (devtools as WrapperFn) : (fn) => fn;
+  process.env.NODE_ENV === "development"
+    ? (devtools as WrapperFn)
+    : (fn: any) => fn;
 
 export const useStore = create<State>(
   wrapper((set, get) => ({
@@ -86,6 +92,27 @@ export const useStore = create<State>(
     queryEndpoint: mapConfig[0].endpoint,
     mapLayer: "pesticide-use",
     view: "map",
+    setView: (view: string) =>
+      set({
+        view,
+        loadingState: "settings-changed",
+        // @ts-ignore
+        filterKeys: view === "timeseries" ? timeseriesViews[0].filterKeys : [],
+        timeseriesType:
+          view === "timeseries"
+            ? timeseriesViews[0].label
+            : "Active Ingredient Class",
+      }),
+    timeseriesType: "Active Ingredient Class",
+    setTimeseriesType: (type: string) => {
+      const spec = timeseriesViews.find((view) => view.label === type);
+      set({
+        timeseriesType: type,
+        // @ts-ignore
+        filterKeys: spec?.filterKeys || [],
+        queryEndpoint: spec?.endpoint || "",
+      });
+    },
     queriedFilters: [],
     uiFilters: allFilterSections.flatMap((section) =>
       section.filters
@@ -98,6 +125,7 @@ export const useStore = create<State>(
         }))
     ),
     filterKeys: [],
+    setFilterKeys: (keys) => set({ filterKeys: keys }),
     tooltip: undefined,
     setTooltip: (tooltip) => set({ tooltip }),
     setFilter: (filter: FilterState & { index?: number }) =>
@@ -126,9 +154,11 @@ export const useStore = create<State>(
       set({ loadingState: "loading" });
       const queryEndpoint = get().queryEndpoint;
       const uiFilters = get().uiFilters;
+      const filterKeys = get().filterKeys;
       const url = constructQuery(
         `${import.meta.env.VITE_DATA_ENDPOINT}${queryEndpoint}`,
-        uiFilters
+        uiFilters,
+        filterKeys
       );
       const response = await fetch(url);
 
@@ -138,9 +168,7 @@ export const useStore = create<State>(
         staticData = unpack(buffer as Buffer);
         // @ts-ignore
         window.staticData = staticData;
-        console.log("static data", staticData.length);
         if (staticData.length === 0) {
-          console.log("No data found");
           set({
             loadingState: "no-data",
             queriedFilters: deepCloneRecords(uiFilters),
@@ -183,7 +211,6 @@ useStore.subscribe((state, prev) => {
     if (timeoutFn) {
       clearTimeout(timeoutFn);
     }
-    console.log("applying changes");
     timeoutFn = setTimeout(() => {
       state.executeQuery();
     }, timeoutDuration);

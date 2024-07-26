@@ -19,7 +19,7 @@ export const useOptions = (spec: FilterSpec) => {
             // @ts-ignore
             value: item[spec.options.value],
             // @ts-ignore
-            label: item[spec.options.label],
+            label: item[spec.options.label].replace(/_/g, " "),
           }));
           setOptions(options);
         });

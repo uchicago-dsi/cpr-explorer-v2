@@ -16,12 +16,12 @@ const dateSection: FilterSection = {
       queryParam: ["start", "end"],
       label: "Date Range",
       alwaysInclude: true,
-      default: ["2021-01", "2021-12"],
+      default: ["2022-01", "2022-12"],
       options: {
         type: "static",
         values: [
           {
-            value: "2021-12",
+            value: "2022-12",
             label: "max",
           },
           {
@@ -52,7 +52,7 @@ const ingredientSection: FilterSection = {
     },
     {
       queryParam: "ai_type",
-      label: "Active Ingredient Type",
+      label: "Active Ingredient (AI) Type",
       options: {
         type: "dynamic",
         value: "ai_type",
@@ -64,7 +64,7 @@ const ingredientSection: FilterSection = {
     },
     {
       queryParam: "ai_type_specific",
-      label: "Active Ingredient Type Specific",
+      label: "AI Type Specific",
       options: {
         type: "dynamic",
         value: "ai_type_specific",

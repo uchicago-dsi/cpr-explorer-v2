@@ -38,7 +38,7 @@ export const MultipleSelectCheckmarks: React.FC<{
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
   const currentOptions = value
-  console.log('DROPDOWN', state)
+
   const handleChange = (_event: SelectChangeEvent<any>, _e: any) => {
     const newValue = _e.props.value
     const newLabel = _e.props.label || _e.props.value

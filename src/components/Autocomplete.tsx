@@ -8,8 +8,6 @@ import { VariableSizeList, ListChildComponentProps } from "react-window";
 import Typography from "@mui/material/Typography";
 import { FilterSpec, FilterState } from "../types/state";
 import { useOptions } from "../hooks/useOptions";
-// import Button from "@mui/material/Button";
-// import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import { FilterValue } from "../config/filters";
 import { theme } from "../main";
@@ -52,7 +50,7 @@ const OuterElementContext = React.createContext({});
 
 const OuterElementType = React.forwardRef<HTMLDivElement>((props, ref) => {
   const outerProps = React.useContext(OuterElementContext);
-  return <div ref={ref} {...props} {...outerProps} />;
+  return <Box component="div" ref={ref} {...props} {...outerProps} />;
 });
 
 function useResetCache(data: any) {
@@ -109,7 +107,7 @@ const ListboxComponent = React.forwardRef<
   const gridRef = useResetCache(itemCount);
 
   return (
-    <div ref={ref}>
+    <Box ref={ref} component="div">
       <OuterElementContext.Provider value={other}>
         <VariableSizeList
           itemData={itemData}
@@ -125,7 +123,7 @@ const ListboxComponent = React.forwardRef<
           {renderRow}
         </VariableSizeList>
       </OuterElementContext.Provider>
-    </div>
+    </Box>
   );
 });
 
@@ -278,6 +276,9 @@ export const AutoComplete: React.FC<{
         inputValue={textValue}
         onOpen={() => {
           setOpen(true)
+          setTimeout(() => {
+            // debugger
+          }, 1000);
         }}
         PopperComponent={StyledPopper}
         ListboxComponent={ListboxComponent}

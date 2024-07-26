@@ -7,6 +7,7 @@ import Select from "@mui/material/Select";
 import { FilterSpec, FilterState } from "../types/state";
 import dayjs from "dayjs";
 import { FilterValue } from "../config/filters";
+import Typography from "@mui/material/Typography";
 
 const pickerLang = {
   months: [
@@ -86,8 +87,8 @@ export const MonthPicker: React.FC<{
           justifyContent: "space-around",
         }}
       >
-        <p>{pickerLang.from}</p>
-        <p>{pickerLang.to}</p>
+        <Typography component="p">{pickerLang.from}</Typography>
+        <Typography component="p">{pickerLang.to}</Typography>
       </Box>
 
       <Box component="section" width={"100%"} sx={{ flexDirection: "column" }}>

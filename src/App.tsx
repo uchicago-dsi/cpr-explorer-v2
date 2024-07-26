@@ -18,6 +18,7 @@ import { Demography } from "./components/Demography";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
 
 export const MapWidget = () => {
   const executeQuery = useStore((state) => state.executeQuery);
@@ -25,7 +26,9 @@ export const MapWidget = () => {
   const geography = useStore((state) => state.geography);
   const setGeography = useStore((state) => state.setGeography);
   const alwaysApplyChanges = useStore((state) => state.alwaysApplyFilters);
-  const toggleAlwaysApplyFilters = useStore((state) => state.toggleAlwaysApplyFilters);
+  const toggleAlwaysApplyFilters = useStore(
+    (state) => state.toggleAlwaysApplyFilters
+  );
 
   return (
     <Box
@@ -54,44 +57,54 @@ export const MapWidget = () => {
         overflow="auto"
       >
         {!!(!isLoaded || alwaysApplyChanges) && (
-          <Box component="div" sx={{ 
-              display: "flex", justifyContent: "center",
-               position: "sticky",
-               flexDirection: "column",
-               top: "1rem",
-               zIndex: isLoaded ? 0 : 100,
-             }}>
-
-          {!!(!isLoaded && !alwaysApplyChanges) && <Button
-            variant="contained"
-            onClick={executeQuery}
-            disabled={isLoaded}
-            sx={{
-              textTransform: "none"}}
+          <Box
+            component="div"
+            padding="0.5rem"
+            margin="0"
+            flex="column"
+            position="sticky"
+            top={'-1rem'}
+            zIndex={1000}
+            justifyContent={"center"}
+            bgcolor={"white"}
+            // borderbottom
+            borderBottom="2px solid rgba(0,0,0,0.1)"
           >
-            Apply Changes
-          </Button>}
-          <FormGroup
-            sx={{
-              position: "sticky",
-              top: "1rem",
-              zIndex: 100,
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={alwaysApplyChanges}
-                  onClick={toggleAlwaysApplyFilters}
-                />
-              }
-              label="Automatically Apply Changes"
-            />
-          </FormGroup>
+            {!!(!isLoaded && !alwaysApplyChanges) && (
+              <Button
+                variant="contained"
+                onClick={executeQuery}
+                disabled={isLoaded}
+                sx={{
+                  textTransform: "none",
+                }}
+              >
+                Apply Changes
+              </Button>
+            )}
+            <FormGroup
+              sx={{
+                position: "sticky",
+                top: "1rem",
+                zIndex: 100,
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={alwaysApplyChanges}
+                    onClick={toggleAlwaysApplyFilters}
+                  />
+                }
+                label="Automatically Apply Changes"
+              />
+            </FormGroup>
           </Box>
         )}
         <hr />
-        <h3>Geography</h3>
+        <Typography component="h3" variant="h6">
+          Geography
+        </Typography>
 
         <MultipleSelectCheckmarks
           multiple={false}
@@ -103,7 +116,9 @@ export const MapWidget = () => {
         {allFilterSections.map((section, i) => (
           <div key={section.title}>
             {" "}
-            <h3>{section.title}</h3>
+            <Typography component="h3" variant="h6" paddingBottom="1rem">
+              {section.title}
+            </Typography>
             {section.filters.map((filter) => (
               <FilterControl
                 key={JSON.stringify(filter.queryParam)}
@@ -172,7 +187,15 @@ function App() {
           justifyContent: "space-between",
         }}
       >
-        <h1 style={{ padding: "0 1rem" }}>Pesticide Data Explorer</h1>
+        <Typography
+          component="h1"
+          fontWeight="bold"
+          variant="h1"
+          paddingY="1rem"
+          fontSize="2rem"
+        >
+          Pesticide Data Explorer
+        </Typography>
         <ButtonGroup variant="text" aria-label="Basic button group">
           {selectConfig.map((config) => (
             <Button

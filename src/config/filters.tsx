@@ -111,6 +111,30 @@ const ingredientSection: FilterSection = {
     }
   ],
 };
+
+export const timeseriesViews = [
+  {
+    label: "Active Ingredient Class",
+    filterKeys: ["Date Range", "Active Ingredient Class"],
+    endpoint: '66a3dcb42bbe320009739fb9',
+    dataCol: "lbs_chm_used",
+    keyCol: "ai_class",
+    dateCol: "monthyear"
+  }
+] as const
+
+export const timeseriesFilterSpec: FilterSpec = {
+  queryParam: "na",
+  label: "Filter Type",
+  component: "dropdown",
+  options: {
+    type: 'static',
+    values: timeseriesViews.map((config) => ({
+      value: config.label!,
+      label: config.label!,
+    }))
+  }
+}
 // const geographyFilters: FilterSection = {
 //   title: "Geography",
 //   defaultOpen: false,

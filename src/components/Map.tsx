@@ -22,14 +22,17 @@ import { mapConfig } from "../config/map";
 import CircularProgress from "@mui/material/CircularProgress";
 import { State } from "../types/state";
 import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import InfoIcon from "@mui/icons-material/Info";
+// import IconButton from "@mui/material/IconButton";
+// import Tooltip from "@mui/material/Tooltip";
+// import InfoIcon from "@mui/icons-material/Info";
 import { cleanLabel } from "../utils/cleanLabel";
 import Button from "@mui/material/Button";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 
 const DEFAULT_MVT_LAYER_SETTINGS = {
   pickable: true,
@@ -171,7 +174,9 @@ const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }> = ({
     return (
       <LoadingStateContainer>
         <CircularProgress />
-        <h4>Loading...</h4>
+        <Typography component="h4" fontWeight={"bold"} mt={2}>
+          Loading...
+        </Typography>
       </LoadingStateContainer>
     );
   }
@@ -203,7 +208,9 @@ const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }> = ({
             background: "white",
           }}
         >
-          <p>Settings updated. Applying changes...</p>
+          <Typography component="p">
+            Settings updated. Applying changes...
+          </Typography>
         </Alert>
       </LoadingStateContainer>
     );
@@ -218,43 +225,49 @@ const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }> = ({
             background: "white",
           }}
         >
-          <p>
+          <Typography component="p">
             Settings updated. Click 'Apply Changes' to refresh the data view.
-          </p>
-
-          <Button
-            variant="contained"
-            onClick={executeQuery}
-            sx={{
-              textTransform: "none",
-              position: "sticky",
-              top: "1rem",
-            }}
+          </Typography>
+          <Box
+            component="div"
+            display={"flex"}
+            flexDirection={"row"}
+            gap={2}
+            mt={2}
           >
-            Apply Changes
-          </Button>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={alwaysApplyFilters}
-                  onClick={toggleAlwaysApplyFilters}
-                />
-              }
-              label="Automatically Apply Changes"
-            />
-          </FormGroup>
+            <Button
+              variant="contained"
+              onClick={executeQuery}
+              sx={{
+                textTransform: "none",
+                position: "sticky",
+                top: "1rem",
+              }}
+            >
+              Apply Changes
+            </Button>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={alwaysApplyFilters}
+                    onClick={toggleAlwaysApplyFilters}
+                  />
+                }
+                sx={{
+                  fontSize: "0.5rem",
+                }}
+                label="Automatically Apply Changes"
+              />
+            </FormGroup>
+          </Box>
         </Alert>
       </LoadingStateContainer>
     );
   }
   return null;
 };
-const numberthDict = {
-  0: "st",
-  2: "rd",
-  4: "th",
-};
+
 const compactFormatter = d3.format(".2s");
 const Legend: React.FC<{
   title: string;
@@ -266,16 +279,9 @@ const Legend: React.FC<{
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "start" }}
     >
-      <h3
-        style={{
-          margin: "0 0 1rem 0",
-          padding: 0,
-          fontSize: "0.75rem",
-          maxWidth: "150px",
-        }}
-      >
+      <Typography variant="h6" component="h4" fontSize="0.75rem">
         {title}
-      </h3>
+      </Typography>
       {colors.map((color, index) => (
         <div
           key={index}
@@ -303,37 +309,13 @@ const Legend: React.FC<{
               flexDirection: "row",
             }}
           >
-            {[0, 2, 4].includes(index) && (
-              <p style={{ margin: 0 }}>
-                {index + 1}
-                {/* @ts-ignore */}
-                {numberthDict[index]} Quintile
-              </p>
-            )}
-            <Tooltip
-              title={
-                index === 0
-                  ? `< ${cleanBreaks[0]}`
-                  : index === colors.length - 1
-                  ? `≥ ${cleanBreaks[cleanBreaks.length - 1]}`
-                  : `${cleanBreaks[index - 1]} - ${cleanBreaks[index]}`
-              }
-            >
-              <IconButton
-                sx={{
-                  padding: 0,
-                  margin: 0,
-                }}
-              >
-                <InfoIcon
-                  fontSize="small"
-                  sx={{
-                    padding: 0,
-                    margin: 0,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
+            <Typography component="p" fontSize="0.75rem" margin="0">
+              {index === 0
+                ? `< ${cleanBreaks[0]}`
+                : index === colors.length - 1
+                ? `≥ ${cleanBreaks[cleanBreaks.length - 1]}`
+                : `${cleanBreaks[index - 1]} - ${cleanBreaks[index]}`}
+            </Typography>
           </div>
         </div>
       ))}
@@ -368,16 +350,20 @@ export const MapTooltip: React.FC<{
         pointerEvents: "none",
       }}
     >
-      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        <li>
-          <b>Lbs of Chemical Used:</b> {value}
-        </li>
+      <List style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <ListItem>
+          <Typography component="p">
+            <b>Pounds of Chemical Used:</b> {value}
+          </Typography>
+        </ListItem>
         {Object.entries(tooltip.data).map(([key, value]) => (
-          <li key={key}>
-            <b>{key}:</b> {value as any}
-          </li>
+          <ListItem key={key}>
+            <Typography component="p">
+              <b>{key}:</b> {value as any}
+            </Typography>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </Box>
   );
 };
@@ -488,17 +474,18 @@ export const MainMapView: React.FC = () => {
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <p
-            style={{
-              padding: 0,
-              margin: 0,
-              fontWeight: "bold",
+          <Typography
+            component="p"
+            padding="0"
+            margin="0"
+            fontWeight="bold"
+            sx={{
               textDecoration: "underline",
             }}
           >
             Data Filters
-          </p>
-          <ul
+          </Typography>
+          <List
             style={{
               listStyle: "none",
               padding: 0,
@@ -506,27 +493,35 @@ export const MainMapView: React.FC = () => {
               maxWidth: "50ch",
             }}
           >
-            <li>
-              <b>Geography:</b> {geography}
-            </li>
+            <ListItem>
+              <Typography component="p">
+                <b>Geography:</b> {geography}
+              </Typography>
+            </ListItem>
             {uiFilters
               .filter(
                 (f) => f.value && (!Array.isArray(f.value) || f.value.length)
               )
               .map((f, i) => (
-                <li key={`filter-${i}`}>
-                  <b>{f.label}:</b>{" "}
-                  {!Array.isArray(f.valueLabels)
-                    ? cleanLabel(f.valueLabels)
-                    : Array.isArray(f.queryParam)
-                    ? f.valueLabels.join(" to ")
-                    : f.valueLabels
-                        .map(cleanLabel)
-                        .sort((a, b) => a.localeCompare(b))
-                        .join(", ")}
-                </li>
+                <ListItem key={`filter-${i}`}>
+                  <Typography component="p"
+                    sx={{
+                      wordBreak: "anywhere"
+                    }}
+                  >
+                    <b>{f.label}:</b>{" "}
+                    {!Array.isArray(f.valueLabels)
+                      ? cleanLabel(f.valueLabels)
+                      : Array.isArray(f.queryParam)
+                      ? f.valueLabels.join(" to ")
+                      : f.valueLabels
+                          .map(cleanLabel)
+                          .sort((a, b) => a.localeCompare(b))
+                          .join(", ")}
+                  </Typography>
+                </ListItem>
               ))}
-          </ul>
+          </List>
         </Box>
         <GlMap
           maxBounds={[-130, 30, -104, 45.0]}
@@ -573,7 +568,7 @@ export const MainMapView: React.FC = () => {
             <Legend
               colors={colors}
               breaks={quantiles}
-              title="Pounds of Chemical Used (Quintiles)"
+              title="Pounds of Chemical Used"
             />
           </Box>
         )}

@@ -12,6 +12,7 @@ import { useOptions } from "../hooks/useOptions";
 // import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import { FilterValue } from "../config/filters";
+import { theme } from "../main";
 const LISTBOX_PADDING = 8; // px
 
 function renderRow(props: ListChildComponentProps) {
@@ -21,7 +22,7 @@ function renderRow(props: ListChildComponentProps) {
   const inlineStyle = {
     ...style,
     top: (style.top as number) + LISTBOX_PADDING,
-    background: isSelected ? "rgba(255, 0, 0, 0.4)" : "white",
+    background: isSelected ? theme.palette.secondary.main : "white",
   };
 
   const { key, ...optionProps } = dataSet[0];
@@ -83,14 +84,19 @@ const ListboxComponent = React.forwardRef<
     noSsr: true,
   });
   const itemCount = itemData.length;
-  const itemSize = smUp ? 36 : 48;
+  const itemSize = smUp ? 54 : 72;
+  const lineLength = 24;
+  const longLineLength = 36;
+  const lineHeight = 36;
 
   const getChildSize = (child: React.ReactElement) => {
     if (child.hasOwnProperty("group")) {
       return 48;
     }
-
-    return itemSize;
+    const name = (child as unknown as any)?.[0]?.key || ''
+    const _lines = Math.ceil(name.length / lineLength)
+    const lines = _lines > 2 ? Math.ceil(name.length / longLineLength) : _lines
+    return lines * lineHeight;
   };
 
   const getHeight = () => {
@@ -123,7 +129,28 @@ const ListboxComponent = React.forwardRef<
   );
 });
 
-const StyledPopper = styled(Popper)({
+const StyledPopper = styled(Popper)<{width?: number}>(({}) => ({
+  '.MuiAutocomplete-listbox': {
+
+    maxHeight: 'none', // Remove max height restriction
+    overflow: 'auto', // Enable scrolling if content exceeds viewport height
+    '& .MuiAutocomplete-option': {
+      // fontSize: "0.75rem",
+      lineHeight: 1,
+      height: '100px',
+      whiteSpace: 'normal', // Allow text to wrap
+      wordBreak: 'break-all', // Allow text to wrap
+      minHeight: '48px', // Set minimum height for individual options
+      margin: '0.5rem 0',
+
+      '&[data-focus="true"]': {
+        color: theme.palette.primary.main,
+      },
+      '&:hover': {
+        color: theme.palette.primary.main,
+      },
+    },
+  },
   [`& .${autocompleteClasses.listbox}`]: {
     boxSizing: "border-box",
     "& ul": {
@@ -131,7 +158,7 @@ const StyledPopper = styled(Popper)({
       margin: 0,
     },
   },
-});
+}));
 
 export const AutoComplete: React.FC<{
   spec: FilterSpec;
@@ -150,6 +177,7 @@ export const AutoComplete: React.FC<{
       setOpen(false);
     }
   };
+
   // @ts-ignore
   const valueCol = spec.options.value;
   // @ts-ignore
@@ -248,7 +276,9 @@ export const AutoComplete: React.FC<{
         }}
         open={open}
         inputValue={textValue}
-        onOpen={() => setOpen(true)}
+        onOpen={() => {
+          setOpen(true)
+        }}
         PopperComponent={StyledPopper}
         ListboxComponent={ListboxComponent}
         options={allOptions}

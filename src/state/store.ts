@@ -126,12 +126,15 @@ export const useStore = create<State>(
     timeseriesType: "AI Class",
     setTimeseriesType: (type: string) => {
       const spec = timeseriesViews.find((view) => view.label === type);
-      set({
-        timeseriesType: type,
-        // @ts-ignore
-        filterKeys: spec?.filterKeys || [],
-        queryEndpoint: spec?.endpoint || "",
-      });
+      if (spec) {
+
+        set({
+          timeseriesType: type,
+          // @ts-ignore
+          filterKeys: spec?.filterKeys || [],
+          queryEndpoint: spec?.endpoint || "",
+        });
+      }
     },
     queriedFilters: [],
     uiFilters: allFilterSections.flatMap((section) =>

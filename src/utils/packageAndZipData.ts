@@ -1,7 +1,6 @@
 import { dataDescription, license } from "../config/docs."
 import { unparse } from "papaparse";
 import { downloadZip } from "client-zip"
-import { ingredientSection } from "../config/filters";
 import { FilterState } from "../types/state";
 
 const cleanFitlersText = (view: string, filters: FilterState[], info?: Record<string,any>) => {

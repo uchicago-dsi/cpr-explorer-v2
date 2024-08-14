@@ -10,35 +10,35 @@ export const mapConfig: {
   {
     layer: 'Townships',
     tileset: "cpr2024.cioych4l",
-    endpoint: "6568f10116faa30008555612",
+    endpoint: "66bbaa1d5b6d420008c78e51",
     tileId: "TownshipRange",
     dataId: "TownshipRange"
   },
   {
     layer: "Counties",
     tileset:"cpr2024.47ns3kc2",
-    endpoint: "6567860cb678c50008c549fe",
+    endpoint: "66bbaa9a5b6d420008c78e54",
     tileId: "GEOID",
     dataId: "FIPS"
   },
-  // {
-  //   layer: "School Districts",
-  //   tileset: "",
-  //   endpoint: "656775cc2aa95c0008fc60f4",
-  //   tileId: "GEOID",
-  //   dataId: "SCID"
-  // },
+  {
+    layer: "School Districts",
+    tileset: "cpr2024.5i4j8yha",
+    endpoint: "66bbaa715b6d420008c78e53",
+    tileId: "FIPS",
+    dataId: "FIPS"
+  },
   {
     layer: "Tracts",
     tileset: "cpr2024.0n14fhc6",
-    endpoint: "656774962aa95c0008fc60f3",
+    endpoint: "66bb8eb8811a870008714ce7",
     tileId: "GEOID",
     dataId: "GEOID"
   },
   {
     layer: "Sections",
     tileset: "cpr2024.atj2mdo6",
-    endpoint: "6691750964ade80008122215" , 
+    endpoint: "66bbaa465b6d420008c78e52" , 
     tileId: "CO_MTRS",
     dataId: "comtrs"
   },

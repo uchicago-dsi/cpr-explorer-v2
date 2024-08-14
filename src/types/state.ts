@@ -11,6 +11,7 @@ export type DynamicOptionSpec = OptionLabel & {
 export type FilterSpec = {
   queryParam: string | [string, string];
   label: string;
+  subLabel?: string;
   options: {
     type: 'static';
   } & {values: OptionLabel[] }| {

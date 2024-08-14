@@ -221,71 +221,74 @@ export const timeseriesFilterSpec: FilterSpec = {
 //     },
 //   ],
 // };
-// const demographyFilters: FilterSection = {
-//   title: "Demographics",
-//   defaultOpen: false,
-//   filters: [
-//     {
-//       queryParam: "pctblack",
-//       label: "Percent Black or African American",
-//       options: {
-//         type: "static",
-//         values: [
-//           {
-//             value: 0,
-//             label: "0%",
-//           },
-//           {
-//             value: 100,
-//             label: "100%",
-//           },
-//         ],
-//       },
-//       component: "range",
-//     },
-//     {
-//       queryParam: "pcthispanic",
-//       label: "Percent Hispanic or Latino",
-//       options: {
-//         type: "static",
-//         values: [
-//           {
-//             value: "0",
-//             label: "0%",
-//           },
-//           {
-//             value: "100",
-//             label: "100%",
-//           },
-//         ],
-//       },
-//       component: "range",
-//     },
-//     {
-//       queryParam: "income",
-//       label: "Median Household Income",
-//       options: {
-//         type: "static",
-//         values: [
-//           {
-//             value: "0",
-//             label: "0",
-//           },
-//           {
-//             value: "150000",
-//             label: "150000",
-//           },
-//         ],
-//       },
-//       component: "range",
-//     },
-//   ],
-// };
+const demographyFilters: FilterSection = {
+  title: "Demographics",
+  defaultOpen: false,
+  filters: [
+    {
+      queryParam: "pctblack",
+      label: "Percent Black or African American",
+      subLabel: "(minimum percent of population)",
+      options: {
+        type: "static",
+        values: [
+          {
+            value: 0,
+            label: "0%",
+          },
+          {
+            value: 1,
+            label: "100%",
+          },
+        ],
+      },
+      component: "range",
+    },
+    {
+      queryParam: "pcthispanic",
+      label: "Percent Hispanic or Latino",
+      subLabel: "(minimum percent of population)",
+      options: {
+        type: "static",
+        values: [
+          {
+            value: 0,
+            label: "0%",
+          },
+          {
+            value: 1,
+            label: "100%",
+          },
+        ],
+      },
+      component: "range",
+    },
+    {
+      queryParam: "income",
+      label: "Median Household Income",
+      subLabel: "(maximum median 2021 household income)",
+      options: {
+        type: "static",
+        values: [
+          {
+            value: "0",
+            label: "0",
+          },
+          {
+            value: "150000",
+            label: "150000",
+          },
+        ],
+      },
+      component: "range",
+    },
+  ],
+};
 
 
 export const allFilterSections: FilterSection[] = [
   dateSection,
   ingredientSection,
   // geographyFilters,
-  // demographyFilters,
+  demographyFilters,
 ]

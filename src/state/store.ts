@@ -147,7 +147,7 @@ export const useStore = create<State>(
           valueLabels: filter.default || null,
         }))
     ),
-    filterKeys: [],
+    filterKeys: mapConfig[0].filterKeys || [],
     setFilterKeys: (keys) => set({ filterKeys: keys }),
     tooltip: undefined,
     setTooltip: (tooltip) => set({ tooltip }),
@@ -215,6 +215,7 @@ export const useStore = create<State>(
           geography,
           queryEndpoint: geoData.endpoint,
           loadingState: "settings-changed",
+          filterKeys: geoData.filterKeys || [],
         });
       }
     },

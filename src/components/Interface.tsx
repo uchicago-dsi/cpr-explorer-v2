@@ -5,7 +5,7 @@ import { AutoComplete } from "./Autocomplete";
 import { useStore } from "../state/store";
 // import { RadioButtonsGroup } from "./Radio";
 import { MultipleSelectCheckmarks } from "./Dropdown";
-// import { RangeSlider } from "./Range";
+import { RangeSlider } from "./Range";
 import { MonthPicker } from "./MonthRange";
 
 export const FilterControl: React.FC<{spec: FilterSpec}> = ({
@@ -18,7 +18,7 @@ export const FilterControl: React.FC<{spec: FilterSpec}> = ({
     valueLabels: string | string[] | number | number[] | null
   ) => {
     setFilter({ label: spec.label, queryParam: spec.queryParam, value, valueLabels });
-  }
+  } 
 
   switch (spec.component) {
     // case 'radio':
@@ -29,8 +29,8 @@ export const FilterControl: React.FC<{spec: FilterSpec}> = ({
       return <MultipleSelectCheckmarks spec={spec} onChange={handleChange} state={filterState} />
     // case 'date':
     //   return <div>Date</div>;
-    // case 'range':
-    //   return <RangeSlider spec={spec} onChange={handleChange} state={filterState} />
+    case 'range':
+      return <RangeSlider spec={spec} onChange={handleChange as any} state={filterState as any} />
     case 'month-range':
       return <MonthPicker spec={spec} onChange={handleChange} state={filterState} />
     default:

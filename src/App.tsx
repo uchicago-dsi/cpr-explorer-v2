@@ -38,7 +38,7 @@ const selectConfig = [
 function App() {
   const currentView = useStore(state => state.view) as keyof typeof componentMapping;
   const setCurrentView = useStore(state => state.setView);
-  
+  const download = useStore(state => state.download);
   const View = componentMapping[currentView];
 
   return (
@@ -91,6 +91,15 @@ function App() {
         </ButtonGroup>
       </Box>
       <View />
+      <Box component={"div"} sx={{ display: "flex", justifyContent: "center" }}>
+        <Button
+          onClick={download}
+          variant="contained"
+          sx={{ margin: "1rem" }}
+        >
+          Download Data as CSV
+        </Button>
+      </Box>
     </>
   );
 }

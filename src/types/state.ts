@@ -29,6 +29,7 @@ export type FilterState = Pick<FilterSpec, 'queryParam' | 'label'> & {
 }
 
 export type State = {
+  download: () => void;
   loadingState: 'unloaded' | 'settings-changed' | 'loading' | 'loaded' | 'error' | 'no-data'
   alwaysApplyFilters: boolean;
   toggleAlwaysApplyFilters: () => void;

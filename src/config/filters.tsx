@@ -35,13 +35,25 @@ const dateSection: FilterSection = {
   ],
 };
 
-const ingredientSection: FilterSection = {
+export const ingredientSection: FilterSection = {
   title: "Data Filters",
   defaultOpen: false,
   filters: [
     {
+      queryParam: "chemical",
+      label: "Active Ingredient (AI)",
+      options: {
+        type: "dynamic",
+        value: "chem_code",
+        label: "chem_name",
+        // @ts-ignore
+        endpoint: `65675fb7b041550008c7b6ba`,
+      },
+      component: "autocomplete",
+    },
+    {
       queryParam: "ai_class",
-      label: "Active Ingredient Class",
+      label: "AI Class",
       options: {
         type: "dynamic",
         value: "ai_class",
@@ -52,7 +64,7 @@ const ingredientSection: FilterSection = {
     },
     {
       queryParam: "ai_type",
-      label: "Active Ingredient (AI) Type",
+      label: "AI Type",
       options: {
         type: "dynamic",
         value: "ai_type",
@@ -71,18 +83,6 @@ const ingredientSection: FilterSection = {
         label: "ai_type_specific",
         // @ts-ignore
         endpoint: `656763b1aeb11300087fbd83`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "chemical",
-      label: "Active Ingredient",
-      options: {
-        type: "dynamic",
-        value: "chem_code",
-        label: "chem_name",
-        // @ts-ignore
-        endpoint: `65675fb7b041550008c7b6ba`,
       },
       component: "autocomplete",
     },
@@ -114,11 +114,43 @@ const ingredientSection: FilterSection = {
 
 export const timeseriesViews = [
   {
-    label: "Active Ingredient Class",
-    filterKeys: ["Date Range", "Active Ingredient Class"],
+    label: "AI Class",
+    filterKeys: ["Date Range", "AI Class"],
     endpoint: '66a3dcb42bbe320009739fb9',
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
+    dateCol: "monthyear"
+  },
+  {
+    label: "AI Type",
+    filterKeys: ["Date Range", "AI Type"],
+    endpoint: '66bd0312a3735500086e76d2',
+    dataCol: "lbs_chm_used",
+    keyCol: "ai_type",
+    dateCol: "monthyear"
+  },
+  {
+    label: "AI Type Specific",
+    filterKeys: ["Date Range", "AI Type Specific"],
+    endpoint: '66bd03bda3735500086e76d3',
+    dataCol: "lbs_chm_used",
+    keyCol: "ai_type_specific",
+    dateCol: "monthyear"
+  },
+  {
+    label: "Active Ingredient",
+    filterKeys: ["Date Range", "Active Ingredient (AI)"],
+    endpoint: '66bd07645c06060008989308',
+    dataCol: "lbs_chm_used",
+    keyCol: "chem_code",
+    dateCol: "monthyear"
+  },
+  {
+    label: "Product",
+    filterKeys: ["Date Range", "Product"],
+    endpoint: '66bd07e85c06060008989309',
+    dataCol: "lbs_prd_used",
+    keyCol: "prodno",
     dateCol: "monthyear"
   }
 ] as const

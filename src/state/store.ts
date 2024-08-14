@@ -4,6 +4,7 @@ import { allFilterSections, timeseriesViews } from "../config/filters";
 import { mapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
 import { devtools } from "zustand/middleware";
+import { packageAndZipData } from "../utils/packageAndZipData";
 
 export let staticData: any = [];
 
@@ -78,6 +79,25 @@ const wrapper: WrapperFn =
 
 export const useStore = create<State>(
   wrapper((set, get) => ({
+    download: () => {
+      const view = get().view;
+      
+      const info: any = {
+        map: {
+          Geography: get().geography,
+        },
+        timeseries: {
+          "Time Series Grouping": get().timeseriesType,
+        },
+      }
+
+      packageAndZipData(
+        get().view,
+        get().queriedFilters,
+        staticData,
+        view in info ? info[view] : undefined
+      )
+    },
     timestamp: 0,
     alwaysApplyFilters: localStorage.getItem("alwaysApplyFilters") === "true",
     toggleAlwaysApplyFilters: () => {
@@ -101,9 +121,9 @@ export const useStore = create<State>(
         timeseriesType:
           view === "timeseries"
             ? timeseriesViews[0].label
-            : "Active Ingredient Class",
+            : "AI Class",
       }),
-    timeseriesType: "Active Ingredient Class",
+    timeseriesType: "AI Class",
     setTimeseriesType: (type: string) => {
       const spec = timeseriesViews.find((view) => view.label === type);
       set({

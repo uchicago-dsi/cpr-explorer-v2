@@ -219,25 +219,31 @@ const FilterControlsInner: React.FC = () => {
           <hr style={{ margin: "0.5rem 0", width: "100%" }} />
         </>
       )}
-      {allFilterSections.map((section, i) => (
-        <Box key={section.title} component="div">
-          {" "}
-          <Typography component="h3" variant="h6" paddingBottom="1rem">
-            {section.title}
-          </Typography>
-          {section.filters.map((filter) =>
-            !filterKeys?.length || filterKeys.includes(filter.label) ? (
-              <FilterControl
-                key={JSON.stringify(filter.queryParam)}
-                spec={filter}
-              />
-            ) : null
-          )}
-          {i + 1 === allFilterSections.length ? null : (
-            <hr style={{ margin: "1rem 0 0 0", width: "100%" }} />
-          )}
-        </Box>
-      ))}
+      {allFilterSections
+        .filter((section) =>
+          section.filters.some(
+            (filter) => !filterKeys?.length || filterKeys.includes(filter.label)
+          )
+        )
+        .map((section, i) => (
+          <Box key={section.title} component="div">
+            {" "}
+            <Typography component="h3" variant="h6" paddingBottom="1rem">
+              {section.title}
+            </Typography>
+            {section.filters.map((filter) =>
+              !filterKeys?.length || filterKeys.includes(filter.label) ? (
+                <FilterControl
+                  key={JSON.stringify(filter.queryParam)}
+                  spec={filter}
+                />
+              ) : null
+            )}
+            {i + 1 === allFilterSections.length ? null : (
+              <hr style={{ margin: "1rem 0 0 0", width: "100%" }} />
+            )}
+          </Box>
+        ))}
     </FilterScrollingContainer>
   );
 };

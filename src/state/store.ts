@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { FilterState, State } from "../types/state";
-import { allFilterSections, timeseriesViews } from "../config/filters";
+import { allFilterSections, ingredientSection, timeseriesViews } from "../config/filters";
 import { mapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
 import { devtools } from "zustand/middleware";
@@ -198,15 +198,37 @@ export const useStore = create<State>(
     queryEndpoint: mapConfig[0].endpoint,
     mapLayer: "pesticide-use",
     view: "map",
-    setView: (view: string) =>
+    setView: (view: string) => {
+      const timeseriesConfig = view === "timeseries" ? timeseriesViews[0] : {} as any;
+      const filterKeys = timeseriesConfig.filterKeys || [];
+      const timeseriesType = timeseriesConfig.label || get().timeseriesType;
+      const uiFilters = timeseriesConfig.defaultFilterOptions 
+        ? [
+          ...get().uiFilters,
+          ...(timeseriesConfig?.defaultFilterOptions || [])
+            .filter((f: any) => get().uiFilters.every(uf => uf.label !== f.label))
+            .map((f: any) => {
+              const filterSpec = ingredientSection.filters.find((sf) => sf.label === f.label);
+              return {
+                queryParam: filterSpec?.queryParam,
+                value: f.value,
+                label: filterSpec?.label,
+                valueLabels: f.valueLabels
+              }
+            })
+        ]
+        : [];
+
+      console.log('FILTERS', uiFilters)
       set({
         view,
         loadingState: "settings-changed",
         // @ts-ignore
-        filterKeys: view === "timeseries" ? timeseriesViews[0].filterKeys : [],
-        timeseriesType:
-          view === "timeseries" ? timeseriesViews[0].label : "AI Class",
-      }),
+        filterKeys,
+        timeseriesType,
+        uiFilters
+      })
+    },
     timeseriesType: "AI Class",
     setTimeseriesType: (type: string) => {
       const spec = timeseriesViews.find((view) => view.label === type);

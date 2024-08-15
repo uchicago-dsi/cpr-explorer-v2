@@ -116,44 +116,79 @@ export const timeseriesViews = [
   {
     label: "AI Class",
     filterKeys: ["Date Range", "AI Class"],
-    endpoint: '66a3dcb42bbe320009739fb9',
+    endpoint: "66a3dcb42bbe320009739fb9",
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
-    dateCol: "monthyear"
+    dateCol: "monthyear",
+    defaultFilterOptions: [
+      {
+        label: "AI Class",
+        value: ["Microbial", "Organic"],
+        valueLabels: ["Microbial", "Organic"],
+      },
+    ],
   },
   {
     label: "AI Type",
     filterKeys: ["Date Range", "AI Type"],
-    endpoint: '66bd0312a3735500086e76d2',
+    endpoint: "66bd0312a3735500086e76d2",
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
-    dateCol: "monthyear"
+    dateCol: "monthyear",
+    defaultFilterOptions: [
+      {
+        label: "AI Type",
+        value: ["Defoliant", "Fumigant", "Insecticide"],
+        valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
+      },
+    ],
   },
   {
     label: "AI Type Specific",
     filterKeys: ["Date Range", "AI Type Specific"],
-    endpoint: '66bd03bda3735500086e76d3',
+    endpoint: "66bd03bda3735500086e76d3",
     dataCol: "lbs_chm_used",
     keyCol: "ai_type_specific",
-    dateCol: "monthyear"
+    dateCol: "monthyear",
+    defaultFilterOptions: [
+      {
+        label: "AI Type Specific",
+        value: ["Defoliant", "Fumigant", "Insecticide"],
+        valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
+      },
+    ],
   },
   {
     label: "Active Ingredient",
     filterKeys: ["Date Range", "Active Ingredient (AI)"],
-    endpoint: '66bd07645c06060008989308',
+    endpoint: "66bd07645c06060008989308",
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
-    dateCol: "monthyear"
+    dateCol: "monthyear",
+    defaultFilterOptions: [
+      {
+        label: "Active Ingredient (AI)",
+        value: [510, 2297, 1685],
+        valueLabels: ["Pyrethrins", "Lambda-Cyhalothrin", "Acephate"],
+      },
+    ],
   },
   {
     label: "Product",
     filterKeys: ["Date Range", "Product"],
-    endpoint: '66bd07e85c06060008989309',
+    endpoint: "66bd07e85c06060008989309",
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
-    dateCol: "monthyear"
-  }
-] as const
+    dateCol: "monthyear",
+    defaultFilterOptions: [
+      {
+        label: "Product",
+        value: [47884, 12723],
+        valueLabels: ["70% Neem Oil", "1-10 Pyrenone Insect Spray"],
+      },
+    ],
+  },
+] as const;
 
 export const timeseriesLabelMapping = {
   "Product": {

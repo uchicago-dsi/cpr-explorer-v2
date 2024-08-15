@@ -96,15 +96,27 @@ function App() {
         </ButtonGroup>
       </NavContainer>
       <View />
-      {!!(currentView in dataViews) && <Box component={"div"} sx={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          onClick={download}
-          variant="contained"
-          sx={{ margin: "1rem" }}
+      {!!(currentView in dataViews) && (
+        <Box
+          component={"div"}
+          sx={{ display: "flex", justifyContent: "center" }}
         >
-          Download Data as CSV
-        </Button>
-      </Box>}
+          <Button
+            onClick={() => download("excel")}
+            variant="contained"
+            sx={{ margin: "1rem" }}
+          >
+            Download Data as Excel
+          </Button>
+          <Button
+            onClick={() => download("zip")}
+            variant="contained"
+            sx={{ margin: "1rem" }}
+          >
+            Download Data as CSV
+          </Button>
+        </Box>
+      )}
     </>
   );
 }

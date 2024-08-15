@@ -4,7 +4,7 @@ import { allFilterSections, timeseriesViews } from "../config/filters";
 import { mapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
 import { devtools } from "zustand/middleware";
-import { packageAndZipData } from "../utils/packageAndZipData";
+import { exportData } from "../utils/packageAndZipData";
 
 export let staticData: any = [];
 
@@ -79,9 +79,9 @@ const wrapper: WrapperFn =
 
 export const useStore = create<State>(
   wrapper((set, get) => ({
-    download: () => {
+    download: (format: string) => {
       const view = get().view;
-      
+
       const info: any = {
         map: {
           Geography: get().geography,
@@ -89,14 +89,15 @@ export const useStore = create<State>(
         timeseries: {
           "Time Series Grouping": get().timeseriesType,
         },
-      }
+      };
 
-      packageAndZipData(
+      exportData(
+        format,
         get().view,
         get().queriedFilters,
         staticData,
         view in info ? info[view] : undefined
-      )
+      );
     },
     timestamp: 0,
     alwaysApplyFilters: localStorage.getItem("alwaysApplyFilters") === "true",
@@ -119,15 +120,12 @@ export const useStore = create<State>(
         // @ts-ignore
         filterKeys: view === "timeseries" ? timeseriesViews[0].filterKeys : [],
         timeseriesType:
-          view === "timeseries"
-            ? timeseriesViews[0].label
-            : "AI Class",
+          view === "timeseries" ? timeseriesViews[0].label : "AI Class",
       }),
     timeseriesType: "AI Class",
     setTimeseriesType: (type: string) => {
       const spec = timeseriesViews.find((view) => view.label === type);
       if (spec) {
-
         set({
           timeseriesType: type,
           // @ts-ignore

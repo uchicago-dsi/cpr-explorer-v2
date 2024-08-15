@@ -200,8 +200,11 @@ export const useStore = create<State>(
     view: "map",
     setView: (view: string) => {
       const timeseriesConfig = view === "timeseries" ? timeseriesViews[0] : {} as any;
+      const mapViewConfig = view === "map" ? mapConfig[0] : {} as any;
       const filterKeys = timeseriesConfig.filterKeys || [];
       const timeseriesType = timeseriesConfig.label || get().timeseriesType;
+      const queryEndpoint = timeseriesConfig.endpoint || mapViewConfig.endpoint || get().queryEndpoint;
+      const geography = mapViewConfig.layer || get().geography;
       const uiFilters = timeseriesConfig.defaultFilterOptions 
         ? [
           ...get().uiFilters,
@@ -217,12 +220,13 @@ export const useStore = create<State>(
               }
             })
         ]
-        : [];
+        : get().uiFilters
 
-      console.log('FILTERS', uiFilters)
       set({
         view,
         loadingState: "settings-changed",
+        queryEndpoint,
+        geography,
         // @ts-ignore
         filterKeys,
         timeseriesType,

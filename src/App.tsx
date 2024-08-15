@@ -96,7 +96,7 @@ function App() {
         </ButtonGroup>
       </NavContainer>
       <View />
-      {!!(currentView in dataViews) && (
+      {!!(dataViews.includes(currentView)) && (
         <Box
           component={"div"}
           sx={{ display: "flex", justifyContent: "center" }}

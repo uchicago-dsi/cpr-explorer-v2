@@ -76,11 +76,11 @@ export const FilterListBox = () => {
               >
                 <b>{f.label}:</b>{" "}
                 {!Array.isArray(f.valueLabels)
-                  ? cleanLabel(f.valueLabels)
+                  ? cleanLabel(f.valueLabels || f.value, f.label)
                   : Array.isArray(f.queryParam)
                   ? f.valueLabels.join(" to ")
                   : f.valueLabels
-                      .map(cleanLabel)
+                      .map(v => cleanLabel(v, f.label))
                       .sort((a, b) => a.localeCompare(b))
                       .join(", ")}
               </Typography>

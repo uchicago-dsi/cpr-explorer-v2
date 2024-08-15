@@ -11,6 +11,7 @@ const cleanFitlersText = (view: string, filters: FilterState[], info?: Record<st
     })
   }
   for (const filter of filters) {
+    if (filter.value === undefined) continue
     if (Array.isArray(filter.value) && Array.isArray(filter.queryParam)) {
       for (let i=0; i<filter.queryParam.length; i++) {
         let value = `${filter.value[i]}`

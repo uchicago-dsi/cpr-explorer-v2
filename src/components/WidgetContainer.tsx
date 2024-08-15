@@ -12,7 +12,7 @@ export const WidgetContainer: React.FC<any> = styled(
   borderRadius: "0.25rem",
   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   // vertical ipad or smaller column
-  "@media (max-width: 768px)": {
+  "@media (max-width: 1024px)": {
     flexDirection: "column-reverse",
   },
 });

@@ -19,7 +19,7 @@ export const FilterControls: React.FC = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const isDesktop = useMediaQuery("(min-width:768px)");
+  const isDesktop = useMediaQuery("(min-width:1024px)");
   if (isDesktop) {
     return <FilterControlsInner />;
   } else {
@@ -110,13 +110,15 @@ const FilterScrollingContainer = styled(Box)({
   flexDirection: "column",
   gap: 2,
   padding: "1rem",
+  flex: 0,
   borderRight: "2px solid rgba(0,0,0,0.4)",
   maxWidth: "300px",
+  minWidth: "300px",
   maxHeight: "70vh",
   minHeight: "70vh",
   overflow: "auto",
   // vertical ipad or smaller
-  "@media (max-width: 768px)": {
+  "@media (max-width: 1024px)": {
     // no max height or min height
     maxHeight: "none",
     minHeight: "none",

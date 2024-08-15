@@ -124,7 +124,7 @@ const MapContainer = styled(Box)({
   height: "100%",
   position: "relative",
   // vertical ipad and smaller
-  "@media (max-width: 768px)": {
+  "@media (max-width: 1024px)": {
     height: "70vh",
     //  .mapboxgl-map child div
     "& > div.mapboxgl-map": {

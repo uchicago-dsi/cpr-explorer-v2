@@ -197,7 +197,7 @@ export const useStore = create<State>(
     geography: mapConfig[0].layer!,
     queryEndpoint: mapConfig[0].endpoint,
     mapLayer: "pesticide-use",
-    view: "timeseries",
+    view: "map",
     setView: (view: string) =>
       set({
         view,

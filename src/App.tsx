@@ -16,6 +16,11 @@ const componentMapping = {
   about:  AboutWidget
 } as const;
 
+const dataViews = [
+  "map",
+  "timeseries"
+]
+
 const selectConfig = [
   {
     label: "Map",
@@ -91,7 +96,7 @@ function App() {
         </ButtonGroup>
       </NavContainer>
       <View />
-      <Box component={"div"} sx={{ display: "flex", justifyContent: "center" }}>
+      {!!(currentView in dataViews) && <Box component={"div"} sx={{ display: "flex", justifyContent: "center" }}>
         <Button
           onClick={download}
           variant="contained"
@@ -99,7 +104,7 @@ function App() {
         >
           Download Data as CSV
         </Button>
-      </Box>
+      </Box>}
     </>
   );
 }

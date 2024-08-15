@@ -4,7 +4,7 @@ import { WidgetContainer } from "./WidgetContainer";
 import { FilterControls } from "./FilterControls";
 import { timeseriesViews } from "../config/filters";
 import { useParentSize } from "@visx/responsive";
-import { TimeseriesChart } from "./TimeseriesChart";
+import TimeseriesChart from "./TimeseriesChart";
 import { LoadingStateShade } from "./LoadingShade";
 import { FilterListBox } from "./FilterListBox";
 
@@ -43,7 +43,7 @@ export const TimeseriesWidget = () => {
         position: "relative",
         padding: "1rem",
         height: "75vh",
-        width: "80vw",
+        flex: 1
       }}
         ref={parentRef}
       >

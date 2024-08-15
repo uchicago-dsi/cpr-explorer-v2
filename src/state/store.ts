@@ -75,7 +75,7 @@ const infillTimeseries = (
             } else if (col === dataCol) {
               newRecord[col] = 0;
             } else if (col === dateCol) {
-              newRecord[col] = dates[dateIndex];
+              newRecord[col] = missingDate
             } else {
               newRecord[col] = null;
             }

@@ -2,7 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { FilterSpec } from "../types/state";
-import { Button, Switch, Typography } from "@mui/material";
+import { Switch, Typography } from "@mui/material";
 
 function valuetext(value: number) {
   return `${value}`;

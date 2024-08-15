@@ -14,14 +14,17 @@ import { FilterControl } from "./Interface";
 import { Modal, styled, useMediaQuery } from "@mui/material";
 import { theme } from "../main";
 
-export const FilterControls: React.FC = () => {
+type FilterProps = {
+  allowToggle?: boolean;
+};
+export const FilterControls: React.FC<FilterProps> = ({ allowToggle }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const isDesktop = useMediaQuery("(min-width:1024px)");
   if (isDesktop) {
-    return <FilterControlsInner />;
+    return <FilterControlsInner allowToggle={allowToggle} />;
   } else {
     return (
       <div>
@@ -95,7 +98,7 @@ export const FilterControls: React.FC = () => {
                   overflowY: "scroll",
                 }}
               >
-                <FilterControlsInner />
+                <FilterControlsInner allowToggle={allowToggle} />
               </Box>
             </Box>
           </Box>
@@ -105,31 +108,36 @@ export const FilterControls: React.FC = () => {
   }
 };
 
-const FilterScrollingContainer = styled(Box)({
-  display: "flex",
-  flexDirection: "column",
-  gap: 2,
-  padding: "1rem",
-  flex: 0,
-  borderRight: "2px solid rgba(0,0,0,0.4)",
-  maxWidth: "300px",
-  minWidth: "300px",
-  maxHeight: "70vh",
-  minHeight: "70vh",
-  overflow: "auto",
-  // vertical ipad or smaller
-  "@media (max-width: 1024px)": {
-    // no max height or min height
-    maxHeight: "none",
-    minHeight: "none",
-    overflow: "visible",
-    width: "calc(100% - 2rem)",
-    maxWidth: "none",
-    borderRight: "none",
-  },
-});
+const FilterScrollingContainer = styled(Box)<{ isOpen?: boolean }>`
+display: flex;
+flex-direction: column;
+gap: 2;
+padding: 1rem;
+position: relative;
+flex: 0;
+border-right: 2px solid rgba(0,0,0,0.4);
+max-width: 300px;
+min-width: ${(p) => (p.isOpen ? "300px" : "2rem")};
+max-height: 70vh;
+min-height: 70vh;
+overflow: auto;
+// children 
+> * {
+  visibility: ${(p) => (p.isOpen ? "visible" : "hidden")};
+}
+> #toggle-filters {
+ visibility: visible !important;
+}
+@media (max-width: 1024px): {
+  max-height: none;
+  min-height: none;
+  overflow: visible;
+  width: calc(100% - 2rem);
+  max-width: none;
+  border-right: none;
+`;
 
-const FilterControlsInner: React.FC = () => {
+const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
   const executeQuery = useStore((state) => state.executeQuery);
   const isLoaded = useStore((state) => state.loadingState === "loaded");
   const geography = useStore((state) => state.geography);
@@ -142,9 +150,19 @@ const FilterControlsInner: React.FC = () => {
   const toggleAlwaysApplyFilters = useStore(
     (state) => state.toggleAlwaysApplyFilters
   );
+  const [open, setOpen] = React.useState(true);
 
   return (
-    <FilterScrollingContainer>
+    <FilterScrollingContainer isOpen={allowToggle ? open : true}>
+      {allowToggle && (
+        <button
+          id="toggle-filters"
+          style={{ position: "absolute", right: 0, top: 0 }}
+          onClick={() => setOpen(!open)}
+        >
+          {open ? "<<" : ">>"}
+        </button>
+      )}
       {!!(!isLoaded || alwaysApplyChanges) && (
         <Box
           component="div"

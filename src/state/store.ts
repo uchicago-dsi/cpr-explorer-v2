@@ -279,13 +279,11 @@ export const useStore = create<State>(
           const dateRange = get().uiFilters.find(
             (filter) => filter.label === "Date Range"
           );
-          const t0 = performance.now();
           staticData = infillTimeseries(
             staticData,
             config,
             dateRange?.value as string[]
           );
-          console.log("infill time", performance.now() - t0);
         }
         // @ts-ignore
         window.staticData = staticData;

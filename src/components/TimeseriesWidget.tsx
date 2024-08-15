@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { staticData, useStore } from "../state/store";
 import { WidgetContainer } from "./WidgetContainer";
 import { FilterControls } from "./FilterControls";
-import { timeseriesViews } from "../config/filters";
+import { timeseriesLabelMapping, timeseriesViews } from "../config/filters";
 import { useParentSize } from "@visx/responsive";
 import TimeseriesChart from "./TimeseriesChart";
 import { LoadingStateShade } from "./LoadingShade";
@@ -21,6 +21,22 @@ export const TimeseriesWidget = () => {
     (view) => view.label === timeseriesType
   );
   const loadingState = useStore((state) => state.loadingState);
+  const labelMapping = useMemo(() => {
+    if (timeseriesType in timeseriesLabelMapping) {
+      const filter = uiFilters.find(
+        (f) => f.label === timeseriesLabelMapping[timeseriesType as keyof typeof timeseriesLabelMapping].filter
+      );
+      const values = filter?.value as string[]
+      const valueLabels = filter?.valueLabels as string[]
+      if (values && valueLabels) {
+        return values.reduce(
+          (acc, val, i) => ({ ...acc, [val]: valueLabels[i] }),
+          {}
+        );
+      }
+    }
+    return undefined
+  }, [timeseriesType, uiFilters]);
 
   useEffect(() => {
     shouldQuery.current = false;
@@ -52,6 +68,7 @@ export const TimeseriesWidget = () => {
           data={staticData}
           width={width}
           height={height}
+          labelMapping={labelMapping}
           // @ts-ignore
           minDate={dateFilter?.value[0] || "2022-01"}
           // @ts-ignore

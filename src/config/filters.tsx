@@ -155,6 +155,16 @@ export const timeseriesViews = [
   }
 ] as const
 
+export const timeseriesLabelMapping = {
+  "Product": {
+    filter: "Product"
+  },
+  "Active Ingredient": {
+    filter: "Active Ingredient (AI)"
+  }
+}
+
+
 export const timeseriesFilterSpec: FilterSpec = {
   queryParam: "na",
   label: "Filter Type",

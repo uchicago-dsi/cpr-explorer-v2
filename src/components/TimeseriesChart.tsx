@@ -6,7 +6,7 @@ import { AxisLeft, AxisBottom } from "@visx/axis";
 import { Group } from "@visx/group";
 import { LegendOrdinal } from "@visx/legend";
 import { timeParse } from "d3-time-format";
-import { schemeCategory10 } from "d3-scale-chromatic";
+import { interpolateSpectral, schemeCategory10 } from "d3-scale-chromatic";
 import { scaleOrdinal } from "d3-scale";
 import { compactFormatter } from "./MapLegend";
 import { Tooltip, withTooltip } from "@visx/tooltip";
@@ -26,6 +26,7 @@ type LineChartProps = {
   width: number;
   height: number;
   yAxisLabel?: string;
+  labelMapping?: Record<string, string>;
 };
 
 const parseDate = timeParse("%Y-%m");
@@ -46,6 +47,7 @@ export default withTooltip<LineChartProps>(
     dateCol,
     width,
     height,
+    labelMapping,
     yAxisLabel = "Pounds of Chemical Used",
   }: LineChartProps & WithTooltipProvidedProps<any>) => {
     const svgRef = React.useRef<SVGSVGElement>(null);
@@ -63,7 +65,8 @@ export default withTooltip<LineChartProps>(
         cleanedData[d[keyCol]].push(d);
         max = Math.max(max, d[dataCol] as number);
       }
-      const keys = Object.keys(cleanedData);
+      const keys = Object.keys(cleanedData)
+        .sort((a,b) => `${a}`.localeCompare(`${b}`))
       return { cleanedData, max, keys };
     }, [data, minDate, maxDate, keyCol, dataCol]);
 
@@ -78,7 +81,10 @@ export default withTooltip<LineChartProps>(
       domain: [0, max],
     });
     // Color scale
-    const colorScale = scaleOrdinal().domain(keys).range(schemeCategory10);
+    const keyLength = keys?.length;
+    const range = keyLength < 10 ? schemeCategory10 : keys.map((_, i) => interpolateSpectral(i / keyLength));
+    const colorScale = scaleOrdinal().domain(keys).range(range);
+    const labelScale = scaleOrdinal().domain(keys.map(key => labelMapping?.[key] || key.replace(/_/g, " "))).range(range);
     // event handlers
     const handleMouseMove = useCallback(
       (event: React.MouseEvent | React.TouchEvent) => {
@@ -94,7 +100,7 @@ export default withTooltip<LineChartProps>(
         const monthyear = `${year}-${month.toString().padStart(2, "0")}`;
         const monthData = data
           .filter((d) => d[dateCol] === monthyear)
-          .sort((a, b) => a[keyCol] - b[keyCol])
+          .sort((a, b) => `${a[keyCol]}`.localeCompare(`${b[keyCol]}`))
           .reduce((acc, d) => {
             acc[d[keyCol]] = d[dataCol];
             return acc;
@@ -175,7 +181,7 @@ export default withTooltip<LineChartProps>(
           </Group>
         </svg>
         <LegendOrdinal
-          scale={colorScale}
+          scale={labelScale}
           direction="column"
           itemMargin={0}
           labelMargin={0}
@@ -205,9 +211,9 @@ export default withTooltip<LineChartProps>(
                 border: "1px solid black",
                 borderRadius: "0.25rem",
                 padding: "0.5rem",
-                width: "25vw",
-                maxWidth: "300px",
-                minWidth: "200px",
+                width: "fit-content !important",
+                maxWidth: "300px !important",
+                minWidth: "200px !important",
                 left: !tooltipData.isOnRightHalf ? tooltipLeft + 10 : tooltipLeft - 10,
                 top: tooltipTop + 10,
                 position: "absolute",
@@ -221,6 +227,7 @@ export default withTooltip<LineChartProps>(
                   ? "Pounds of Product Applied "
                   : "Pounds of Chemical Applied "}
                   </b>
+                  <br/>
                 <i>{tooltipData.monthyear}</i>
               </Typography>
               <hr/>
@@ -228,7 +235,7 @@ export default withTooltip<LineChartProps>(
                 {Object.entries(tooltipData.monthData).map(
                   ([key, value], i) => (
                     <Typography component={"p"} fontSize={"xs"} key={i}>
-                      <strong>{key.replace(/_/g, " ")}:</strong>{" "}
+                      <strong>{labelMapping?.[key] || key.replace(/_/g, " ")}:</strong>{" "}
                       {value && !isNaN(value as number)
                         ? value.toLocaleString()
                         : `${value}`}

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -34,6 +34,24 @@ const selectConfig = [
     value: "about",
   },
 ];
+const NavContainer = styled(Box)({
+  display: "flex",
+  flexDirection: "row",
+  gap: 2,
+  padding: "0 1rem",
+  background: "white",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  borderRadius: "0.25rem",
+  margin: "1rem",
+  alignItems: "center",
+  justifyContent: "space-between",
+  // mobile
+  "@media (max-width: 600px)": {
+    flexDirection: "column",
+    gap: "1rem",
+    padding: "0.5rem",
+  },
+});
 
 function App() {
   const currentView = useStore(state => state.view) as keyof typeof componentMapping;
@@ -43,25 +61,7 @@ function App() {
 
   return (
     <>
-      <Box
-        component={"div"}
-        // row
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 2,
-          px: "1rem",
-          py: 0,
-          background: "white",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          borderRadius: "0.25rem",
-          margin: "1rem",
-          // vertical align
-          alignItems: "center",
-          // spread horizontally
-          justifyContent: "space-between",
-        }}
-      >
+      <NavContainer>
         <Typography
           component="h1"
           fontWeight="bold"
@@ -89,7 +89,7 @@ function App() {
             </Button>
           ))}
         </ButtonGroup>
-      </Box>
+      </NavContainer>
       <View />
       <Box component={"div"} sx={{ display: "flex", justifyContent: "center" }}>
         <Button

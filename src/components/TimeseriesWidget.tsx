@@ -42,7 +42,7 @@ export const TimeseriesWidget = () => {
       style={{
         position: "relative",
         padding: "1rem",
-        height: "80vh",
+        height: "75vh",
         width: "80vw",
       }}
         ref={parentRef}

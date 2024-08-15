@@ -11,8 +11,123 @@ import { mapConfigFilterSpec } from "../config/map";
 import { useStore } from "../state/store";
 import { MultipleSelectCheckmarks } from "./Dropdown";
 import { FilterControl } from "./Interface";
+import { Modal, styled, useMediaQuery } from "@mui/material";
+import { theme } from "../main";
 
 export const FilterControls: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const isDesktop = useMediaQuery("(min-width:768px)");
+  if (isDesktop) {
+    return <FilterControlsInner />;
+  } else {
+    return (
+      <div>
+        <Button
+          onClick={handleOpen}
+          variant="contained"
+          sx={{
+            margin: "1rem auto",
+            display: "block",
+          }}
+        >
+          Data Filters and Settings
+        </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            sx={{
+              height: "90vh",
+              backgroundColor: "white",
+              width: "90vw",
+              left: "5vw",
+              top: "5vh",
+              position: "absolute",
+
+              borderRadius: "0.25rem",
+              background: "white",
+              border: `2px solid ${theme.palette.secondary.main}`,
+              // shadow
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <Box
+              sx={{
+                position: "relative",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              {/* close button */}
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                flex="0"
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                <Typography component="h2" variant="h5" padding="1rem">
+                  Data Filters and Settings
+                </Typography>
+                <Button
+                  onClick={handleClose}
+                  sx={{
+                    flex: 0,
+                    height: "2rem",
+                    width: "1rem",
+                    margin: "0 1rem",
+                  }}
+                  variant="contained"
+                >
+                  &times;
+                </Button>
+              </Box>
+              <Box
+                sx={{
+                  overflowY: "scroll",
+                }}
+              >
+                <FilterControlsInner />
+              </Box>
+            </Box>
+          </Box>
+        </Modal>
+      </div>
+    );
+  }
+};
+
+const FilterScrollingContainer = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+  padding: "1rem",
+  borderRight: "2px solid rgba(0,0,0,0.4)",
+  maxWidth: "300px",
+  maxHeight: "70vh",
+  minHeight: "70vh",
+  overflow: "auto",
+  // vertical ipad or smaller
+  "@media (max-width: 768px)": {
+    // no max height or min height
+    maxHeight: "none",
+    minHeight: "none",
+    overflow: "visible",
+    width: "calc(100% - 2rem)",
+    maxWidth: "none",
+    borderRight: "none",
+  },
+});
+
+const FilterControlsInner: React.FC = () => {
   const executeQuery = useStore((state) => state.executeQuery);
   const isLoaded = useStore((state) => state.loadingState === "loaded");
   const geography = useStore((state) => state.geography);
@@ -25,22 +140,9 @@ export const FilterControls: React.FC = () => {
   const toggleAlwaysApplyFilters = useStore(
     (state) => state.toggleAlwaysApplyFilters
   );
-  
+
   return (
-    <Box
-      component="div"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        p: 2,
-        borderRight: "2px solid rgba(0,0,0,0.4)",
-      }}
-      maxWidth={"300px"}
-      maxHeight={"80vh"}
-      minHeight={"80vh"}
-      overflow="auto"
-    >
+    <FilterScrollingContainer>
       {!!(!isLoaded || alwaysApplyChanges) && (
         <Box
           component="div"
@@ -136,6 +238,6 @@ export const FilterControls: React.FC = () => {
           )}
         </Box>
       ))}
-    </Box>
+    </FilterScrollingContainer>
   );
 };

@@ -24,6 +24,7 @@ import { MapTooltip } from "./MapTooltip";
 import { Legend } from "./MapLegend";
 import { DeckGLOverlay } from "./DeckglOverlay";
 import { FilterListBox } from "./FilterListBox";
+import { styled } from "@mui/material";
 
 const DEFAULT_MVT_LAYER_SETTINGS = {
   pickable: true,
@@ -49,8 +50,7 @@ const getMvtLayer = (
     visible: geography === layer,
     data: getMapboxApi(layer),
     getFillColor: fill,
-    onClick: (_info: any) => {
-    },
+    onClick: (_info: any) => {},
     onHover: handleHover,
     updateTriggers: {
       getFillColor: [fill],
@@ -59,7 +59,6 @@ const getMvtLayer = (
 };
 
 const randomString = () => Math.random().toString(36).substring(7);
-
 
 const INITIAL_VIEW_STATE = {
   latitude: 36.778259,
@@ -120,6 +119,19 @@ const getScaleQuintile = (
   };
 };
 
+const MapContainer = styled(Box)({
+  width: "100%",
+  height: "100%",
+  position: "relative",
+  // vertical ipad and smaller
+  "@media (max-width: 768px)": {
+    height: "70vh",
+    //  .mapboxgl-map child div
+    "& > div.mapboxgl-map": {
+      height: "70vh",
+    },
+  },
+});
 
 export const MainMapView: React.FC = () => {
   const geography = useStore((state) => state.geography);
@@ -176,21 +188,20 @@ export const MainMapView: React.FC = () => {
   }, [loadingState, executeQuery]);
 
   useEffect(() => {
-    if (loadingState === 'settings-changed') executeQuery()
-    }, [executeQuery])
+    if (loadingState === "settings-changed") executeQuery();
+  }, [executeQuery]);
 
   return (
     <>
-      <Box
+      <MapContainer
         component="section"
-        sx={{ width: "100%", height: "100%", position: "relative" }}
         onMouseLeave={() => setTooltip(undefined)}
+        id={mapId.current}
       >
         <LoadingStateShade loadingState={loadingState} />
         {!!(
-          loadingState === "loaded" &&
-          zoom < 8 &&
-          (geography === "Sections" || geography === "Tracts")
+          (loadingState === "loaded" && zoom < 8 && geography === "Sections") ||
+          (zoom < 7 && geography === "Tracts")
         ) && (
           <Alert
             variant="outlined"
@@ -231,6 +242,7 @@ export const MainMapView: React.FC = () => {
           <NavigationControl position="top-left" />
           <FullscreenControl containerId={mapId.current} position="top-left" />
           <AttributionControl
+            compact
             position="bottom-right"
             customAttribution="Data Sources:
             CA Dept of Pesticide Regulation PUR 2017-2022, 
@@ -263,7 +275,7 @@ export const MainMapView: React.FC = () => {
           </Box>
         )}
         <MapTooltip geographyConfig={geographyConfig} mappedData={mappedData} />
-      </Box>
+      </MapContainer>
     </>
   );
 };

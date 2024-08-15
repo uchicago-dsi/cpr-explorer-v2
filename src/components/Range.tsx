@@ -2,7 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { FilterSpec } from "../types/state";
-import { Button, Typography } from "@mui/material";
+import { Button, Switch, Typography } from "@mui/material";
 
 function valuetext(value: number) {
   return `${value}`;
@@ -13,8 +13,8 @@ export const RangeSlider: React.FC<{
   onChange: (value: string | string[] | number | number[] | null) => void;
   state: string | string[] | number | number[] | null;
 }> = ({ spec, onChange, state }) => {
-  // const [active, setActive] = React.useState(false);  
-
+  const [cachedValue, setCachedValue] = React.useState<string | string[] | number | number[] | null>(state); 
+  const active  = (state as any)?.value !== undefined
   const [min, max] =
     spec.options.type === "static"
       ? [
@@ -24,11 +24,17 @@ export const RangeSlider: React.FC<{
       : [0, 1];
 
   const step = Math.abs(max - min) / 100;
+
   const handleChange = (_: Event, newValue: number | number[]) => {
     onChange(newValue as number[]);
+    setCachedValue(newValue as number[]);
   };
-  const handleReset = () => {
-    onChange(undefined as any);
+  const handleToggle = () => {
+    if (active) {
+      onChange(undefined as any);
+    } else {
+      onChange(cachedValue);
+    }
   }
 
   return (
@@ -50,6 +56,8 @@ export const RangeSlider: React.FC<{
           <Slider
             getAriaLabel={() => spec.label}
             value={state as number[]}
+            // @ts-ignore
+            color={active ? "primary" : "default"}
             min={min}
             max={max}
             step={step}
@@ -59,9 +67,12 @@ export const RangeSlider: React.FC<{
           />
         </Box>
         <Box flex={0} width={48}>
-          <Button onClick={handleReset} variant={"text"}>
-            &times;
-          </Button>
+          <Switch
+            checked={active}
+            onClick={handleToggle}
+            size="small"
+            aria-label={"Toggle on off for " + spec.label}
+          />
         </Box>
       </Box>
     </Box>

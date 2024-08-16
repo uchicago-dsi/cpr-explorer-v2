@@ -95,6 +95,9 @@ dependencies:
   mapbox-gl:
     specifier: ^3.5.1
     version: 3.5.1
+  mapbox-gl-sync-move:
+    specifier: ^0.1.0
+    version: 0.1.0
   msgpackr:
     specifier: ^1.10.2
     version: 1.10.2
@@ -3957,6 +3960,11 @@ packages:
 
   /lzo-wasm@0.0.4:
     resolution: {integrity: sha512-VKlnoJRFrB8SdJhlVKvW5vI1gGwcZ+mvChEXcSX6r2xDNc/Q2FD9esfBmGCuPZdrJ1feO+YcVFd2PTk0c137Gw==}
+    dev: false
+
+  /mapbox-gl-sync-move@0.1.0:
+    resolution: {integrity: sha512-6230uiW3mkWDGmb9C7H0xi2hZ3o1pQSLGvEMvF/xLnNF2aYpl4DpeeKSICB8rBSzGb+Kilieb1qWiPeidDRW4Q==}
+    deprecated: Please use @mapbox/mapbox-gl-sync-move
     dev: false
 
   /mapbox-gl@3.5.1:

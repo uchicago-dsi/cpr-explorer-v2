@@ -8,12 +8,14 @@ import { MapWidget } from "./components/MapWidget";
 import { TimeseriesWidget } from "./components/TimeseriesWidget";
 import "./App.css";
 import { useStore } from "./state/store";
+import { DualMapWidget } from "./components/DualMapWidget";
 
 const componentMapping = {
   map: MapWidget,
   demography: Demography,
   timeseries: TimeseriesWidget,
-  about:  AboutWidget
+  about:  AboutWidget,
+  mapDualView: DualMapWidget
 } as const;
 
 const dataViews = [
@@ -31,9 +33,13 @@ const selectConfig = [
     value: "timeseries",
   },
   {
-    label: "Demography",
-    value: "demography",
+    label: "Demographic Comparison",
+    value: "mapDualView",
   },
+  // {
+  //   label: "Demography",
+  //   value: "demography",
+  // },
   {
     label: "About",
     value: "about",

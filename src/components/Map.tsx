@@ -45,9 +45,11 @@ const MapContainer = styled(Box)({
   },
 });
 
-export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
-  defaultMapLayer,
-}) => {
+export const MainMapView: React.FC<{
+  onLoad?: (e: any) => void;
+  defaultMapLayer?: string;
+  containerId?: string;
+}> = ({ defaultMapLayer, containerId, onLoad }) => {
   // globals
   const geography = useStore((state) => state.geography);
   const geographyConfig = mapConfig.find((c) => c.layer === geography)!;
@@ -62,13 +64,7 @@ export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
   const mapLayerConfig = mapLayers.find((l) => l.label === mapLayer)!;
   const [zoom, setZoom] = React.useState(INITIAL_VIEW_STATE.zoom);
   const mapId = useRef(randomString());
-  const {
-    fill,
-    line,
-    colors,
-    mappedData,
-    quantiles,
-  } = useMemo(() => {
+  const { fill, line, colors, mappedData, quantiles } = useMemo(() => {
     if (loadingState === "loaded") {
       return getScaleQuintile(
         staticData,
@@ -125,7 +121,7 @@ export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
         <LoadingStateShade loadingState={loadingState} />
         {!!(
           (loadingState === "loaded" && zoom < 8 && geography === "Sections") ||
-          (zoom < 7 && geography === "Tracts")
+          (loadingState === "loaded" && zoom < 7 && geography === "Tracts")
         ) && (
           <Alert
             variant="outlined"
@@ -152,6 +148,9 @@ export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
         <GlMap
           maxBounds={[-130, 30, -104, 45.0]}
           attributionControl={false}
+          onLoad={(e) => {
+            onLoad && onLoad(e);
+          }}
           // hash={true}
           mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN as string}
           mapStyle="mapbox://styles/cpr2024/clyfwrigb01ca01qj6eg720be?fresh=true"
@@ -164,7 +163,10 @@ export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
           reuseMaps={true}
         >
           <NavigationControl position="top-left" />
-          <FullscreenControl containerId={mapId.current} position="top-left" />
+          <FullscreenControl
+            containerId={containerId || mapId.current}
+            position="top-left"
+          />
           <AttributionControl
             compact
             position="bottom-right"

@@ -209,7 +209,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
         </Box>
       )}
       <hr />
-      {!!(view === "map") && (
+      {!!(view.includes("map")) && (
         <>
           <Typography component="h3" variant="h6">
             Geography

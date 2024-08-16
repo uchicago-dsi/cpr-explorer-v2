@@ -8,11 +8,12 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { styled } from "@mui/material";
+// import { styled } from "@mui/material";
 
 export const compactFormatter = d3.format(".2s");
 
-const StyledDropdown = styled(FormControl)``;
+// const StyledDropdown = styled(FormControl)``;
+
 export const Legend: React.FC<{
   title: string;
   colors: string[] | readonly string[];

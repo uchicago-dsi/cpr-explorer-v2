@@ -16,10 +16,10 @@ const defaultKeys = [
   ...demographiFilterKeys,
   ...ingredientKeys
 ]
-const sectionTownshipKeys = [ 
-  "Date Range",
-  ...ingredientKeys
-]
+// const sectionTownshipKeys = [ 
+//   "Date Range",
+//   ...ingredientKeys
+// ]
 
 export const mapLayers: {
   label: string;
@@ -50,11 +50,11 @@ export const mapConfig: {
 }[] = [
   {
     layer: 'Townships',
-    tileset: "cpr2024.cioych4l",
+    tileset: "cpr2024.62lnnt0z",
     endpoint: "66bbaa1d5b6d420008c78e51",
-    tileId: "TownshipRange",
-    dataId: "TownshipRange",
-    filterKeys: sectionTownshipKeys
+    tileId: "MeridianTownshipRange",
+    dataId: "MeridianTownshipRange",
+    filterKeys: defaultKeys
   },
   {
     layer: "Counties",
@@ -86,7 +86,15 @@ export const mapConfig: {
     endpoint: "66bbaa465b6d420008c78e52" , 
     tileId: "CO_MTRS",
     dataId: "comtrs",
-    filterKeys: sectionTownshipKeys
+    filterKeys: defaultKeys
+  },
+  {
+    layer: 'ZCTA',
+    tileset: "cpr2024.3w98sm2d",
+    endpoint: "66bba9ed5b6d420008c78e50",
+    tileId: "ZCTA5CE20",
+    dataId: "ZCTA5CE20",
+    filterKeys: defaultKeys
   },
 ]
 

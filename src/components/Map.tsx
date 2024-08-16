@@ -63,7 +63,8 @@ export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
   const [zoom, setZoom] = React.useState(INITIAL_VIEW_STATE.zoom);
   const mapId = useRef(randomString());
   const {
-    color: fill,
+    fill,
+    line,
     colors,
     mappedData,
     quantiles,
@@ -78,7 +79,8 @@ export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
       );
     } else {
       return {
-        color: (_: any) => [120, 120, 120],
+        fill: (_: any) => [120, 120, 120],
+        line: (_: any) => [120, 120, 120],
         colors: [],
         quantiles: [],
         mappedData: {},
@@ -101,7 +103,7 @@ export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
   };
 
   const layers = mapConfig.map((f) =>
-    getMvtLayer(geography, f.layer, fill, handleHover)
+    getMvtLayer(geography, f.layer, fill, line, handleHover)
   );
 
   useEffect(() => {

@@ -18,6 +18,7 @@ export const getMvtLayer = (
   geography: string,
   layer: string,
   fill: any,
+  line: any,
   handleHover: MVTLayer["onHover"]
 ) => {
   return new MVTLayer({
@@ -25,11 +26,13 @@ export const getMvtLayer = (
     id: layer,
     visible: geography === layer,
     data: getMapboxApi(layer),
+    getLineColor: line,
     getFillColor: fill,
     onClick: (_info: any) => {},
     onHover: handleHover,
     updateTriggers: {
       getFillColor: [fill],
+      getLineColor: [line],
     },
   });
 };
@@ -77,7 +80,7 @@ export const getScaleQuintile = (
     // @ts-ignore
     mappedData[d[id]] = d[accessor];
   });
-  const color = (row: any) => {
+  const fill = (row: any) => {
     const entryId = row.properties[geoid];
     // @ts-ignore
     const entryValue = mappedData[entryId];
@@ -86,9 +89,20 @@ export const getScaleQuintile = (
     }
     return d3Scale(entryValue);
   };
+  const line = (row: any) => {
+    const entryId = row.properties[geoid];
+    // @ts-ignore
+    const entryValue = mappedData[entryId];
+    if (entryValue === undefined) {
+      return [0, 0, 0, 0];
+    } else {
+      return [0, 0, 0, 255];
+    }
+  };
   // as rgb array
   return {
-    color,
+    fill,
+    line,
     colors,
     mappedData,
     quantiles: d3Scale.quantiles(),

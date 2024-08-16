@@ -154,6 +154,15 @@ export const AboutWidget = () => {
               between those two geographies as a portion of the area within
             </li>
           </ol>
+          Please note that any data processing inherently adds some data
+          uncertainty. In this case, we estimate that across the full data there
+          is around 0.02% for census tracts and school districts due to
+          rounding, small geometry errors, etc. For Zip Code Tabulation Areas
+          (ZCTAs), around 2% of data is missing due to lack of total coverage
+          from ZCTA boundaries. County, township, and section data are directly
+          mapped to PUR data and have effectively no data uncertainty added in
+          our processing.
+          <br />
           Census demographic data is joined based on relevant geographic
           identifier (GEOID, FIPS, or ZCTA).
         </Typography>

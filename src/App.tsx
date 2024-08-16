@@ -27,12 +27,12 @@ const selectConfig = [
     value: "map",
   },
   {
-    label: "Demography",
-    value: "demography",
-  },
-  {
     label: "Use Over Time",
     value: "timeseries",
+  },
+  {
+    label: "Demography",
+    value: "demography",
   },
   {
     label: "About",

@@ -235,13 +235,35 @@ export const useStore = create<State>(
     },
     timeseriesType: "AI Class",
     setTimeseriesType: (type: string) => {
-      const spec = timeseriesViews.find((view) => view.label === type);
-      if (spec) {
+      const timeseriesConfig = timeseriesViews.find(
+        (view) => view.label === type
+      );
+      if (timeseriesConfig) {
+        const uiFilters = [
+          ...get().uiFilters,
+          ...(timeseriesConfig?.defaultFilterOptions || [])
+            .filter((f: any) =>
+              get().uiFilters.every((uf) => uf.label !== f.label)
+            )
+            .map((f: any) => {
+              const filterSpec = ingredientSection.filters.find(
+                (sf) => sf.label === f.label
+              );
+              return {
+                queryParam: filterSpec?.queryParam,
+                value: f.value,
+                label: filterSpec?.label,
+                valueLabels: f.valueLabels,
+              };
+            }),
+        ];
         set({
           timeseriesType: type,
           // @ts-ignore
-          filterKeys: spec?.filterKeys || [],
-          queryEndpoint: spec?.endpoint || "",
+          filterKeys: timeseriesConfig?.filterKeys || [],
+          queryEndpoint: timeseriesConfig?.endpoint || "",
+          // @ts-ignore
+          uiFilters,
         });
       }
     },

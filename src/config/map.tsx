@@ -21,6 +21,25 @@ const sectionTownshipKeys = [
   ...ingredientKeys
 ]
 
+export const mapLayers: {
+  label: string;
+  dataColumn: string;
+  attribution: string;
+  colorScheme?: readonly string[] | string[];
+}[] = [
+  {
+    label: "Pounds of Chemicals Applied",
+    dataColumn: "lbs_chm_used",
+    attribution: "CDPR PUR 2017-2022; Census Geographies 2020"
+  },
+  {
+    label: "Pounds of Product Applied",
+    dataColumn: "lbs_prd_used",
+    attribution: "CDPR PUR 2017-2022; Census Geographies 2020"
+  },
+]
+export const MapLayerOptions = mapLayers.map((layer) => layer.label)
+
 export const mapConfig: {
   layer: string;
   tileset: string;

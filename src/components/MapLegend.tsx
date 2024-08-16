@@ -4,13 +4,22 @@ import Box from "@mui/material/Box";
 import React from "react";
 import * as d3 from "d3";
 import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { styled } from "@mui/material";
 
 export const compactFormatter = d3.format(".2s");
+
+const StyledDropdown = styled(FormControl)``;
 export const Legend: React.FC<{
   title: string;
   colors: string[] | readonly string[];
   breaks: number[];
-}> = ({ title, colors, breaks }) => {
+  onChange?: (value: string) => void;
+  options?: string[];
+}> = ({ title, colors, breaks, onChange, options }) => {
   const cleanBreaks = breaks.map(compactFormatter);
   return (
     <Box
@@ -20,9 +29,36 @@ export const Legend: React.FC<{
       alignItems="start"
       borderRadius="0.25rem"
     >
-      <Typography variant="h6" component="h4" fontSize="0.75rem">
-        {title}
-      </Typography>
+      {!!(onChange && options) ? (
+        <FormControl size="small" sx={{ padding: 0, m: "0.5rem 0" }}>
+          <InputLabel id="demo-select-small-label" sx={{ background: "white" }}>
+            Map Layer
+          </InputLabel>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={title}
+            sx={{
+              fontSize: "0.75rem",
+              padding: "0",
+              borderRadius: "0.25rem",
+              width: "100%",
+            }}
+            label=""
+            onChange={(e) => onChange(e.target.value)}
+          >
+            {options.map((option, index) => (
+              <MenuItem key={index} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      ) : (
+        <Typography variant="h6" component="h4" fontSize="0.75rem">
+          {title}
+        </Typography>
+      )}
       {colors.map((color, index) => (
         <Box
           key={index}
@@ -39,7 +75,7 @@ export const Legend: React.FC<{
             height="20px"
             marginRight="10px"
             sx={{
-              backgroundColor: color
+              backgroundColor: color,
             }}
           ></Box>
           <Box

@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import { staticData, useStore } from "../state/store";
 import React, { useEffect, useMemo, useRef } from "react";
 import { MVTLayer } from "@deck.gl/geo-layers";
-import * as d3 from "d3";
 import GlMap, {
   // @ts-ignore
   FullscreenControl,
@@ -17,7 +16,7 @@ import GlMap, {
   // @ts-ignore
   AttributionControl,
 } from "react-map-gl";
-import { mapConfig } from "../config/map";
+import { mapConfig, MapLayerOptions, mapLayers } from "../config/map";
 import Alert from "@mui/material/Alert";
 import { LoadingStateShade } from "./LoadingShade";
 import { MapTooltip } from "./MapTooltip";
@@ -25,99 +24,12 @@ import { Legend } from "./MapLegend";
 import { DeckGLOverlay } from "./DeckglOverlay";
 import { FilterListBox } from "./FilterListBox";
 import { styled } from "@mui/material";
-
-const DEFAULT_MVT_LAYER_SETTINGS = {
-  pickable: true,
-  getLineColor: [0, 0, 0, 255],
-  getLineWidth: 5,
-  // autoHighlight: true,
-  lineWidthMinPixels: 1,
-  minZoom: 4,
-  getLineDashArray: [3, 3],
-  beforeId: "not-cali",
-  opacity: 0.8,
-};
-
-const getMvtLayer = (
-  geography: string,
-  layer: string,
-  fill: any,
-  handleHover: MVTLayer["onHover"]
-) => {
-  return new MVTLayer({
-    ...(DEFAULT_MVT_LAYER_SETTINGS as any),
-    id: layer,
-    visible: geography === layer,
-    data: getMapboxApi(layer),
-    getFillColor: fill,
-    onClick: (_info: any) => {},
-    onHover: handleHover,
-    updateTriggers: {
-      getFillColor: [fill],
-    },
-  });
-};
-
-const randomString = () => Math.random().toString(36).substring(7);
-
-const INITIAL_VIEW_STATE = {
-  latitude: 36.778259,
-  longitude: -117.5,
-  zoom: 5,
-  maxZoom: 0,
-  pitch: 0,
-  bearing: 0,
-};
-const getMapboxApi = (layer: string) => {
-  const config = mapConfig.find((c) => c.layer === layer);
-  if (!config) {
-    throw new Error(`No config found for layer: ${layer}`);
-  }
-  return `https://api.mapbox.com/v4/${
-    config.tileset
-  }/{z}/{x}/{y}.mvt?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`;
-};
-const hexToRgb = (hex: string) => {
-  if (!hex) return [0, 0, 0, 0];
-  const bigint = parseInt(hex.replace("#", ""), 16);
-  return [bigint >> 16, (bigint >> 8) & 255, bigint & 255];
-};
-
-const getScaleQuintile = (
-  data: Array<Record<string, unknown>>,
-  accessor: string,
-  id: string,
-  geoid: string
-) => {
-  const colors = d3.schemeYlOrRd[5];
-  const colorsRgb = colors.map(hexToRgb);
-  const d3Scale = d3.scaleQuantile(
-    // @ts-ignore
-    data.map((d) => d[accessor]),
-    colorsRgb
-  );
-  const mappedData = {};
-  data.forEach((d) => {
-    // @ts-ignore
-    mappedData[d[id]] = d[accessor];
-  });
-  const color = (row: any) => {
-    const entryId = row.properties[geoid];
-    // @ts-ignore
-    const entryValue = mappedData[entryId];
-    if (entryValue === undefined) {
-      return [0, 0, 0, 0];
-    }
-    return d3Scale(entryValue);
-  };
-  // as rgb array
-  return {
-    color,
-    colors,
-    mappedData,
-    quantiles: d3Scale.quantiles(),
-  };
-};
+import {
+  getMvtLayer,
+  getScaleQuintile,
+  INITIAL_VIEW_STATE,
+} from "../utils/mapUtils";
+import { randomString } from "../utils/randomString";
 
 const MapContainer = styled(Box)({
   width: "100%",
@@ -133,13 +45,21 @@ const MapContainer = styled(Box)({
   },
 });
 
-export const MainMapView: React.FC = () => {
+export const MainMapView: React.FC<{ defaultMapLayer?: string }> = ({
+  defaultMapLayer,
+}) => {
+  // globals
   const geography = useStore((state) => state.geography);
   const geographyConfig = mapConfig.find((c) => c.layer === geography)!;
   const loadingState = useStore((state) => state.loadingState);
   const timestamp = useStore((state) => state.timestamp);
   const executeQuery = useStore((state) => state.executeQuery);
   const setTooltip = useStore((state) => state.setTooltip);
+
+  const [mapLayer, setMapLayer] = React.useState(
+    defaultMapLayer || mapLayers[0].label
+  );
+  const mapLayerConfig = mapLayers.find((l) => l.label === mapLayer)!;
   const [zoom, setZoom] = React.useState(INITIAL_VIEW_STATE.zoom);
   const mapId = useRef(randomString());
   const {
@@ -151,9 +71,10 @@ export const MainMapView: React.FC = () => {
     if (loadingState === "loaded") {
       return getScaleQuintile(
         staticData,
-        "lbs_chm_used",
+        mapLayerConfig.dataColumn,
         geographyConfig.dataId,
-        geographyConfig.tileId
+        geographyConfig.tileId,
+        mapLayerConfig.colorScheme
       );
     } else {
       return {
@@ -163,7 +84,8 @@ export const MainMapView: React.FC = () => {
         mappedData: {},
       };
     }
-  }, [timestamp, loadingState]);
+  }, [mapLayerConfig, timestamp, loadingState]);
+
   const handleHover: MVTLayer["onHover"] = (info: any) => {
     if (info.object) {
       setTooltip({
@@ -244,9 +166,7 @@ export const MainMapView: React.FC = () => {
           <AttributionControl
             compact
             position="bottom-right"
-            customAttribution="Data Sources:
-            CA Dept of Pesticide Regulation PUR 2017-2022, 
-            ACS 2021 5-Year esimates 2021"
+            customAttribution={`Data Sources: ${mapLayerConfig.attribution}`}
           />
           <ScaleControl unit="imperial" position="bottom-right" />
           <DeckGLOverlay layers={layers} interleaved={true} />
@@ -270,7 +190,9 @@ export const MainMapView: React.FC = () => {
             <Legend
               colors={colors}
               breaks={quantiles}
-              title="Pounds of Chemical Used"
+              title={mapLayerConfig.label}
+              options={MapLayerOptions}
+              onChange={(v) => setMapLayer(v)}
             />
           </Box>
         )}

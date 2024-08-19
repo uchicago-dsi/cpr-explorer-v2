@@ -39,6 +39,16 @@ export const mapLayers: {
     attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
   },
   {
+    label: "AI Intensity (lbs/sq mi)",
+    dataColumn: "ai_intensity",
+    attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
+  },
+  {
+    label: "Product Intensity (lbs/sq mi)",
+    dataColumn: "prd_intensity",
+    attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
+  },
+  {
     label: "Total Population",
     dataColumn: "Pax Total",
     attribution: ACS_ATTRIBTUION,
@@ -90,7 +100,7 @@ export const mapConfig: {
   {
     layer: "Counties",
     tileset:"cpr2024.47ns3kc2",
-    endpoint: "66bbaa9a5b6d420008c78e54",
+    endpoint: "66c368eb2218ed0008773e60",
     tileId: "GEOID",
     dataId: "FIPS",
     filterKeys: defaultKeys
@@ -98,7 +108,7 @@ export const mapConfig: {
   {
     layer: "School Districts",
     tileset: "cpr2024.5i4j8yha",
-    endpoint: "66bbaa715b6d420008c78e53",
+    endpoint: "66c36a002218ed0008773e62",
     tileId: "FIPS",
     dataId: "FIPS",
     filterKeys: defaultKeys
@@ -106,7 +116,7 @@ export const mapConfig: {
   {
     layer: "Tracts",
     tileset: "cpr2024.0n14fhc6",
-    endpoint: "66bb8eb8811a870008714ce7",
+    endpoint: "66c367c82218ed0008773e5f",
     tileId: "GEOID",
     dataId: "GEOID",
     filterKeys: defaultKeys
@@ -114,7 +124,7 @@ export const mapConfig: {
   {
     layer: "Sections",
     tileset: "cpr2024.atj2mdo6",
-    endpoint: "66bbaa465b6d420008c78e52" , 
+    endpoint: "66c36a642218ed0008773e63", 
     tileId: "CO_MTRS",
     dataId: "comtrs",
     filterKeys: defaultKeys
@@ -122,7 +132,7 @@ export const mapConfig: {
   {
     layer: 'ZCTA',
     tileset: "cpr2024.3w98sm2d",
-    endpoint: "66bba9ed5b6d420008c78e50",
+    endpoint: "66c36bf62218ed0008773e64",
     tileId: "ZCTA5CE20",
     dataId: "ZCTA5CE20",
     filterKeys: defaultKeys

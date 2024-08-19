@@ -175,11 +175,13 @@ export const useStore = create<State>(
           "Time Series Grouping": get().timeseriesType,
         },
       };
+      const filterKeys = get().filterKeys 
+      const filters = get().queriedFilters.filter((f) => filterKeys.includes(f.label))
 
       exportData(
         format,
         get().view,
-        get().queriedFilters,
+        filters,
         staticData,
         view in info ? info[view] : undefined
       );
@@ -264,6 +266,7 @@ export const useStore = create<State>(
           queryEndpoint: timeseriesConfig?.endpoint || "",
           // @ts-ignore
           uiFilters,
+          loadingState: "settings-changed",
         });
       }
     },

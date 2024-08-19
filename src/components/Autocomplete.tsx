@@ -176,6 +176,11 @@ export const AutoComplete: React.FC<{
     }
   };
 
+  React.useEffect(() => {
+    // on mount, set text value to the current value if it exists
+    setTextValue(valueLabels.join(", "));
+  },[]);
+
   // @ts-ignore
   const valueCol = spec.options.value;
   // @ts-ignore

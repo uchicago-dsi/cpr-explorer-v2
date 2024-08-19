@@ -71,7 +71,7 @@ function App() {
   return (
     <>
       <NavContainer>
-        <Box component={"div"} flexDirection={"row"} display="flex">
+        <Box component={"div"} flexDirection={"row"} display="flex" gap="2px">
           {selectConfig.map((config) => (
             <Button
               key={config.value}
@@ -79,7 +79,6 @@ function App() {
               sx={{
                 py: 2,
                 px: 2,
-                mr: 1,
                 border: "none",
                 maxHeight: "1rem",
                 fontWeight: currentView === config.value ? "bold" : "normal",

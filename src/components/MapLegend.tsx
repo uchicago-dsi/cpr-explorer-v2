@@ -34,7 +34,7 @@ export const Legend: React.FC<{
     >
       {!!(onChange && options) ? (
         <FormControl size="small" sx={{ padding: 0, m: "0.5rem 0" }}>
-          <InputLabel id="demo-select-small-label" sx={{ background: "white" }}>
+          <InputLabel id="demo-select-small-label" sx={{ background: "white", px: 1 }}>
             Map Layer
           </InputLabel>
           <Select

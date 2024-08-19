@@ -36,14 +36,12 @@ export const FilterListBox = () => {
     >
       <Typography
         component="p"
-        padding="0"
+        padding="0 0 5px 0"
+        fontSize="0.85rem"
         margin="0"
         fontWeight="bold"
-        sx={{
-          textDecoration: "underline",
-        }}
       >
-        Data Filters
+        Your Selections:
       </Typography>
       <List
         style={{
@@ -53,19 +51,27 @@ export const FilterListBox = () => {
           maxWidth: "50ch",
         }}
       >
-        <ListItem>
-          <Typography component="p">
-            {view === "map" && <>
-              <b>Geography:</b> {geography}
-            </>}
-            {view === "timeseries" && <>
-              <b>Timeseries Type:</b> {timeseriesType}
-            </>}
+        <ListItem
+          sx={{
+            lineHeight: 4,
+          }}
+        >
+          <Typography component="p" lineHeight={1.7}>
+            {view === "map" && (
+              <>
+                <b>Geography:</b> {geography}
+              </>
+            )}
+            {view === "timeseries" && (
+              <>
+                <b>Timeseries Type:</b> {timeseriesType}
+              </>
+            )}
           </Typography>
         </ListItem>
         {uiFilters
           .filter((f) => f.value && (!Array.isArray(f.value) || f.value.length))
-          .filter((f) => !filterKeys.length || filterKeys.includes(f.label)) 
+          .filter((f) => !filterKeys.length || filterKeys.includes(f.label))
           .map((f, i) => (
             <ListItem key={`filter-${i}`}>
               <Typography
@@ -80,7 +86,7 @@ export const FilterListBox = () => {
                   : Array.isArray(f.queryParam)
                   ? f.valueLabels.join(" to ")
                   : f.valueLabels
-                      .map(v => cleanLabel(v, f.label))
+                      .map((v) => cleanLabel(v, f.label))
                       .sort((a, b) => a.localeCompare(b))
                       .join(", ")}
               </Typography>

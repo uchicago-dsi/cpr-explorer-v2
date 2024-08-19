@@ -9,10 +9,10 @@ export const theme = createTheme({
   // primary accent color rgb((96, 158, 66)
   palette: {
     primary: {
-      main: "#609E42",
+      main: "#557794",
     },
     secondary: {
-      main: "#f28715",
+      main: "#609E42",
     },
   },
   typography: {

@@ -1,7 +1,5 @@
 import { Box, styled } from "@mui/material";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import { AboutWidget } from "./components/AboutWidget";
 import { Demography } from "./components/Demography";
 import { MapWidget } from "./components/MapWidget";
@@ -49,13 +47,13 @@ const NavContainer = styled(Box)({
   display: "flex",
   flexDirection: "row",
   gap: 2,
-  padding: "0 1rem",
+  padding: "1rem",
   background: "white",
   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   borderRadius: "0.25rem",
-  margin: "1rem",
+  margin: "0",
   alignItems: "center",
-  justifyContent: "space-between",
+  justifyContent: "center",
   // mobile
   "@media (max-width: 600px)": {
     flexDirection: "column",
@@ -73,16 +71,7 @@ function App() {
   return (
     <>
       <NavContainer>
-        <Typography
-          component="h1"
-          fontWeight="bold"
-          variant="h1"
-          paddingY="1rem"
-          fontSize="2rem"
-        >
-          Pesticide Data Explorer
-        </Typography>
-        <ButtonGroup variant="text" aria-label="Basic button group">
+        <Box component={"div"} flexDirection={"row"} display="flex">
           {selectConfig.map((config) => (
             <Button
               key={config.value}
@@ -90,19 +79,23 @@ function App() {
               sx={{
                 py: 2,
                 px: 2,
+                mr: 1,
+                border: "none",
                 maxHeight: "1rem",
                 fontWeight: currentView === config.value ? "bold" : "normal",
+                textTransform: "uppercase",
+                color: currentView === config.value ? "#f5f5f5" : "#4d7996",
                 background:
-                  currentView === config.value ? "rgba(0,0,0,0.1)" : "white",
+                  currentView === config.value ? "#4d7996" : "#f5f5f5",
               }}
             >
               {config.label}
             </Button>
           ))}
-        </ButtonGroup>
+        </Box>
       </NavContainer>
       <View />
-      {!!(dataViews.includes(currentView)) && (
+      {!!dataViews.includes(currentView) && (
         <Box
           component={"div"}
           sx={{ display: "flex", justifyContent: "center" }}

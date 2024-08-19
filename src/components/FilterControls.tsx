@@ -17,6 +17,12 @@ import { theme } from "../main";
 type FilterProps = {
   allowToggle?: boolean;
 };
+
+const SectionBreak = styled("hr")`
+  margin: 1rem 0;
+  width: 100%;
+`;
+
 export const FilterControls: React.FC<FilterProps> = ({ allowToggle }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -167,7 +173,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
         <Box
           component="div"
           padding="0.5rem"
-          margin="0"
+          margin="0 0 1rem 0"
           flex="column"
           position="sticky"
           top={"-1rem"}
@@ -208,8 +214,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
           </FormGroup>
         </Box>
       )}
-      <hr />
-      {!!(view.includes("map")) && (
+      {!!view.includes("map") && (
         <>
           <Typography component="h3" variant="h6">
             Geography
@@ -221,7 +226,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
             onChange={(value) => setGeography(value as string)}
             state={{ value: geography, label: geography } as any}
           />
-          <hr style={{ margin: "0.5rem 0", width: "100%" }} />
+          <SectionBreak />
         </>
       )}
       {!!(view === "timeseries") && (
@@ -236,7 +241,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
             onChange={(value) => setTimeseriesType(value as string)}
             state={{ value: timeseriesType, label: timeseriesType } as any}
           />
-          <hr style={{ margin: "0.5rem 0", width: "100%" }} />
+          <SectionBreak />
         </>
       )}
       {allFilterSections
@@ -259,9 +264,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
                 />
               ) : null
             )}
-            {i + 1 === allFilterSections.length ? null : (
-              <hr style={{ margin: "1rem 0 0 0", width: "100%" }} />
-            )}
+            {i + 1 === allFilterSections.length ? null : <SectionBreak />}
           </Box>
         ))}
     </FilterScrollingContainer>

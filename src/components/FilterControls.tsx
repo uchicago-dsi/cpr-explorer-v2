@@ -115,32 +115,33 @@ export const FilterControls: React.FC<FilterProps> = ({ allowToggle }) => {
 };
 
 const FilterScrollingContainer = styled(Box)<{ isOpen?: boolean }>`
-display: flex;
-flex-direction: column;
-gap: 2;
-padding: 1rem;
-position: relative;
-flex: 0;
-border-right: 2px solid rgba(0,0,0,0.4);
-max-width: 300px;
-min-width: ${(p) => (p.isOpen ? "300px" : "2rem")};
-max-height: 70vh;
-min-height: 70vh;
-overflow: auto;
-// children 
-> * {
-  visibility: ${(p) => (p.isOpen ? "visible" : "hidden")};
-}
-> #toggle-filters {
- visibility: visible !important;
-}
-@media (max-width: 1024px): {
-  max-height: none;
-  min-height: none;
-  overflow: visible;
-  width: calc(100% - 2rem);
-  max-width: none;
-  border-right: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2;
+  padding: 1rem;
+  position: relative;
+  flex: 0;
+  border-right: 2px solid rgba(0,0,0,0.4);
+  max-width: 300px;
+  min-width: ${(p) => (p.isOpen ? "300px" : "2rem")};
+  max-height: 70vh;
+  min-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  // children 
+  > * {
+    visibility: ${(p) => (p.isOpen ? "visible" : "hidden")};
+  }
+  > #toggle-filters {
+  visibility: visible !important;
+  }
+  @media (max-width: 1024px): {
+    max-height: none;
+    min-height: none;
+    overflow: visible;
+    width: calc(100% - 2rem);
+    max-width: none;
+    border-right: none;
 `;
 
 const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {

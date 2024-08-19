@@ -1,7 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import { FilterSpec } from "../types/state";
+import { FilterSpec, FilterState } from "../types/state";
 import { Switch, Typography } from "@mui/material";
 
 function valuetext(value: number) {
@@ -11,10 +11,10 @@ function valuetext(value: number) {
 export const RangeSlider: React.FC<{
   spec: FilterSpec;
   onChange: (value: string | string[] | number | number[] | null) => void;
-  state: string | string[] | number | number[] | null;
+  state: FilterState | undefined;
 }> = ({ spec, onChange, state }) => {
-  const [cachedValue, setCachedValue] = React.useState<string | string[] | number | number[] | null>(state); 
-  const active  = (state as any)?.value !== undefined
+  const [cachedValue, setCachedValue] = React.useState<any>(state?.value);
+  const active = state?.value !== undefined;
   const [min, max] =
     spec.options.type === "static"
       ? [
@@ -29,13 +29,14 @@ export const RangeSlider: React.FC<{
     onChange(newValue as number[]);
     setCachedValue(newValue as number[]);
   };
+
   const handleToggle = () => {
     if (active) {
       onChange(undefined as any);
-    } else {
+    } else if (cachedValue !== undefined) {
       onChange(cachedValue);
     }
-  }
+  };
 
   return (
     <Box sx={{ width: 300 }}>
@@ -55,7 +56,7 @@ export const RangeSlider: React.FC<{
         <Box flex={1}>
           <Slider
             getAriaLabel={() => spec.label}
-            value={state as number[]}
+            value={state?.value as number}
             // @ts-ignore
             color={active ? "primary" : "default"}
             min={min}

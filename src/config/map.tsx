@@ -1,6 +1,6 @@
 import { FilterSpec } from "../types/state"
 import { ingredientSection } from "./filters"
-
+import * as d3 from "d3"
 
 const demographiFilterKeys = [
   "Median Household Income",
@@ -20,6 +20,7 @@ const defaultKeys = [
 //   "Date Range",
 //   ...ingredientKeys
 // ]
+const ACS_ATTRIBTUION = "ACS 2021 5-year estiamtes, 2020 Census Geos"
 
 export const mapLayers: {
   label: string;
@@ -30,13 +31,43 @@ export const mapLayers: {
   {
     label: "Pounds of Chemicals Applied",
     dataColumn: "lbs_chm_used",
-    attribution: "CDPR PUR 2017-2022; Census Geographies 2020"
+    attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
   },
   {
     label: "Pounds of Product Applied",
     dataColumn: "lbs_prd_used",
-    attribution: "CDPR PUR 2017-2022; Census Geographies 2020"
+    attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
   },
+  {
+    label: "Total Population",
+    dataColumn: "Pax Total",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemeYlGnBu[5]
+  },
+  {
+    label: "Percent Black or African American",
+    dataColumn: "Pct NH Black",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemePurples[5]
+  },
+  {
+    label: "Percent Hispanic or Latino",
+    dataColumn: "Pct Hispanic",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemeOranges[5]
+  },
+  {
+    label: "Percent With Less Than High School",
+    dataColumn: "Pct No High School",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemeReds[5]
+  },
+  {
+    label: "Percent Working in Agriculture",
+    dataColumn: "Pct Agriculture",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemeGreens[5]
+  }
 ]
 export const MapLayerOptions = mapLayers.map((layer) => layer.label)
 
@@ -51,7 +82,7 @@ export const mapConfig: {
   {
     layer: 'Townships',
     tileset: "cpr2024.62lnnt0z",
-    endpoint: "66bbaa1d5b6d420008c78e51",
+    endpoint: "66c364f46cea330008e258c2",
     tileId: "MeridianTownshipRange",
     dataId: "MeridianTownshipRange",
     filterKeys: defaultKeys

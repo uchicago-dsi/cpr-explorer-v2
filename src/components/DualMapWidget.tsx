@@ -2,20 +2,20 @@ import Box from "@mui/material/Box";
 import { MainMapView } from "./Map";
 import { FilterControls } from "./FilterControls";
 import { WidgetContainer } from "./WidgetContainer";
-// @ts-ignore
-import syncMaps from "mapbox-gl-sync-move";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { MapSyncer } from "../utils/syncMaps";
 
 export const DualMapWidget = () => {
-  const mainMap = useRef<any>(null);
+  const syncer = useRef<any>(new MapSyncer());
 
   const handleLoad = (e: any) => {
-    if (mainMap.current === null) {
-      mainMap.current = e.target;
-    } else {
-      syncMaps(mainMap.current, e.target);
-    }
+    syncer.current.addMap(e.target);
   };
+  useEffect(() => {
+    return () => {
+      syncer.current.unmount();
+    };
+  });
 
   return (
     <WidgetContainer>

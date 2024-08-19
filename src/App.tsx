@@ -18,7 +18,8 @@ const componentMapping = {
 
 const dataViews = [
   "map",
-  "timeseries"
+  "timeseries",
+  "mapDualView",
 ]
 
 const selectConfig = [

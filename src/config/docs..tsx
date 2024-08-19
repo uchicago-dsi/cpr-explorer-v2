@@ -11,6 +11,16 @@ export const dataDescription = {
   - ZCTA5CE20: ZIP Code Tabulation Area [ZIP Codes]
   - lbs_chm_used: Pounds of active ingredient chemcial used
   - lbs_prd_used: Pounds of product used
+  - ai_intensity: Pounds of active ingredient per square mile of total area (not just growing area)
+  - prd_intensity: Pounds of product per square mile of total area (not just growing area)
+  - Median HH Income: Median Household Income (2021 dollars)
+  - Pax Total: Total Population
+  - Pax NH Black: Total Black or African American Population (non hispanic)
+  - Pct NH Black: Percent Black or African American
+  - Pax Hispanic: Total Hispanic or Latino Population
+  - Pct Hispanic: Percent Hispanic or Latino
+  - Pct No High School: Percent of people over 25 with Less Than High School degree as their highest level of education
+  - Pct Agriculture: Percent of people working in Agriculture
   `,
   timeseries: `
   Data columns

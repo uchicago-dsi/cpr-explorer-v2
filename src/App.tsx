@@ -49,7 +49,7 @@ const NavContainer = styled(Box)({
   gap: 2,
   padding: "1rem",
   background: "white",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  borderBottom: "2px solid #4d799655",
   borderRadius: "0.25rem",
   margin: "0",
   alignItems: "center",
@@ -103,14 +103,14 @@ function App() {
           <Button
             onClick={() => download("excel")}
             variant="contained"
-            sx={{ margin: "1rem" }}
+            sx={{ margin: "1rem", textTransform: "uppercase", fontWeight: "normal" }}
           >
             Download Data as Excel
           </Button>
           <Button
             onClick={() => download("zip")}
             variant="contained"
-            sx={{ margin: "1rem" }}
+            sx={{ margin: "1rem", textTransform: "uppercase", fontWeight: "normal" }}
           >
             Download Data as CSV
           </Button>

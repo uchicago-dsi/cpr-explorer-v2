@@ -8,7 +8,7 @@ export const WidgetContainer: React.FC<any> = styled(
   flexDirection: "row",
   position: "relative",
   background: "white",
-  margin: "1rem",
+  margin: "0",
   borderRadius: "0.25rem",
   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   // vertical ipad or smaller column

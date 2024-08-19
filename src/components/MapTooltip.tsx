@@ -11,7 +11,8 @@ import { compactFormatter } from "./MapLegend";
 export const MapTooltip: React.FC<{
   mappedData: any;
   geographyConfig: any;
-}> = ({ mappedData, geographyConfig }) => {
+  label?: string;
+}> = ({ mappedData, geographyConfig, label }) => {
   const tooltip = useStore((state) => state.tooltip);
   if (!tooltip) return null;
   const idCol = geographyConfig.tileId;
@@ -37,13 +38,13 @@ export const MapTooltip: React.FC<{
       <List style={{ listStyle: "none", padding: 0, margin: 0 }}>
         <ListItem>
           <Typography component="p">
-            <b>Pounds of Chemical Used:</b> {value}
+            <b>{label}:</b> {value}
           </Typography>
         </ListItem>
         {Object.entries(tooltip.data).map(([key, value]) => (
           <ListItem key={key}>
             <Typography component="p">
-              <b>{key}:</b> {value as any}
+              <b>{key || "Data"}:</b> {value as any}
             </Typography>
           </ListItem>
         ))}

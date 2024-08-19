@@ -61,9 +61,11 @@ export const MainMapView: React.FC<{
   const [mapLayer, setMapLayer] = React.useState(
     defaultMapLayer || mapLayers[0].label
   );
+
   const mapLayerConfig = mapLayers.find((l) => l.label === mapLayer)!;
   const [zoom, setZoom] = React.useState(INITIAL_VIEW_STATE.zoom);
   const mapId = useRef(randomString());
+
   const { fill, line, colors, mappedData, quantiles } = useMemo(() => {
     if (loadingState === "loaded") {
       return getScaleQuintile(
@@ -200,7 +202,11 @@ export const MainMapView: React.FC<{
             />
           </Box>
         )}
-        <MapTooltip geographyConfig={geographyConfig} mappedData={mappedData} />
+        <MapTooltip
+          geographyConfig={geographyConfig}
+          mappedData={mappedData}
+          label={mapLayerConfig.label}
+        />
       </MapContainer>
     </>
   );

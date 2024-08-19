@@ -100,7 +100,7 @@ export const mapConfig: {
   {
     layer: "Counties",
     tileset:"cpr2024.47ns3kc2",
-    endpoint: "66c368eb2218ed0008773e60",
+    endpoint: "66c3a44c698c0f0008ae926b",
     tileId: "GEOID",
     dataId: "FIPS",
     filterKeys: defaultKeys
@@ -108,7 +108,7 @@ export const mapConfig: {
   {
     layer: "School Districts",
     tileset: "cpr2024.5i4j8yha",
-    endpoint: "66c36a002218ed0008773e62",
+    endpoint: "66c3a4e0698c0f0008ae926c",
     tileId: "FIPS",
     dataId: "FIPS",
     filterKeys: defaultKeys
@@ -116,7 +116,7 @@ export const mapConfig: {
   {
     layer: "Tracts",
     tileset: "cpr2024.0n14fhc6",
-    endpoint: "66c367c82218ed0008773e5f",
+    endpoint: "66c3a573698c0f0008ae926d",
     tileId: "GEOID",
     dataId: "GEOID",
     filterKeys: defaultKeys
@@ -124,7 +124,7 @@ export const mapConfig: {
   {
     layer: "Sections",
     tileset: "cpr2024.atj2mdo6",
-    endpoint: "66c36a642218ed0008773e63", 
+    endpoint: "66c3a5be698c0f0008ae926e", 
     tileId: "CO_MTRS",
     dataId: "comtrs",
     filterKeys: defaultKeys
@@ -132,7 +132,7 @@ export const mapConfig: {
   {
     layer: 'ZCTA',
     tileset: "cpr2024.3w98sm2d",
-    endpoint: "66c36bf62218ed0008773e64",
+    endpoint: "66c3a63a698c0f0008ae926f",
     tileId: "ZCTA5CE20",
     dataId: "ZCTA5CE20",
     filterKeys: defaultKeys

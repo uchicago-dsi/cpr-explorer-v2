@@ -43,7 +43,7 @@ export const DualMapWidget = () => {
             />
           </Box>
           <MainMapView
-            defaultMapLayer="Pounds of Product Applied"
+            defaultMapLayer="Total Population"
             containerId={"dualMapContainer"}
             onLoad={handleLoad}
           />

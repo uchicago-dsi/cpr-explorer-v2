@@ -88,22 +88,30 @@ export const mapConfig: {
   tileId: string;
   dataId: string;
   filterKeys?: string[];
+  tooltipKeys?: Record<string, string>;
 }[] = [
   {
-    layer: 'Townships',
+    layer: "Townships",
     tileset: "cpr2024.62lnnt0z",
     endpoint: "66c364f46cea330008e258c2",
     tileId: "MeridianTownshipRange",
     dataId: "MeridianTownshipRange",
-    filterKeys: defaultKeys
+    filterKeys: defaultKeys,
+    tooltipKeys: {
+      MeridianTownshipRange: "MeridianTownshipRange",
+    },
   },
   {
     layer: "Counties",
-    tileset:"cpr2024.47ns3kc2",
+    tileset: "cpr2024.47ns3kc2",
     endpoint: "66c3a44c698c0f0008ae926b",
     tileId: "GEOID",
     dataId: "FIPS",
-    filterKeys: defaultKeys
+    filterKeys: defaultKeys,
+    tooltipKeys: {
+      "Area Name": "Name",
+      FIPS: "FIPS",
+    },
   },
   {
     layer: "School Districts",
@@ -111,7 +119,11 @@ export const mapConfig: {
     endpoint: "66c3a4e0698c0f0008ae926c",
     tileId: "FIPS",
     dataId: "FIPS",
-    filterKeys: defaultKeys
+    filterKeys: defaultKeys,
+    tooltipKeys: {
+      "Area Name": "Name",
+      FIPS: "FIPS",
+    },
   },
   {
     layer: "Tracts",
@@ -119,25 +131,32 @@ export const mapConfig: {
     endpoint: "66c3a573698c0f0008ae926d",
     tileId: "GEOID",
     dataId: "GEOID",
-    filterKeys: defaultKeys
+    filterKeys: defaultKeys,
+    tooltipKeys: {
+      NAMELSADCO: "County",
+      NAMELSAD: "Name",
+      GEOID: "GEOID",
+    },
   },
   {
     layer: "Sections",
     tileset: "cpr2024.atj2mdo6",
-    endpoint: "66c3a5be698c0f0008ae926e", 
+    endpoint: "66c3a5be698c0f0008ae926e",
     tileId: "CO_MTRS",
     dataId: "comtrs",
-    filterKeys: defaultKeys
+    filterKeys: defaultKeys,
+    tooltipKeys: { NAMELSAD: "Name", REGIONNAME: "Region", CO_MTRS: "CO_MTRS" },
   },
   {
-    layer: 'ZCTA',
+    layer: "ZCTA",
     tileset: "cpr2024.3w98sm2d",
     endpoint: "66c3a63a698c0f0008ae926f",
     tileId: "ZCTA5CE20",
     dataId: "ZCTA5CE20",
-    filterKeys: defaultKeys
+    filterKeys: defaultKeys,
+    tooltipKeys: { ZIP: "ZIP", USPS_ZIP_PREF_CITY: "City" },
   },
-]
+];
 
 export const mapConfigFilterSpec: FilterSpec = {
   queryParam: "na",

@@ -88,10 +88,27 @@ export const MainMapView: React.FC<{
 
   const handleHover: MVTLayer["onHover"] = (info: any) => {
     if (info.object) {
+      const idCol = geographyConfig.dataId;
+      const data = staticData.find(
+        (d: Record<string, unknown>) => d[idCol] === info.object.properties[idCol]
+      ) || {}
+      const tooltipdata = {
+        ...info.object.properties,
+        ...data,
+      };
+
+      let cleanTooltipData: Record<string, unknown> = {}
+      
+      if (geographyConfig.tooltipKeys) {
+        Object.entries(geographyConfig.tooltipKeys).forEach(([k,v]) => {
+          cleanTooltipData[v] = tooltipdata[k]
+        })
+      }
+
       setTooltip({
         x: info.x,
         y: info.y,
-        data: info.object.properties,
+        data: cleanTooltipData
       });
       return true;
     } else {

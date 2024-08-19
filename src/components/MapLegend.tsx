@@ -11,6 +11,7 @@ import Select from "@mui/material/Select";
 // import { styled } from "@mui/material";
 
 export const compactFormatter = d3.format(".2s");
+export const percentFormatter = d3.format(".1%");
 
 // const StyledDropdown = styled(FormControl)``;
 
@@ -21,7 +22,8 @@ export const Legend: React.FC<{
   onChange?: (value: string) => void;
   options?: string[];
 }> = ({ title, colors, breaks, onChange, options }) => {
-  const cleanBreaks = breaks.map(compactFormatter);
+  const isPercent = title.includes("Percent");
+  const cleanBreaks = breaks.map(isPercent ? percentFormatter : compactFormatter);
   return (
     <Box
       component="div"

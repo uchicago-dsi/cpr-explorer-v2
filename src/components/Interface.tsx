@@ -13,6 +13,9 @@ export const FilterControl: React.FC<{spec: FilterSpec}> = ({
 }) => {
   const setFilter = useStore((state) => state.setFilter);
   const filterState = useStore((state) => state.uiFilters.find((f) => f.queryParam === spec.queryParam));
+  const loadingState = useStore((state) => state.loadingState);
+  
+  const stateIsTimeseriesError = loadingState.includes('timeseries')
 
   const handleChange = (value: string | string[] | number | number[] | null,
     valueLabels: string | string[] | number | number[] | null
@@ -24,7 +27,7 @@ export const FilterControl: React.FC<{spec: FilterSpec}> = ({
     // case 'radio':
     //   return <RadioButtonsGroup spec={spec} onChange={handleChange} value={filterState?.value as string || ''} />
     case 'autocomplete':
-      return <AutoComplete spec={spec} onChange={handleChange} state={filterState} />
+      return <AutoComplete spec={spec} onChange={handleChange} state={filterState} focused={stateIsTimeseriesError} />
     case 'dropdown':
       return <MultipleSelectCheckmarks spec={spec} onChange={handleChange} state={filterState} />
     // case 'date':

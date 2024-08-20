@@ -162,7 +162,8 @@ export const AutoComplete: React.FC<{
   spec: FilterSpec;
   onChange: (value: FilterValue, valueLabels: FilterValue) => void;
   state?: FilterState;
-}> = ({ spec, onChange, state }) => {
+  focused?:boolean;
+}> = ({ spec, onChange, state, focused }) => {
   const _options = useOptions(spec);
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
@@ -266,7 +267,10 @@ export const AutoComplete: React.FC<{
       <Autocomplete
         id="virtualize-demo"
         fullWidth
-        sx={{ py: 1 }}
+        sx={{ 
+          py: 1,
+          animation: focused ? 'pulsate 1.5s infinite;' : 'none',
+        }}
         defaultValue={value}
         disableListWrap
         onClose={handleClose}

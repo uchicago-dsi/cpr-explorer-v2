@@ -2,3 +2,19 @@
   width:100%;
   min-height:100vh;
 }
+
+@keyframes pulsate {
+  0% {
+    box-shadow: 0 0 0 .25rem #609E42de;
+  }
+  50% {
+    box-shadow: 0 0 0 .5rem #609E42de;
+  }
+  100% {
+    box-shadow: 0 0 0 .25rem #609E42de;
+  }
+}
+
+.attention-pulse {
+  animation: pulsate 1.5s infinite;
+}

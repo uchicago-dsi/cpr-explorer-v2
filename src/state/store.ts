@@ -308,7 +308,7 @@ export const useStore = create<State>(
             return;
           }
           const filterGoodLength = Array.isArray(filterState?.value)
-            ? filterState?.value.length < 10
+            ? filterState?.value.length <= 10
             : true;
           if (!filterGoodLength) {
             set({

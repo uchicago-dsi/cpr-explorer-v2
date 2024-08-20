@@ -6,15 +6,16 @@ import { AxisLeft, AxisBottom } from "@visx/axis";
 import { Group } from "@visx/group";
 import { LegendOrdinal } from "@visx/legend";
 import { timeParse } from "d3-time-format";
-import { interpolateSpectral, schemeCategory10 } from "d3-scale-chromatic";
+import { interpolateSpectral, schemeTableau10 } from "d3-scale-chromatic";
 import { scaleOrdinal } from "d3-scale";
-import { compactFormatter } from "./MapLegend";
 import { Tooltip, withTooltip } from "@visx/tooltip";
 import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
 import localPoint from "@visx/event/lib/localPointGeneric";
 import { Typography } from "@mui/material";
-
+import * as d3 from "d3";
 let tooltipTimeout: number;
+
+const compactFormatter = d3.format(".2s");
 
 type LineChartProps = {
   data: Record<string, any>[];
@@ -82,7 +83,7 @@ export default withTooltip<LineChartProps>(
     });
     // Color scale
     const keyLength = keys?.length;
-    const range = keyLength < 10 ? schemeCategory10 : keys.map((_, i) => interpolateSpectral(i / keyLength));
+    const range = keyLength <= 10 ? schemeTableau10 : keys.map((_, i) => interpolateSpectral(i / keyLength));
     const colorScale = scaleOrdinal().domain(keys).range(range);
     const labelScale = scaleOrdinal().domain(keys.map(key => labelMapping?.[key] || key.replace(/_/g, " "))).range(range);
     // event handlers

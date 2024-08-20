@@ -2,18 +2,20 @@
 import "mapbox-gl/dist/mapbox-gl.css";
 import Box from "@mui/material/Box";
 import React from "react";
-import * as d3 from "d3";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-// import { styled } from "@mui/material";
 
-export const compactFormatter = d3.format(".2s");
-export const percentFormatter = d3.format(".1%");
-
-// const StyledDropdown = styled(FormControl)``;
+export const percentFormatter = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  minimumFractionDigits: 1,
+}).format
+export const compactFormatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 2,
+}).format
 
 export const Legend: React.FC<{
   title: string;

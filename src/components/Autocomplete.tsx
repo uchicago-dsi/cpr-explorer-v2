@@ -266,10 +266,11 @@ export const AutoComplete: React.FC<{
     })}</Box></Box>} */}
       <Autocomplete
         id="virtualize-demo"
+        disableClearable={true}
         fullWidth
-        sx={{ 
+        sx={{
           py: 1,
-          animation: focused ? 'pulsate 1.5s infinite;' : 'none',
+          animation: focused ? "pulsate 1.5s infinite;" : "none",
         }}
         defaultValue={value}
         disableListWrap
@@ -284,7 +285,7 @@ export const AutoComplete: React.FC<{
         open={open}
         inputValue={textValue}
         onOpen={() => {
-          setOpen(true)
+          setOpen(true);
           setTimeout(() => {
             // debugger
           }, 1000);

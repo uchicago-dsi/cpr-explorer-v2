@@ -89,8 +89,9 @@ export const MainMapView: React.FC<{
   const handleHover: MVTLayer["onHover"] = (info: any) => {
     if (info.object) {
       const idCol = geographyConfig.dataId;
+      const tileId = geographyConfig.tileId;
       const data = staticData.find(
-        (d: Record<string, unknown>) => d[idCol] === info.object.properties[idCol]
+        (d: Record<string, unknown>) => d[tileId] === info.object.properties[idCol]
       ) || {}
       const tooltipdata = {
         ...info.object.properties,

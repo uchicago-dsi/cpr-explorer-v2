@@ -94,7 +94,11 @@ export default withTooltip<LineChartProps>(
         // find the nearest polygon to the current mouse position
         const point = localPoint(svgRef.current, event);
         if (!point) return;
-        const nearest = xScale.invert(point.x);
+        const x = point.x - margin.left
+        if (x < 0 || x > xMax) {
+          return
+        }
+        const nearest = xScale.invert(x);
         const month = nearest.getMonth() + 1;
         const year = nearest.getFullYear();
         const monthyear = `${year}-${month.toString().padStart(2, "0")}`;

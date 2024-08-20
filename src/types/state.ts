@@ -28,10 +28,10 @@ export type FilterState = Pick<FilterSpec, 'queryParam' | 'label'> & {
   value: string | string[] | number | number[] | null;
   valueLabels: string | string[] | number | number[] | null;
 }
-
+type LoadingStates = 'unloaded' | 'settings-changed' | 'loading' | 'loaded' | 'error' | 'no-data' | 'timeseries-none' | 'timeseries-too-many';
 export type State = {
   download: (foramt: string) => void;
-  loadingState: 'unloaded' | 'settings-changed' | 'loading' | 'loaded' | 'error' | 'no-data'
+  loadingState: LoadingStates;
   alwaysApplyFilters: boolean;
   toggleAlwaysApplyFilters: () => void;
   geography: string;

@@ -120,13 +120,13 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
     dateCol: "monthyear",
-    defaultFilterOptions: [
-      {
-        label: "AI Class",
-        value: ["Microbial", "Organic"],
-        valueLabels: ["Microbial", "Organic"],
-      },
-    ],
+    // defaultFilterOptions: [
+    //   {
+    //     label: "AI Class",
+    //     value: ["Microbial", "Organic"],
+    //     valueLabels: ["Microbial", "Organic"],
+    //   },
+    // ],
   },
   {
     label: "AI Type",
@@ -135,13 +135,13 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
     dateCol: "monthyear",
-    defaultFilterOptions: [
-      {
-        label: "AI Type",
-        value: ["Defoliant", "Fumigant", "Insecticide"],
-        valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
-      },
-    ],
+    // defaultFilterOptions: [
+    //   {
+    //     label: "AI Type",
+    //     value: ["Defoliant", "Fumigant", "Insecticide"],
+    //     valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
+    //   },
+    // ],
   },
   {
     label: "AI Type Specific",
@@ -150,13 +150,13 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_type_specific",
     dateCol: "monthyear",
-    defaultFilterOptions: [
-      {
-        label: "AI Type Specific",
-        value: ["Defoliant", "Fumigant", "Insecticide"],
-        valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
-      },
-    ],
+    // defaultFilterOptions: [
+    //   {
+    //     label: "AI Type Specific",
+    //     value: ["Defoliant", "Fumigant", "Insecticide"],
+    //     valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
+    //   },
+    // ],
   },
   {
     label: "Active Ingredient",
@@ -165,13 +165,13 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
     dateCol: "monthyear",
-    defaultFilterOptions: [
-      {
-        label: "Active Ingredient (AI)",
-        value: [510, 2297, 1685],
-        valueLabels: ["Pyrethrins", "Lambda-Cyhalothrin", "Acephate"],
-      },
-    ],
+    // defaultFilterOptions: [
+    //   {
+    //     label: "Active Ingredient (AI)",
+    //     value: [510, 2297, 1685],
+    //     valueLabels: ["Pyrethrins", "Lambda-Cyhalothrin", "Acephate"],
+    //   },
+    // ],
   },
   {
     label: "Product",
@@ -180,15 +180,18 @@ export const timeseriesViews = [
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
     dateCol: "monthyear",
-    defaultFilterOptions: [
-      {
-        label: "Product",
-        value: [47884, 12723],
-        valueLabels: ["70% Neem Oil", "1-10 Pyrenone Insect Spray"],
-      },
-    ],
+    // defaultFilterOptions: [
+    //   {
+    //     label: "Product",
+    //     value: [47884, 12723],
+    //     valueLabels: ["70% Neem Oil", "1-10 Pyrenone Insect Spray"],
+    //   },
+    // ],
   },
 ] as const;
+
+export const timeseriesFiltersNotDateRange: any[] = timeseriesViews.map((config) => config.filterKeys)
+  .flat().filter((key) => key !== "Date Range");
 
 export const timeseriesLabelMapping = {
   "Product": {

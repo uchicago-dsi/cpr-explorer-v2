@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { staticData, useStore } from "../state/store";
 import { WidgetContainer } from "./WidgetContainer";
 import { FilterControls } from "./FilterControls";
@@ -9,10 +9,10 @@ import { LoadingStateShade } from "./LoadingShade";
 import { FilterListBox } from "./FilterListBox";
 
 export const TimeseriesWidget = () => {
-  const executeQuery = useStore((state) => state.executeQuery);
-  const filterKeys = useStore((state) => state.filterKeys);
-  const shouldQuery = useRef(false);
-  const setTimeseriesType = useStore((state) => state.setTimeseriesType);
+  // const executeQuery = useStore((state) => state.executeQuery);
+  // const filterKeys = useStore((state) => state.filterKeys);
+  // const shouldQuery = useRef(false);
+  // const setTimeseriesType = useStore((state) => state.setTimeseriesType);
   const { width, height, parentRef } = useParentSize();
   const uiFilters = useStore((state) => state.uiFilters);
   const dateFilter = uiFilters.find((f) => f.label === "Date Range");
@@ -24,10 +24,14 @@ export const TimeseriesWidget = () => {
   const labelMapping = useMemo(() => {
     if (timeseriesType in timeseriesLabelMapping) {
       const filter = uiFilters.find(
-        (f) => f.label === timeseriesLabelMapping[timeseriesType as keyof typeof timeseriesLabelMapping].filter
+        (f) =>
+          f.label ===
+          timeseriesLabelMapping[
+            timeseriesType as keyof typeof timeseriesLabelMapping
+          ].filter
       );
-      const values = filter?.value as string[]
-      const valueLabels = filter?.valueLabels as string[]
+      const values = filter?.value as string[];
+      const valueLabels = filter?.valueLabels as string[];
       if (values && valueLabels) {
         return values.reduce(
           (acc, val, i) => ({ ...acc, [val]: valueLabels[i] }),
@@ -35,32 +39,19 @@ export const TimeseriesWidget = () => {
         );
       }
     }
-    return undefined
+    return undefined;
   }, [timeseriesType, uiFilters]);
-
-  useEffect(() => {
-    shouldQuery.current = false;
-    setTimeseriesType(timeseriesViews[0].label);
-  }, []);
-
-  useEffect(() => {
-    if (shouldQuery.current) {
-      shouldQuery.current = false;
-      executeQuery();
-    }
-  }, [filterKeys]);
 
   return (
     <WidgetContainer>
       <FilterControls />
       <div
-      //  component="div" padding={2} position={"relative"}
-      style={{
-        position: "relative",
-        padding: "1rem",
-        height: "75vh",
-        flex: 1
-      }}
+        style={{
+          position: "relative",
+          padding: "1rem",
+          height: "75vh",
+          flex: 1,
+        }}
         ref={parentRef}
       >
         <LoadingStateShade loadingState={loadingState} />
@@ -77,7 +68,7 @@ export const TimeseriesWidget = () => {
           dateCol={currentConfig?.dateCol || "monthyear"}
           dataCol={currentConfig?.dataCol || "lbs_chm_used"}
         />
-        <FilterListBox/>
+        <FilterListBox />
       </div>
     </WidgetContainer>
   );

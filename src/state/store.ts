@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { FilterState, State } from "../types/state";
-import { allFilterSections, ingredientSection, timeseriesViews } from "../config/filters";
+import { allFilterSections, timeseriesFiltersNotDateRange, timeseriesViews } from "../config/filters";
 import { mapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
 import { devtools } from "zustand/middleware";
@@ -201,28 +201,22 @@ export const useStore = create<State>(
     mapLayer: "pesticide-use",
     view: "map",
     setView: (view: string) => {
-      const timeseriesConfig = view === "timeseries" ? timeseriesViews[0] : {} as any;
+      let timeseriesConfig = view === "timeseries" ? timeseriesViews[0] : {} as any;
+      const uiFilters = get().uiFilters
+      if (view === "timeseries") {
+        const existingFilter = uiFilters.find(f => timeseriesFiltersNotDateRange.includes(f.label))
+        const existingLabel = existingFilter?.label as string
+        if (existingLabel) {
+          timeseriesConfig = timeseriesViews.find(
+            (view) => view.filterKeys.includes(existingLabel as any)
+          );
+        }
+      }
       const mapViewConfig = view === "map" ? mapConfig[0] : {} as any;
       const filterKeys = timeseriesConfig.filterKeys || [];
       const timeseriesType = timeseriesConfig.label || get().timeseriesType;
       const queryEndpoint = timeseriesConfig.endpoint || mapViewConfig.endpoint || get().queryEndpoint;
       const geography = mapViewConfig.layer || get().geography;
-      const uiFilters = timeseriesConfig.defaultFilterOptions 
-        ? [
-          ...get().uiFilters,
-          ...(timeseriesConfig?.defaultFilterOptions || [])
-            .filter((f: any) => get().uiFilters.every(uf => uf.label !== f.label))
-            .map((f: any) => {
-              const filterSpec = ingredientSection.filters.find((sf) => sf.label === f.label);
-              return {
-                queryParam: filterSpec?.queryParam,
-                value: f.value,
-                label: filterSpec?.label,
-                valueLabels: f.valueLabels
-              }
-            })
-        ]
-        : get().uiFilters
 
       set({
         view,
@@ -231,8 +225,7 @@ export const useStore = create<State>(
         geography,
         // @ts-ignore
         filterKeys,
-        timeseriesType,
-        uiFilters
+        timeseriesType
       })
     },
     timeseriesType: "AI Class",
@@ -241,31 +234,12 @@ export const useStore = create<State>(
         (view) => view.label === type
       );
       if (timeseriesConfig) {
-        const uiFilters = [
-          ...get().uiFilters,
-          ...(timeseriesConfig?.defaultFilterOptions || [])
-            .filter((f: any) =>
-              get().uiFilters.every((uf) => uf.label !== f.label)
-            )
-            .map((f: any) => {
-              const filterSpec = ingredientSection.filters.find(
-                (sf) => sf.label === f.label
-              );
-              return {
-                queryParam: filterSpec?.queryParam,
-                value: f.value,
-                label: filterSpec?.label,
-                valueLabels: f.valueLabels,
-              };
-            }),
-        ];
+        const filterKeys = (timeseriesConfig.filterKeys || []) as unknown as string[]
         set({
           timeseriesType: type,
-          // @ts-ignore
-          filterKeys: timeseriesConfig?.filterKeys || [],
+          filterKeys,
           queryEndpoint: timeseriesConfig?.endpoint || "",
-          // @ts-ignore
-          uiFilters,
+          uiFilters: get().uiFilters.filter((f) => filterKeys.includes(f.label)),
           loadingState: "settings-changed",
         });
       }
@@ -312,6 +286,34 @@ export const useStore = create<State>(
       const queryEndpoint = get().queryEndpoint;
       const uiFilters = get().uiFilters;
       const filterKeys = get().filterKeys;
+      const view = get().view;
+      // if is timeseries and filters that are not date ragen is empty or greater than 10
+      // error
+      if (view === "timeseries") {
+        const nonDateKey = filterKeys.filter((f) => f !== "Date Range");
+        for (const key of nonDateKey) {
+          const filterState = uiFilters.find((filter) => filter.label === key);
+          const filterExists = Array.isArray(filterState?.value)
+            ? filterState?.value.length > 0
+            : filterState?.value !== null;
+
+          if (!filterExists || !filterState) {
+            set({
+              loadingState: "timeseries-none",
+            });
+            return;
+          }
+          const filterGoodLength = Array.isArray(filterState?.value)
+            ? filterState?.value.length < 10
+            : true;
+          if (!filterGoodLength) {
+            set({
+              loadingState: "timeseries-too-many",
+            });
+            return;
+          }
+        }
+      }
       const url = constructQuery(
         `${import.meta.env.VITE_DATA_ENDPOINT}${queryEndpoint}`,
         uiFilters,

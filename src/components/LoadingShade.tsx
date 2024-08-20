@@ -39,6 +39,24 @@ export const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }
       </LoadingStateContainer>
     );
   }
+  if (loadingState === "timeseries-none") {
+    return (
+      <LoadingStateContainer>
+        <Alert variant="outlined" severity="error">
+          Please select at least one AI, class, type, or product in the data filters menu to view timeseries data
+        </Alert>
+      </LoadingStateContainer>
+    );
+  }
+  if (loadingState === "timeseries-too-many") {
+    return (
+      <LoadingStateContainer>
+        <Alert variant="outlined" severity="error">
+          Please select up to nine (9) AI, class, type, or product in the data filters menu  to view timeseries data
+        </Alert>
+      </LoadingStateContainer>
+    );
+  }
   if (loadingState === "no-data") {
     return (
       <LoadingStateContainer>

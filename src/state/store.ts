@@ -214,7 +214,7 @@ export const useStore = create<State>(
       }
       const geography = get().geography;
       const mapViewConfig =
-        view === "map"
+        view === "map" || view === 'mapDualView'
           ? mapConfig.find((f) => f.layer == geography) || mapConfig[0]
           : ({} as any);
           

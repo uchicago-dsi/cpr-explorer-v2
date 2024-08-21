@@ -7,6 +7,8 @@ import { TimeseriesWidget } from "./components/TimeseriesWidget";
 import "./App.css";
 import { useStore } from "./state/store";
 import { DualMapWidget } from "./components/DualMapWidget";
+import { DataTableModal } from "./components/TableViewer";
+import { DownloadButtons } from "./components/DownloadButtons";
 
 const componentMapping = {
   map: MapWidget,
@@ -66,7 +68,6 @@ const NavContainer = styled(Box)({
 function App() {
   const currentView = useStore(state => state.view) as keyof typeof componentMapping;
   const setCurrentView = useStore(state => state.setView);
-  const download = useStore(state => state.download);
   const View = componentMapping[currentView];
 
   return (
@@ -98,22 +99,10 @@ function App() {
       {!!dataViews.includes(currentView) && (
         <Box
           component={"div"}
-          sx={{ display: "flex", justifyContent: "center" }}
+          sx={{ display: "flex", justifyContent: "center", py: 2, gap:2 }}
         >
-          <Button
-            onClick={() => download("excel")}
-            variant="contained"
-            sx={{ margin: "1rem", textTransform: "uppercase", fontWeight: "normal" }}
-          >
-            Download Data as Excel
-          </Button>
-          <Button
-            onClick={() => download("zip")}
-            variant="contained"
-            sx={{ margin: "1rem", textTransform: "uppercase", fontWeight: "normal" }}
-          >
-            Download Data as CSV
-          </Button>
+          <DownloadButtons />
+          <DataTableModal />
         </Box>
       )}
     </>

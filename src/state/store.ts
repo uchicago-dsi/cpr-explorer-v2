@@ -16,7 +16,7 @@ let timeoutFn: any = null;
 
 export const useStore = create<State>(
   wrapper((set, get) => ({
-    download: (format: string) => {
+    download: (format, indices) => {
       const view = get().view;
 
       const info: any = {
@@ -29,12 +29,13 @@ export const useStore = create<State>(
       };
       const filterKeys = get().filterKeys 
       const filters = get().queriedFilters.filter((f) => filterKeys.includes(f.label))
+      const outputData = indices ? indices.map((i) => staticData[i]) : staticData;
 
       exportData(
         format,
         get().view,
         filters,
-        staticData,
+        outputData,
         view in info ? info[view] : undefined
       );
     },

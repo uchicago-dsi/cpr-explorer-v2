@@ -29,6 +29,7 @@ import {
   INITIAL_VIEW_STATE,
 } from "../utils/mapUtils";
 import { randomString } from "../utils/randomString";
+import { StyledOverlayBox } from "./StyledOverlayBox";
 
 const MapContainer = styled(Box)({
   width: "100%",
@@ -89,26 +90,28 @@ export const MainMapView: React.FC<{
     if (info.object) {
       const idCol = geographyConfig.dataId;
       const tileId = geographyConfig.tileId;
-      const data = staticData.find(
-        (d: Record<string, unknown>) => d[tileId] === info.object.properties[idCol]
-      ) || {}
+      const data =
+        staticData.find(
+          (d: Record<string, unknown>) =>
+            d[tileId] === info.object.properties[idCol]
+        ) || {};
       const tooltipdata = {
         ...info.object.properties,
         ...data,
       };
 
-      let cleanTooltipData: Record<string, unknown> = {}
-      
+      let cleanTooltipData: Record<string, unknown> = {};
+
       if (geographyConfig.tooltipKeys) {
-        Object.entries(geographyConfig.tooltipKeys).forEach(([k,v]) => {
-          cleanTooltipData[v] = tooltipdata[k]
-        })
+        Object.entries(geographyConfig.tooltipKeys).forEach(([k, v]) => {
+          cleanTooltipData[v] = tooltipdata[k];
+        });
       }
 
       setTooltip({
         x: info.x,
         y: info.y,
-        data: cleanTooltipData
+        data: cleanTooltipData,
       });
       return true;
     } else {
@@ -195,20 +198,11 @@ export const MainMapView: React.FC<{
           <DeckGLOverlay layers={layers} interleaved={true} />
         </GlMap>
         {!!quantiles.length && (
-          <Box
+          <StyledOverlayBox
             component="div"
-            sx={{
-              position: "absolute",
-              left: "0.5rem",
-              bottom: "3rem",
-              margin: "0",
-              padding: "0.5rem",
-              fontSize: "0.75rem",
-              background: "rgba(255,255,255,0.95)",
-              // shadow
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              zIndex: 1000,
-            }}
+            left="0.5rem"
+            bottom="3rem"
+            borderColor={"secondary.main"}
           >
             <Legend
               colors={colors}
@@ -217,7 +211,7 @@ export const MainMapView: React.FC<{
               options={MapLayerOptions}
               onChange={(v) => setMapLayer(v)}
             />
-          </Box>
+          </StyledOverlayBox>
         )}
         <MapTooltip
           geographyConfig={geographyConfig}

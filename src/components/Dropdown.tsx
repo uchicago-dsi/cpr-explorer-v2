@@ -41,7 +41,7 @@ export const MultipleSelectCheckmarks: React.FC<{
 
   const handleChange = (_event: SelectChangeEvent<any>, _e: any) => {
     const newValue = _e.props.value
-    const newLabel = _e.props.label || _e.props.value
+    const newLabel = _e.props.label || options.find((o) => o.value === newValue)?.label || newValue
     if (!multiple) {
       onChange(newValue, newLabel);
       return

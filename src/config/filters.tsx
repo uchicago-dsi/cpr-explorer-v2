@@ -108,6 +108,28 @@ export const ingredientSection: FilterSection = {
         endpoint: "65676456aeb11300087fbd85"
       },
       component: "autocomplete",
+    },
+    {
+      queryParam: "aerial_ground",
+      label: "Aerial/Ground",
+      options: {
+        type: "static",
+        values: [
+          {
+            label: "All",
+            value: "*",
+          },
+          {
+            value: "A",
+            label: "Aerial",
+          },
+          {
+            value: "G",
+            label: "Ground",
+          },
+        ],
+      },
+      component: "dropdown",
     }
   ],
 };

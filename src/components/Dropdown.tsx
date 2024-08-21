@@ -33,7 +33,7 @@ export const MultipleSelectCheckmarks: React.FC<{
   state?: FilterState;
   onChange: (value: FilterValue, valueLabels: FilterValue) => void;
   multiple?: boolean;
-}> = ({ spec, state, onChange, multiple=true }) => {
+}> = ({ spec, state, onChange, multiple=false }) => {
   const options = useOptions(spec);
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
@@ -44,6 +44,7 @@ export const MultipleSelectCheckmarks: React.FC<{
     const newLabel = _e.props.label || _e.props.value
     if (!multiple) {
       onChange(newValue, newLabel);
+      return
     }
     const valueInSelection = value.includes(newValue);
     if (valueInSelection) {

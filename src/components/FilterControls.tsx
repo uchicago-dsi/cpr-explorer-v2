@@ -122,7 +122,6 @@ const FilterScrollingContainer = styled(Box)<{ isOpen?: boolean }>`
   position: relative;
   flex: 0;
   border-right: 2px solid rgba(0,0,0,0.4);
-  max-width: 300px;
   min-width: ${(p) => (p.isOpen ? "300px" : "2rem")};
   max-height: 70vh;
   min-height: 70vh;

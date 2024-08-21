@@ -111,7 +111,7 @@ export const ingredientSection: FilterSection = {
     },
     {
       queryParam: "aerial_ground",
-      label: "Aerial/Ground",
+      label: "Application Method",
       options: {
         type: "static",
         values: [
@@ -126,6 +126,14 @@ export const ingredientSection: FilterSection = {
           {
             value: "G",
             label: "Ground",
+          },
+          {
+            value: "F",
+            label: "Fumigation",
+          },
+          {
+            value: "O",
+            label: "Other",
           },
         ],
       },

@@ -1,4 +1,3 @@
-"use client";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Box from "@mui/material/Box";
 import { staticData, useStore } from "../state/store";

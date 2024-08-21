@@ -1,4 +1,3 @@
-"use client"
 import React from "react";
 import { FilterSpec } from "../types/state";
 import { AutoComplete } from "./Autocomplete";

@@ -13,6 +13,7 @@ import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withToolti
 import localPoint from "@visx/event/lib/localPointGeneric";
 import { Typography } from "@mui/material";
 import * as d3 from "d3";
+import { Grid } from "@visx/grid";
 let tooltipTimeout: number;
 
 const compactFormatter = d3.format(".2s");
@@ -70,7 +71,6 @@ export default withTooltip<LineChartProps>(
         .sort((a,b) => `${a}`.localeCompare(`${b}`))
       return { cleanedData, max, keys };
     }, [data, minDate, maxDate, keyCol, dataCol]);
-
     // Scale
     const xScale = scaleTime({
       range: [0, xMax],
@@ -146,6 +146,12 @@ export default withTooltip<LineChartProps>(
             onTouchEnd={handleMouseLeave}
           />
           <Group left={margin.left} top={margin.top} pointerEvents={"none"}>
+            <Grid
+              xScale={xScale}
+              yScale={yScale}
+              width={xMax}
+              height={yMax}
+            />
             <AxisBottom
               scale={xScale}
               top={yMax}
@@ -177,8 +183,7 @@ export default withTooltip<LineChartProps>(
                 x2={xScale(tooltipData.date)}
                 y1={0}
                 y2={yMax}
-                stroke={"rgba(0,0,0,0.25)"}
-                strokeDasharray={"4,2"}
+                stroke={"rgba(0,0,0,0.5)"}
                 pointerEvents={"none"}
                 strokeWidth={1}
               />
@@ -209,7 +214,7 @@ export default withTooltip<LineChartProps>(
           tooltipData &&
           tooltipLeft != null &&
           tooltipTop != null && (
-            <Tooltip 
+            <Tooltip
               style={{
                 background: "rgba(255,255,255,0.9)",
                 color: "black",
@@ -219,28 +224,33 @@ export default withTooltip<LineChartProps>(
                 width: "fit-content !important",
                 maxWidth: "300px !important",
                 minWidth: "200px !important",
-                left: !tooltipData.isOnRightHalf ? tooltipLeft + 10 : tooltipLeft - 10,
+                left: !tooltipData.isOnRightHalf
+                  ? tooltipLeft + 10
+                  : tooltipLeft - 10,
                 top: tooltipTop + 10,
                 position: "absolute",
-                transform: tooltipData.isOnRightHalf ? "translateX(-100%)" : "translateX(0)",
+                transform: tooltipData.isOnRightHalf
+                  ? "translateX(-100%)"
+                  : "translateX(0)",
               }}
-              >
+            >
               <Typography component="p" padding={0} fontSize={"md"}>
                 <b>
-
-                {dataCol.includes("prd")
-                  ? "Pounds of Product Applied "
-                  : "Pounds of Chemical Applied "}
-                  </b>
-                  <br/>
+                  {dataCol.includes("prd")
+                    ? "Pounds of Product Applied "
+                    : "Pounds of Chemical Applied "}
+                </b>
+                <br />
                 <i>{tooltipData.monthyear}</i>
               </Typography>
-              <hr/>
+              <hr />
               <Typography variant="body1" fontSize={"xs"}>
                 {Object.entries(tooltipData.monthData).map(
                   ([key, value], i) => (
                     <Typography component={"p"} fontSize={"xs"} key={i}>
-                      <strong>{labelMapping?.[key] || key.replace(/_/g, " ")}:</strong>{" "}
+                      <strong>
+                        {labelMapping?.[key] || key.replace(/_/g, " ")}:
+                      </strong>{" "}
                       {value && !isNaN(value as number)
                         ? value.toLocaleString()
                         : `${value}`}

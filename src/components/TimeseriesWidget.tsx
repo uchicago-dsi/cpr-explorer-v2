@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { staticData, useStore } from "../state/store";
 import { WidgetContainer } from "./WidgetContainer";
 import { FilterControls } from "./FilterControls";
@@ -16,6 +16,7 @@ export const TimeseriesWidget = () => {
   const { width, height, parentRef } = useParentSize();
   const uiFilters = useStore((state) => state.uiFilters);
   const dateFilter = uiFilters.find((f) => f.label === "Date Range");
+  const setLoadingState = useStore((state) => state.setLoadingState);
   const timeseriesType = useStore((state) => state.timeseriesType);
   const currentConfig = timeseriesViews.find(
     (view) => view.label === timeseriesType
@@ -42,6 +43,15 @@ export const TimeseriesWidget = () => {
     return undefined;
   }, [timeseriesType, uiFilters]);
 
+  useEffect(() => {
+    if (loadingState === "loaded" && staticData.length > 0) {
+      const dateInData = staticData[0].hasOwnProperty(currentConfig?.dateCol);
+      const dataInData = staticData[0].hasOwnProperty(currentConfig?.dataCol);
+      if (!dateInData || !dataInData) {
+        setLoadingState("error");
+      }
+    }
+  }, [loadingState])
   return (
     <WidgetContainer>
       <FilterControls />

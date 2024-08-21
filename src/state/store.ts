@@ -11,6 +11,8 @@ import { constructQuery } from "../utils/constructQuery";
 import { deepCloneRecords } from "../utils/deepCloneRecords";
 
 export let staticData: any = [];
+const timeoutDuration = 500;
+let timeoutFn: any = null;
 
 export const useStore = create<State>(
   wrapper((set, get) => ({
@@ -135,6 +137,7 @@ export const useStore = create<State>(
         }
       }),
     setQueryEndpoint: (endpoint) => set({ queryEndpoint: endpoint }),
+    setLoadingState: (loadingState) => set({ loadingState }),
     executeQuery: async () => {
       set({ loadingState: "loading" });
       const queryEndpoint = get().queryEndpoint;
@@ -226,14 +229,13 @@ export const useStore = create<State>(
   }))
 );
 
-const timeoutDuration = 500;
-let timeoutFn: any = null;
 
 useStore.subscribe((state, prev) => {
   const somethingChanged =
     state.uiFilters !== prev.uiFilters ||
     state.alwaysApplyFilters !== prev.alwaysApplyFilters ||
-    state.geography !== prev.geography;
+    state.geography !== prev.geography ||
+    state.view !== prev.view;
   if (state.alwaysApplyFilters && somethingChanged) {
     if (timeoutFn) {
       clearTimeout(timeoutFn);

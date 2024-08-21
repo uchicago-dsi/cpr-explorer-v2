@@ -41,6 +41,7 @@ export type State = {
   setView: (view: string) => void;
   setGeography: (geography: string) => void;
   setMapLayer: (mapLayer: string) => void;
+  setLoadingState: (loadingState: LoadingStates) => void;
 
   timeseriesType: string;
   setTimeseriesType: (type: string) => void;

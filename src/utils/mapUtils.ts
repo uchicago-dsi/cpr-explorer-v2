@@ -94,7 +94,7 @@ export const getScaleQuintile = (
     // @ts-ignore
     const entryValue = mappedData[entryId];
     if (entryValue === undefined) {
-      return [0, 0, 0, 0];
+      return [0, 0, 0, 25];
     } else {
       return [0, 0, 0, 255];
     }

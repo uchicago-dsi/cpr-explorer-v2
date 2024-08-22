@@ -90,10 +90,11 @@ export const MainMapView: React.FC<{
     if (info.object) {
       const idCol = geographyConfig.dataId;
       const tileId = geographyConfig.tileId;
+      const id = info.object.properties[tileId];
       const data =
         staticData.find(
           (d: Record<string, unknown>) =>
-            d[tileId] === info.object.properties[idCol]
+            d[idCol] === id
         ) || {};
       const tooltipdata = {
         ...info.object.properties,
@@ -107,7 +108,7 @@ export const MainMapView: React.FC<{
           cleanTooltipData[v] = tooltipdata[k];
         });
       }
-
+      
       setTooltip({
         x: info.x,
         y: info.y,

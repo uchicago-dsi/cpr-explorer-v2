@@ -113,7 +113,7 @@ export const mapConfig: {
     ],
     tooltipKeys: {
       "Area Name": "Name",
-      FIPS: "FIPS",
+      GEOID: "GEOID",
     },
   },
   {
@@ -148,7 +148,7 @@ export const mapConfig: {
     tileId: "CO_MTRS",
     dataId: "comtrs",
     filterKeys: defaultKeys,
-    tooltipKeys: { NAMELSAD: "Name", REGIONNAME: "Region", CO_MTRS: "CO_MTRS" },
+    tooltipKeys: { NAMELSAD: "Name", REGIONNAME: "Region", comtrs: "CO_MTRS" },
   },
   {
     layer: "ZCTA",
@@ -157,7 +157,7 @@ export const mapConfig: {
     tileId: "ZCTA5CE20",
     dataId: "ZCTA5CE20",
     filterKeys: defaultKeys,
-    tooltipKeys: { ZIP: "ZIP", USPS_ZIP_PREF_CITY: "City" },
+    tooltipKeys: { ZCTA5CE20: "ZCTA5CE20", USPS_ZIP_PREF_CITY: "City" },
   },
 ];
 

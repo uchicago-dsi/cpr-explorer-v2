@@ -29,7 +29,7 @@ export const AboutWidget = () => {
           of pesticides in a community and to support data-driven advocacy.
           <br />
           This tool was developed by the Open Spatial Lab at the University of
-          Chicago Data Science Institute in collaboration with Californian's for
+          Chicago Data Science Institute in collaboration with Californians for
           Pesticide Reform (CPR) and Pesticide Action Network North American
           (PANNA).
           <br />
@@ -71,12 +71,12 @@ export const AboutWidget = () => {
           Community Data:
           <ul>
             <li>
-              Community and demographic data allows users to better understand
+              Community and demographic data allow users to better understand
               the impact of pesticide use on different populations locally and
               across the state.
             </li>
             <li>
-              Demographic data available to filter, map, and explore include:
+              Demographic data available to filter, map, and explore includes:
               Census Demographic Data: ACS 2021 5-year estimates, via Social
               Explorer Population Race and ethnicity Education
             </li>
@@ -132,7 +132,7 @@ export const AboutWidget = () => {
           For census geographic units, section level PUR data was joined to the
           relevant geographic units. This process applied area interpolation to
           calculate the proportion of each section that falls within each
-          geographic unit. The following georocessing steps were applied:
+          geographic unit. The following geoprocessing steps were applied:
           <ol>
             <li>
               Convert all geospatial data to NAD83 / California Albers
@@ -141,7 +141,7 @@ export const AboutWidget = () => {
             <li>Calculate original area of each section (roughly 1 sq mi)</li>
             <li>Overlay section areas with census geographies</li>
             <li>
-              Calculate the propertion of the section in each census geography
+              Calculate the proportion of the section in each census geography
             </li>
             <li>
               To resolve topological data errors and optimize data, any section

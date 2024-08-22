@@ -107,7 +107,10 @@ export const mapConfig: {
     endpoint: "66c3a44c698c0f0008ae926b",
     tileId: "GEOID",
     dataId: "FIPS",
-    filterKeys: defaultKeys,
+    filterKeys: [
+      ...defaultKeys,
+      "Agricultural Use"
+    ],
     tooltipKeys: {
       "Area Name": "Name",
       FIPS: "FIPS",

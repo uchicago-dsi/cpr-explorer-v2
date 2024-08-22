@@ -105,7 +105,7 @@ export const ingredientSection: FilterSection = {
         type: "dynamic",
         value: "site_code",
         label: "site_name",
-        endpoint: "65676456aeb11300087fbd85"
+        endpoint: "65676456aeb11300087fbd85",
       },
       component: "autocomplete",
     },
@@ -138,7 +138,29 @@ export const ingredientSection: FilterSection = {
         ],
       },
       component: "dropdown",
-    }
+    },
+    {
+      queryParam: "usetype",
+      label: "Agricultural Use",
+      options: {
+        type: "static",
+        values: [
+          {
+            value: "AG",
+            label: "Agricultural",
+          },
+          {
+            value: "NON-AG",
+            label: "Non-Agricultural (County only)",
+          },
+          {
+            value: "*",
+            label: "Both",
+          },
+        ],
+      },
+      component: "dropdown",
+    },
   ],
 };
 

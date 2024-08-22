@@ -65,6 +65,17 @@ const NavContainer = styled(Box)({
   },
 });
 
+const TabButton = styled(Button)`
+  padding: 1rem;
+  border: none;
+  max-height: 1rem;
+  text-transform: uppercase;
+  &:hover {
+    background: rgb(59, 83, 103);
+    color: white;
+  }
+`
+
 function App() {
   const currentView = useStore(state => state.view) as keyof typeof componentMapping;
   const setCurrentView = useStore(state => state.setView);
@@ -75,23 +86,18 @@ function App() {
       <NavContainer>
         <Box component={"div"} flexDirection={"row"} display="flex" gap="2px">
           {selectConfig.map((config) => (
-            <Button
+            <TabButton
               key={config.value}
               onClick={() => setCurrentView(config.value as any)}
               sx={{
-                py: 2,
-                px: 2,
-                border: "none",
-                maxHeight: "1rem",
                 fontWeight: currentView === config.value ? "bold" : "normal",
-                textTransform: "uppercase",
                 color: currentView === config.value ? "#f5f5f5" : "#4d7996",
                 background:
                   currentView === config.value ? "#4d7996" : "#f5f5f5",
               }}
             >
               {config.label}
-            </Button>
+            </TabButton>
           ))}
         </Box>
       </NavContainer>

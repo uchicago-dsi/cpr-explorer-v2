@@ -1,5 +1,9 @@
-import { Box, styled, Typography } from "@mui/material";
+import { Box, Button, styled, Typography } from "@mui/material";
 import { WidgetContainer } from "./WidgetContainer";
+import React from "react";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
 
 const InlineCode = styled("code")({
   backgroundColor: "#f4f4f4",
@@ -8,32 +12,172 @@ const InlineCode = styled("code")({
   fontFamily: "monospace",
 });
 
+const references = {
+  "areal-interpolation": [
+    {
+      name: "Markoff and Shapiro, 1973",
+      link: "https://www.tandfonline.com/doi/epdf/10.1080/00182494.1973.10112670",
+    },
+    {
+      name: "Crackel, 1975",
+      link: "https://www.tandfonline.com/doi/pdf/10.1080/00182494.1975.10112707",
+    },
+    {
+      name: "Tobler, 1979",
+      link: "https://www.tandfonline.com/doi/abs/10.1080/01621459.1979.10481647",
+    },
+    {
+      name: "Lam, 1983",
+      link: "https://www.tandfonline.com/doi/abs/10.1559/152304083783914958",
+    },
+    {
+      name: "Gotway and Young, 2002",
+      link: "https://www.tandfonline.com/doi/abs/10.1198/016214502760047140?casa_token=YgEHY",
+    },
+  ],
+};
+
+const Reference: React.FC<{ id: keyof typeof references }> = ({ id }) => {
+  // list of a elements inline
+  if (!references[id]) return <></>;
+
+  const refs = references[id].map((ref, i) => (
+    <span style={{ display: "inline" }} key={i}>
+      <a
+        style={{ display: "inline" }}
+        href={ref.link}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {ref.name}
+      </a>
+      ;{" "}
+    </span>
+  ));
+  return (
+    <Typography component={"p"} display="inline">
+      ({refs})
+    </Typography>
+  );
+};
+
+const arealSteps = [
+  {
+    imagePath: "explainer-01.png",
+    title: "Areal Interpolation Problem",
+    text: "The areal interpolation problem is a method to combine data from different spatial units. Imagine we want to assign the pesticide use in a section that overlaps two school districts.",
+  },
+  {
+    imagePath: "explainer-02.png",
+    title: "Calculate Original Area",
+    text: "First we calculate the area of the section. In this case, the section is roughly 1 square mile.",
+  },
+  {
+    imagePath: "explainer-03.png",
+    title: "Overlay and Calculate Proportions",
+    text: "Next, we calculate how much of the section is in the two (or more) school districts. In this case, the section is 70% in School District 1 and 30% in School District 2.",
+  },
+  {
+    imagePath: "explainer-04.png",
+    title: "Assign Values to Census Areas",
+    text: "Last, we assign the value from the section to the two school districts as a proportion weighted by the overlap. Imagine that there are 210lbs used in the section. We assign 70% of that to School District 1 (147lb = 210lbs * 0.7) and 30% to School District 2 (63lbs = 210lbs * 0.3).",
+  },
+];
+const ArealExplainer: React.FC = () => {
+  const [step, setStep] = React.useState(0);
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        background: "white",
+        border: "1px solid gray",
+        boxShadow: "0 0 5px rgba(0,0,0,0.1)",
+        my: 2,
+      }}
+    >
+      <Box
+        p={2}
+        my={2}
+        component={"div"}
+        sx={{ width: "100%", boxSizing: "border-box" }}
+      >
+        <img
+          src={arealSteps[step].imagePath}
+          alt={arealSteps[step].title}
+          style={{
+            width: "100%",
+            height: "auto",
+            maxWidth: "800px",
+            margin: "0 auto",
+            display: "block",
+          }}
+        />
+        <Typography component={"h4"}>{arealSteps[step].text}</Typography>
+      </Box>
+      <Stepper activeStep={step} alternativeLabel>
+        {arealSteps.map((step) => (
+          <Step key={step.title} onClick={() => console.log(step)}>
+            <StepLabel>{step.title}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+      <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+        <Button
+          color="inherit"
+          disabled={step === 0}
+          onClick={() => setStep((prev) => (prev - 1 >= 0 ? prev - 1 : prev))}
+          sx={{ mr: 1 }}
+        >
+          Back
+        </Button>
+        <Box sx={{ flex: "1 1 auto" }} />
+        <Button
+          disabled={step === arealSteps.length - 1}
+          onClick={() =>
+            setStep((prev) => (prev + 1 < arealSteps.length ? prev + 1 : prev))
+          }
+        >
+          Next
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
 export const AboutWidget = () => {
   return (
-    <WidgetContainer>
+    <WidgetContainer
+      style={{
+        maxHeight: "calc(100vh - 70px)",
+        overflow: "auto",
+      }}
+    >
       <Box
         display="flex"
         justifyContent="space-between"
         flexDirection="column"
         gap={2}
-        p={2}
+        p={4}
+        pb={24}
+        maxWidth="800px"
+        margin="0 auto 400px auto"
       >
         <Typography component={"h3"} fontSize={"1.5rem"} fontWeight={"bold"}>
           About
         </Typography>
         <Typography component={"p"}>
-          This tool makes it easier to explore California's Pesticide Use
-          Reporting (PUR) data and combine that data with common demographic
-          census variables. This tool also makes PUR data available at various
-          census geographies, which are often helpful for understanding the use
-          of pesticides in a community and to support data-driven advocacy.
+          This one-of-a-kind tool makes it easier to explore California's
+          Pesticide Use Reporting (PUR) data and combine that data with common
+          demographic census variables. This tool also makes PUR data available
+          at various census geographies, which are often helpful for
+          understanding the use of pesticides in a community and to support
+          data-driven advocacy.
           <br />
-          This tool was developed by the Open Spatial Lab at the University of
-          Chicago Data Science Institute in collaboration with Californians for
-          Pesticide Reform (CPR) and Pesticide Action Network North American
-          (PANNA).
           <br />
-          Support for this project was provided by the Robert Wood Johnson
+          Developed by the Open Spatial Lab at the University of Chicago Data
+          Science Institute in collaboration with Californians for Pesticide
+          Reform (CPR) and Pesticide Action Network North American (PANNA),
+          project support for this tool was provided by the Robert Wood Johnson
           Foundation and 11th Hour Foundation. The views expressed here do not
           necessarily reflect the views of the Foundations.
         </Typography>
@@ -127,12 +271,25 @@ export const AboutWidget = () => {
           </ol>
           For section-level data, no further processing is applied. For
           TownshipRange and County data, the section data was further grouped on
-          county code and township range identifiers.
+          county code and township range identifiers provided in CalPip data.
           <br />
-          For census geographic units, section level PUR data was joined to the
+          For census geographic units, additional processing is required to
+          connect the PUR data census areas. The data is processed using areal
+          interpolation, a method to estimate the proportion of a section that
+          falls within each census geography. This method is widely used in
+          spatial data analysis to estimate the proportion of an area that falls
+          within a specific area of interest; it has been formalized at least 50
+          years ago with numerous scholarly publications describing the approach{" "}
+          <Reference id="areal-interpolation" />.
+          <br />
+          <br />A simplified explanation of areal interpolation is described in
+          the below diagrams:
+          <ArealExplainer />
+          {/* section level PUR data was joined to the
           relevant geographic units. This process applied area interpolation to
           calculate the proportion of each section that falls within each
           geographic unit. The following geoprocessing steps were applied:
+          <br />
           <ol>
             <li>
               Convert all geospatial data to NAD83 / California Albers
@@ -153,18 +310,35 @@ export const AboutWidget = () => {
               of chemical applied and pounds of product applied would be split
               between those two geographies as a portion of the area within
             </li>
-          </ol>
-          Please note that any data processing inherently adds some data
-          uncertainty. In this case, we estimate that across the full data there
-          is around 0.02% for census tracts and school districts due to
-          rounding, small geometry errors, etc. For Zip Code Tabulation Areas
-          (ZCTAs), around 2% of data is missing due to lack of total coverage
-          from ZCTA boundaries. County, township, and section data are directly
-          mapped to PUR data and have effectively no data uncertainty added in
-          our processing.
+          </ol> */}
           <br />
-          Census demographic data is joined based on relevant geographic
-          identifier (GEOID, FIPS, or ZCTA).
+          <i>Technical Notes</i>
+          <ul>
+            <li>
+              Geoprocessing was done in CRS EPSG:3310, California Albers Equal
+              Area / NAD83.{" "}
+            </li>
+            <li>
+              As with any data processing, there is inherent uncertainty added.
+              Below the section level, we do not have specific data on where
+              pesticide application occurs. Additionally, there is a roughly
+              ~0.02% data uncertainty added to census tracts and school
+              districts from rounding and geometry errors.
+            </li>
+            <li>
+              For Zip Code Tabulation Areas (ZCTAs), around 2% of data is
+              missing due to lack of total coverage from ZCTA boundaries.{" "}
+            </li>
+            <li>
+              County, township, and section data are directly mapped to PUR data
+              and have effectively no data uncertainty added in our processing.
+            </li>
+            <li>
+              Census demographic data is joined based on relevant geographic
+              identifier (GEOID, FIPS, or ZCTA).
+            </li>
+          </ul>
+          <br />
         </Typography>
         <Typography component={"h4"}>Data Filtering</Typography>
         <Typography component={"p"}>
@@ -279,6 +453,9 @@ export const AboutWidget = () => {
             </li>
           </ol>
         </Typography>
+        <br/>
+        <br/>
+        <br/>
       </Box>
     </WidgetContainer>
   );

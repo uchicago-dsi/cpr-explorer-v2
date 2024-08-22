@@ -160,7 +160,7 @@ export const AboutWidget = () => {
         p={4}
         pb={24}
         maxWidth="800px"
-        margin="0 auto 400px auto"
+        margin="0 auto"
       >
         <Typography component={"h3"} fontSize={"1.5rem"} fontWeight={"bold"}>
           About
@@ -453,8 +453,6 @@ export const AboutWidget = () => {
             </li>
           </ol>
         </Typography>
-        <br/>
-        <br/>
         <br/>
       </Box>
     </WidgetContainer>

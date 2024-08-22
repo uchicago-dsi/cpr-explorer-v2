@@ -40,12 +40,8 @@ export const FilterListBox = () => {
           maxWidth: "50ch",
         }}
       >
-        <ListItem
-          sx={{
-            lineHeight: 4,
-          }}
-        >
-          <Typography component="p" lineHeight={1.7}>
+        <ListItem>
+          <Typography component="p" sx={{lineHeight: 1.7}}>
             {view === "map" && (
               <>
                 <b>Geography:</b> {geography}

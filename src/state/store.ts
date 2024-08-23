@@ -9,7 +9,7 @@ import { wrapper } from "../utils/stateUtils";
 import { findExistingFilter } from "../utils/findExistingFilter";
 import { constructQuery } from "../utils/constructQuery";
 import { deepCloneRecords } from "../utils/deepCloneRecords";
-import { compressToEncodedURIComponent, compressToUTF16, decompressFromEncodedURIComponent, decompressFromUTF16 } from "lz-string";
+import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
 
 export let staticData: any = [];
 const timeoutDuration = 500;

@@ -66,7 +66,7 @@ export const MainMapView: React.FC<{
   const [zoom, setZoom] = React.useState(INITIAL_VIEW_STATE.zoom);
   const mapId = useRef(randomString());
 
-  const { fill, line, colors, mappedData, quantiles } = useMemo(() => {
+  const { fill, line, colors, quantiles } = useMemo(() => {
     if (loadingState === "loaded") {
       return getScaleQuintile(
         staticData,
@@ -92,27 +92,15 @@ export const MainMapView: React.FC<{
       const tileId = geographyConfig.tileId;
       const id = info.object.properties[tileId];
       const data =
-        staticData.find(
-          (d: Record<string, unknown>) =>
-            d[idCol] === id
-        ) || {};
-      const tooltipdata = {
-        ...info.object.properties,
-        ...data,
-      };
+        staticData.find((d: Record<string, unknown>) => d[idCol] === id) || {};
 
-      let cleanTooltipData: Record<string, unknown> = {};
-
-      if (geographyConfig.tooltipKeys) {
-        Object.entries(geographyConfig.tooltipKeys).forEach(([k, v]) => {
-          cleanTooltipData[v] = tooltipdata[k];
-        });
-      }
-      
       setTooltip({
         x: info.x,
         y: info.y,
-        data: cleanTooltipData,
+        data: {
+          ...info.object.properties,
+          ...data,
+        },
       });
       return true;
     } else {
@@ -215,9 +203,8 @@ export const MainMapView: React.FC<{
           </StyledOverlayBox>
         )}
         <MapTooltip
-          geographyConfig={geographyConfig}
-          mappedData={mappedData}
-          label={mapLayerConfig.label}
+          mapLayerTooltips={mapLayerConfig.tooltipKeys}
+          geographyTooltips={geographyConfig.tooltipKeys}
         />
       </MapContainer>
     </>

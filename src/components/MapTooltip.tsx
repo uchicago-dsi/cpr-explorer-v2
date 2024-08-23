@@ -5,18 +5,17 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import { compactFormatter } from "./MapLegend";
+import { mapConfig, mapLayers } from "../config/map";
 
 export const MapTooltip: React.FC<{
-  mappedData: any;
-  geographyConfig: any;
-  label?: string;
-}> = ({ mappedData, geographyConfig, label }) => {
+  geographyTooltips: typeof mapConfig[number]['tooltipKeys'];
+  mapLayerTooltips: typeof mapLayers[number]['tooltipKeys'];
+}> = ({
+  mapLayerTooltips,
+  geographyTooltips
+}) => {
   const tooltip = useStore((state) => state.tooltip);
   if (!tooltip) return null;
-  const idCol = geographyConfig.tileId;
-  const _value = mappedData[tooltip.data[idCol]];
-  const value = isNaN(_value) ? "No Use In Data" : compactFormatter(_value);
   return (
     <Box
       component={"div"}
@@ -35,18 +34,24 @@ export const MapTooltip: React.FC<{
       }}
     >
       <List style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        <ListItem>
-          <Typography component="p">
-            <b>{label}:</b> {value}
-          </Typography>
-        </ListItem>
-        {Object.entries(tooltip.data).map(([key, value]) => (
-          <ListItem key={key}>
-            <Typography component="p">
-              <b>{key || "Data"}:</b> {value as any}
-            </Typography>
-          </ListItem>
-        ))}
+        {!!mapLayerTooltips  && (
+          Object.entries(mapLayerTooltips).map(([key, value]) => (
+            <ListItem key={key}>
+              <Typography component="p">
+                <b>{value || "Data"}:</b> {tooltip?.data?.[key] as string || "N/A"}
+              </Typography>
+            </ListItem>
+          ))
+        )}
+        {!!geographyTooltips && (
+          Object.entries(geographyTooltips).map(([key, value]) => (
+            <ListItem key={key}>
+              <Typography component="p">
+                <b>{value || "Data"}:</b> {tooltip?.data?.[key] as string || "N/A"}
+              </Typography>
+            </ListItem>
+          ))
+        )}
       </List>
     </Box>
   );

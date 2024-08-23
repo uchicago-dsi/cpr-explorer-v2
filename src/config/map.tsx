@@ -27,56 +27,84 @@ export const mapLayers: {
   dataColumn: string;
   attribution: string;
   colorScheme?: readonly string[] | string[];
+  tooltipKeys?: Record<string, string>;
 }[] = [
   {
     label: "Pounds of Chemicals Applied",
     dataColumn: "lbs_chm_used",
-    attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
+    attribution: "CDPR PUR 2017-2022; 2020 Census Geos",
+    tooltipKeys: {
+      lbs_chm_used: "Pounds of Chemicals Applied",
+    }
   },
   {
     label: "Pounds of Product Applied",
     dataColumn: "lbs_prd_used",
-    attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
+    attribution: "CDPR PUR 2017-2022; 2020 Census Geos",
+    tooltipKeys: {
+      lbs_prd_used: "Pounds of Product Applied",
+    }
   },
   {
     label: "AI Intensity (lbs/sq mi)",
     dataColumn: "ai_intensity",
-    attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
+    attribution: "CDPR PUR 2017-2022; 2020 Census Geos",
+    tooltipKeys: {
+      ai_intensity: "AI Intensity (lbs/sq mi)",
+    }
   },
   {
     label: "Product Intensity (lbs/sq mi)",
     dataColumn: "prd_intensity",
-    attribution: "CDPR PUR 2017-2022; 2020 Census Geos"
+    attribution: "CDPR PUR 2017-2022; 2020 Census Geos",
+    tooltipKeys: {
+      prd_intensity: "Product Intensity (lbs/sq mi)",
+    }
   },
   {
     label: "Total Population",
     dataColumn: "Pax Total",
     attribution: ACS_ATTRIBTUION,
-    colorScheme: d3.schemeYlGnBu[5]
+    colorScheme: d3.schemeYlGnBu[5],
+    tooltipKeys: {
+      "Pax Total": "Total Population",
+    }
   },
   {
     label: "Percent Black or African American",
     dataColumn: "Pct NH Black",
     attribution: ACS_ATTRIBTUION,
-    colorScheme: d3.schemePurples[5]
+    colorScheme: d3.schemePurples[5],
+    tooltipKeys: {
+      "Pct NH Black": "Percent Black or African American",
+    }
   },
   {
     label: "Percent Hispanic or Latino",
     dataColumn: "Pct Hispanic",
     attribution: ACS_ATTRIBTUION,
-    colorScheme: d3.schemeOranges[5]
+    colorScheme: d3.schemeOranges[5],
+    tooltipKeys: {
+      "Pct Hispanic": "Percent Hispanic or Latino",
+    }
   },
   {
     label: "Percent With Less Than High School",
     dataColumn: "Pct No High School",
     attribution: ACS_ATTRIBTUION,
-    colorScheme: d3.schemeReds[5]
+    colorScheme: d3.schemeReds[5],
+    tooltipKeys: {
+      "Pct No High School": "Percent With Less Than High School",
+    }
   },
   {
     label: "Percent Working in Agriculture",
     dataColumn: "Pct Agriculture",
     attribution: ACS_ATTRIBTUION,
-    colorScheme: d3.schemeGreens[5]
+    colorScheme: d3.schemeGreens[5],
+    tooltipKeys: {
+      "Pct Agriculture": "Percent Working in Agriculture",
+    }
   }
 ]
 export const MapLayerOptions = mapLayers.map((layer) => layer.label)
@@ -151,13 +179,13 @@ export const mapConfig: {
     tooltipKeys: { NAMELSAD: "Name", REGIONNAME: "Region", comtrs: "CO_MTRS" },
   },
   {
-    layer: "ZCTA",
+    layer: "Zip Codes",
     tileset: "cpr2024.3w98sm2d",
     endpoint: "66c3a63a698c0f0008ae926f",
     tileId: "ZCTA5CE20",
     dataId: "ZCTA5CE20",
     filterKeys: defaultKeys,
-    tooltipKeys: { ZCTA5CE20: "ZCTA5CE20", USPS_ZIP_PREF_CITY: "City" },
+    tooltipKeys: { ZCTA5CE20: "Zip Code", USPS_ZIP_PREF_CITY: "City" },
   },
 ];
 

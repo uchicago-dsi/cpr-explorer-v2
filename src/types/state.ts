@@ -58,9 +58,9 @@ export type State = {
   timestamp: number;
 
   tooltip?: {
-    x: any;
-    y: any;
-    data: any;
+    x: number;
+    y: number;
+    data: Record<string, unknown>;
   },
   setTooltip: (tooltip: State['tooltip']) => void;
 }

@@ -169,6 +169,7 @@ export const AutoComplete: React.FC<{
   const valueLabels = (state?.valueLabels || []) as any[];
   const [textValue, setTextValue] = React.useState("");
 
+
   const [open, setOpen] = React.useState(false);
 
   const handleClose = (_e: any, reason: any) => {
@@ -180,7 +181,13 @@ export const AutoComplete: React.FC<{
   React.useEffect(() => {
     // on mount, set text value to the current value if it exists
     setTextValue(valueLabels.join(", "));
-  },[]);
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) {
+      setTextValue(valueLabels.join(", "));
+    }
+  }, [valueLabels, open]);
 
   // @ts-ignore
   const valueCol = spec.options.value;
@@ -280,15 +287,12 @@ export const AutoComplete: React.FC<{
           setTextValue("");
         }}
         onBlur={() => {
-          setTextValue(valueLabels.join(", "));
+          setOpen(false);
         }}
         open={open}
         inputValue={textValue}
         onOpen={() => {
           setOpen(true);
-          setTimeout(() => {
-            // debugger
-          }, 1000);
         }}
         PopperComponent={StyledPopper}
         ListboxComponent={ListboxComponent}

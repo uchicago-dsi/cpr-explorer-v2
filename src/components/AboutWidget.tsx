@@ -51,7 +51,7 @@ const Reference: React.FC<{ id: keyof typeof references }> = ({ id }) => {
       >
         {ref.name}
       </a>
-      ;{" "}
+      {i < references[id].length - 1 ? "; " : ""}
     </span>
   ));
   return (
@@ -181,22 +181,49 @@ export const AboutWidget = () => {
           Foundation and 11th Hour Foundation. The views expressed here do not
           necessarily reflect the views of the Foundations.
         </Typography>
-        <Typography component={"h4"}>Data Description</Typography>
+        <Typography component={"h4"} fontWeight={"bold"}>
+          Data Description
+        </Typography>
         <Typography component={"p"}>
           California's Pesticide Use Reporting (PUR) program has collected data
           on California's agriculture and many non-agriculture pesticide uses
-          across the state since 1970 through present day. Managed and collected
-          by California's Department of Pesticide Regulation, PUR data is
-          refreshed about once per year. More information is available from [CA
-          DPR](https://www.cdpr.ca.gov/docs/pur/purmain.htm). California PUR
-          Data This interactive data explorer enables users to filter or
-          summarize publicly available California PUR data based on the
-          following parameters. PUR data was accessed in Summer 2024. Data from
-          2017 to 2022 (the most recent data year) are available in this tool.
-          Year (start and end), months Active ingredient Active ingredient class
-          or type Product Commodity Agricultural or non-agricultural use
-          (Agricultural available at 1 sq. mi units; non-agricultural available
-          at county-level.)
+          across the state since 1970 through present day. PUR data for this
+          tool was accessed from the{" "}
+          <a
+            href="https://calpip.cdpr.ca.gov/main.cfm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            California Pesticide Information Portal (CalPIP).
+          </a>{" "}
+          PUR data is managed and collected by California's Department of
+          Pesticide Regulation, and it is refreshed about once per year. More
+          information is available from{" "}
+          <a
+            href="https://www.cdpr.ca.gov/docs/pur/purmain.htm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            CA DPR
+          </a>
+          .
+          <br />
+          <br />
+          This interactive data explorer enables users to filter or summarize
+          publicly available California PUR data based on the following
+          parameters:
+          <ul>
+            <li>Start and end month</li>
+            <li>
+              Active ingredients, active ingredient classes, types, and specific
+              types
+            </li>
+            <li>Site / crop produced</li>
+            <li>Pesticide product</li>
+            <li>Application method (aerial, ground, fumigation, or other)</li>
+            <li>Agricultural or non-agricultural use</li>
+          </ul>
+          PUR data was accessed in Summer 2024.
           <br />
           <br />
           Spatial Data (GIS) Spatial data enables users to query data based on
@@ -206,27 +233,50 @@ export const AboutWidget = () => {
               Census Administrative Boundaries: ACS 2021 and 2020 boundaries,
               via census.gov
             </li>
-            <li>Counties Zip codes Census tracts</li>
+            <li>Counties Zip codes (ZCTA / Zip Code Tabulation Area)</li>
+            <li>Census tracts</li>
             <li>
               School districts: elementary, secondary, and unified school
               districts
             </li>
           </ul>
-          Community Data:
+          <b>Community Data:</b>
+          <br />
+          <br />
+          Community and demographic data allow users to better understand the
+          impact of pesticide use on different populations locally and across
+          the state. Demographic data available to filter includes:
           <ul>
             <li>
-              Community and demographic data allow users to better understand
-              the impact of pesticide use on different populations locally and
-              across the state.
+              Percent Black or African American: ACS 2021 data non-hispanic
+              black or african american population divided by total population
             </li>
             <li>
-              Demographic data available to filter, map, and explore includes:
-              Census Demographic Data: ACS 2021 5-year estimates, via Social
-              Explorer Population Race and ethnicity Education
+              Percent Hispanic or Latino: ACS 2021 data hispanic or latino
+              population divided by total population
+            </li>
+            <li>Median household income: ACS 2021 data</li>
+          </ul>
+          Additional demographic data include:
+          <ul>
+            <li>
+              Total population: ACS 2021 data, total population of the area
+            </li>
+            <li>
+              {/* pct without high school degree */}
+              Percent of population over 25 without a high school degree: ACS
+              2021 data
+            </li>
+            <li>
+              {/* pct over 16 working in agriculture */}
+              Percent of population over 16 working in agriculture: ACS 2021
+              data
             </li>
           </ul>
         </Typography>
-        <Typography component={"h4"}>Data Processing</Typography>
+        <Typography component={"h4"} fontWeight="bold">
+          Data Processing
+        </Typography>
         <Typography component={"p"}>
           Data processing for this tool includes the following steps:
           <ol>
@@ -234,16 +284,16 @@ export const AboutWidget = () => {
             <li>
               Data converted from <InlineCode>txt</InlineCode> format to Apache
               Parquet with the following columns retained:
-              <InlineCode>COMTRS</InlineCode> ,
-              <InlineCode>POUNDS_CHEMICAL_APPLIED</InlineCode> ,
-              <InlineCode>POUNDS_PRODUCT_APPLIED</InlineCode> ,
-              <InlineCode>AERIAL_GROUND_INDICATOR</InlineCode> ,
-              <InlineCode>AG_NONAG</InlineCode>,
-              <InlineCode>AMOUNT_PLANTED</InlineCode> ,
-              <InlineCode>CHEMICAL_CODE</InlineCode> ,
-              <InlineCode>COUNTY_CODE</InlineCode> ,
-              <InlineCode>PRODUCT_CHEMICAL_PERCENT</InlineCode>,
-              <InlineCode>PRODUCT_NUMBER</InlineCode> ,
+              <InlineCode>COMTRS</InlineCode>,{" "}
+              <InlineCode>POUNDS_CHEMICAL_APPLIED</InlineCode>,{" "}
+              <InlineCode>POUNDS_PRODUCT_APPLIED</InlineCode>,{" "}
+              <InlineCode>AERIAL_GROUND_INDICATOR</InlineCode>,{" "}
+              <InlineCode>AG_NONAG</InlineCode>,{" "}
+              <InlineCode>AMOUNT_PLANTED</InlineCode>,{" "}
+              <InlineCode>CHEMICAL_CODE</InlineCode>,{" "}
+              <InlineCode>COUNTY_CODE</InlineCode>,{" "}
+              <InlineCode>PRODUCT_CHEMICAL_PERCENT</InlineCode>,{" "}
+              <InlineCode>PRODUCT_NUMBER</InlineCode>,{" "}
               <InlineCode>SITE_CODE</InlineCode>
             </li>
             <li>
@@ -372,6 +422,14 @@ export const AboutWidget = () => {
             <li>
               Site: <InlineCode>site_code</InlineCode> in selected site codes
             </li>
+            <li>
+              Application Method: <InlineCode>aerial_ground</InlineCode> (
+              <InlineCode>AERIAL_GROUND_INDICATOR</InlineCode>) equals selected
+            </li>
+            <li>
+              Agricultural use: <InlineCode>usetype</InlineCode> (
+              <InlineCode>AG_NONAG</InlineCode>) equals selected
+            </li>
           </ol>
           The following filters use a SQL greater than{" "}
           <InlineCode>{">"}</InlineCode> or less than{" "}
@@ -397,6 +455,7 @@ export const AboutWidget = () => {
         <Typography component={"h4"}>Data Grouping</Typography>
         <Typography component={"p"}>
           After filtering, the following data groupings are applied:
+          <br />
           <br />
           <b>Map View</b>
           <br />
@@ -426,7 +485,6 @@ export const AboutWidget = () => {
               product summed
             </li>
           </ol>
-          <br />
           <b>Time series view</b>
           <br />
           <ol>
@@ -453,7 +511,7 @@ export const AboutWidget = () => {
             </li>
           </ol>
         </Typography>
-        <br/>
+        <br />
       </Box>
     </WidgetContainer>
   );

@@ -21,6 +21,7 @@ export type FilterSpec = {
   alwaysInclude?: boolean;
   range?: number[];
   default?: string | string[] | number | number[];
+  defaultLabel?: string | string[] | number | number[];
   format?: 'percent' | 'dollars'
 }
 

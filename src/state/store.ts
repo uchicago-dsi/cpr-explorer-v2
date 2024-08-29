@@ -147,7 +147,7 @@ export const useStore = create<State>(
           queryParam: filter.queryParam,
           value: filter.default || null,
           label: filter.label,
-          valueLabels: filter.default || null,
+          valueLabels: filter.defaultLabel || filter.default || null,
         }))
     ),
     filterKeys: mapConfig[0].filterKeys || [],

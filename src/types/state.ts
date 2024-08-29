@@ -29,7 +29,7 @@ export type FilterState = Pick<FilterSpec, 'queryParam' | 'label'> & {
   value: string | string[] | number | number[] | null;
   valueLabels: string | string[] | number | number[] | null;
 }
-type LoadingStates = 'unloaded' | 'settings-changed' | 'loading' | 'loaded' | 'error' | 'no-data' | 'timeseries-none' | 'timeseries-too-many';
+type LoadingStates = 'unloaded' | 'settings-changed' | 'loading' | 'loaded' | 'error' | 'no-data' | 'timeseries-none' | 'timeseries-too-many' | 'ag-on-not-counties'
 
 export type State = {
   download: (foramt: string, indices?: number[]) => void;

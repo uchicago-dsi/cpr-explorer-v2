@@ -236,7 +236,14 @@ export const useStore = create<State>(
         }
         // @ts-ignore
         window.staticData = staticData;
-        if (staticData.length === 0) {
+        const agFilter = uiFilters.find((f) => f.queryParam === "usetype")?.value === 'NON-AG';
+        if (get().geography !== "Counties" && agFilter) {
+          set({
+            loadingState: "ag-on-not-counties",
+            queriedFilters: deepCloneRecords(uiFilters),
+            timestamp,
+          });
+        } else if (staticData.length === 0) {
           set({
             loadingState: "no-data",
             queriedFilters: deepCloneRecords(uiFilters),

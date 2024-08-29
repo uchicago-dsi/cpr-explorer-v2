@@ -570,7 +570,7 @@ export const Quickstart: React.FC<{
                 This tool by the Open Spatial Lab at the University of Chicago
                 Data Science Institute in collaboration with Californians for
                 Pesticide Reform (CPR) and Pesticide Action Network North
-                American (PANNA). Data is sourced from the California Department
+                American (PANNA). Data are sourced from the California Department
                 of Pesticide Regulation (CDPR) California Pesticide Information
                 Portal project (CalPIP) and the US Census Bureau.
               </Typography>

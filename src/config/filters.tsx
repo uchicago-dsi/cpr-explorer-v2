@@ -172,6 +172,7 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
     dateCol: "monthyear",
+    sortKeys: ["monthyear","ai_class"]
     // defaultFilterOptions: [
     //   {
     //     label: "AI Class",
@@ -187,6 +188,7 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
     dateCol: "monthyear",
+    sortKeys: ["monthyear","ai_type"]
     // defaultFilterOptions: [
     //   {
     //     label: "AI Type",
@@ -202,6 +204,7 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_type_specific",
     dateCol: "monthyear",
+    sortKeys: ["monthyear","ai_type_specific"]
     // defaultFilterOptions: [
     //   {
     //     label: "AI Type Specific",
@@ -217,6 +220,7 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
     dateCol: "monthyear",
+    sortKeys: ["monthyear","chem_code"]
     // defaultFilterOptions: [
     //   {
     //     label: "Active Ingredient (AI)",
@@ -232,6 +236,7 @@ export const timeseriesViews = [
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
     dateCol: "monthyear",
+    sortKeys: ["monthyear","prodno"]
     // defaultFilterOptions: [
     //   {
     //     label: "Product",

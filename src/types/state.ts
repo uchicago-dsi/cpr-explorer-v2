@@ -31,7 +31,7 @@ export type FilterState = Pick<FilterSpec, 'queryParam' | 'label'> & {
 type LoadingStates = 'unloaded' | 'settings-changed' | 'loading' | 'loaded' | 'error' | 'no-data' | 'timeseries-none' | 'timeseries-too-many';
 
 export type State = {
-  download: (foramt: string, indices?: number[]) => void;
+  download: (foramt: string, indices?: number[], sortKeys?: string | string[]) => void;
   loadingState: LoadingStates;
   alwaysApplyFilters: boolean;
   toggleAlwaysApplyFilters: () => void;

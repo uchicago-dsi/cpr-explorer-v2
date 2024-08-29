@@ -375,28 +375,30 @@ export const Quickstart: React.FC<{
 }> = ({ onClose }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [stepIndex, setStepIndex] = useState(0);
-
-  const StepButtons = useMemo(
-    () => () =>
-      (
-        <Box
-          width="100%"
-          justifyContent="space-between"
-          flexDirection={"row"}
-          display="flex"
-        >
-          <Button onClick={() => setStepIndex((p) => p - 1)} variant="outlined">
-            Back
-          </Button>
-          <Button
-            onClick={() => setStepIndex((p) => p + 1)}
-            variant="contained"
-          >
-            {stepIndex < stepLength - 1 ? "Next" : "Finish"}
-          </Button>
-        </Box>
-      ),
-    [stepIndex]
+  
+  const StepButtons = () => (
+    <Box
+      width="100%"
+      justifyContent="space-between"
+      flexDirection={"row"}
+      display="flex"
+      mt={2}
+    >
+      <Button onClick={() => setStepIndex((p) => p - 1)} variant="outlined">
+        Back
+      </Button>
+      <Button
+        onClick={() => {
+          setStepIndex((p) => p + 1);
+          if (stepIndex === stepLength - 1) {
+            onClose();
+          }
+        }}
+        variant="contained"
+      >
+        {stepIndex < stepLength - 2 ? "Next" : "Finish"}
+      </Button>
+    </Box>
   );
 
   const openOnLoadPreference = localStorage.getItem("showQuickStart");
@@ -420,7 +422,6 @@ export const Quickstart: React.FC<{
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status, type, action, index } = data;
-    console.log(data);
     if (action === "close") {
       onClose();
       return;
@@ -434,9 +435,9 @@ export const Quickstart: React.FC<{
 
     if (finishedStatuses.includes(status)) {
       setJoyrideState((p) => ({ ...p, run: false }));
+      onClose();
     }
 
-    console.log(type, data);
   };
 
   const handleToggleClosePreference = () => {

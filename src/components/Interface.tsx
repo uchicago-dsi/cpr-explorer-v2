@@ -11,9 +11,15 @@ export const FilterControl: React.FC<{spec: FilterSpec}> = ({
   spec
 }) => {
   const setFilter = useStore((state) => state.setFilter);
-  const filterState = useStore((state) => state.uiFilters.find((f) => f.queryParam === spec.queryParam));
+  const filterFn = Array.isArray(spec.queryParam)
+    ? (f: any) => {
+        return (spec.queryParam as string[]).every(
+          (q, i) => f.queryParam[i] === q
+        );
+      }
+    : (f: any) => f.queryParam === spec.queryParam;
+  const filterState = useStore((state) => state.uiFilters.find(filterFn));
   const loadingState = useStore((state) => state.loadingState);
-  
   const stateIsTimeseriesError = loadingState.includes('timeseries')
 
   const handleChange = (value: string | string[] | number | number[] | null,

@@ -63,5 +63,9 @@ export type State = {
     data: Record<string, unknown>;
   },
   setTooltip: (tooltip: State['tooltip']) => void;
+  saveQueries: (title: string, format: string) => void;
+  loadQueries: (title: string, format: string, args: Partial<State>) => void;
+  saveMessage?: string;
+  setSaveMessage: (message: string) => void;
 }
 

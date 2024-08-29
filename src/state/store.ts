@@ -9,6 +9,7 @@ import { wrapper } from "../utils/stateUtils";
 import { findExistingFilter } from "../utils/findExistingFilter";
 import { constructQuery } from "../utils/constructQuery";
 import { deepCloneRecords } from "../utils/deepCloneRecords";
+import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
 
 export let staticData: any = [];
 const timeoutDuration = 500;
@@ -27,9 +28,13 @@ export const useStore = create<State>(
           "Time Series Grouping": get().timeseriesType,
         },
       };
-      const filterKeys = get().filterKeys 
-      const filters = get().queriedFilters.filter((f) => filterKeys.includes(f.label))
-      const outputData = indices ? indices.map((i) => staticData[i]) : staticData;
+      const filterKeys = get().filterKeys;
+      const filters = get().queriedFilters.filter((f) =>
+        filterKeys.includes(f.label)
+      );
+      const outputData = indices
+        ? indices.map((i) => staticData[i])
+        : staticData;
 
       exportData(
         format,
@@ -54,26 +59,32 @@ export const useStore = create<State>(
     mapLayer: "pesticide-use",
     view: "map",
     setView: (view: string) => {
-      let timeseriesConfig = view === "timeseries" ? timeseriesViews[0] : {} as any;
-      const uiFilters = get().uiFilters
+      let timeseriesConfig =
+        view === "timeseries" ? timeseriesViews[0] : ({} as any);
+      const uiFilters = get().uiFilters;
       if (view === "timeseries") {
-        const existingFilter = uiFilters.find(f => timeseriesFiltersNotDateRange.includes(f.label))
-        const existingLabel = existingFilter?.label as string
+        const existingFilter = uiFilters.find((f) =>
+          timeseriesFiltersNotDateRange.includes(f.label)
+        );
+        const existingLabel = existingFilter?.label as string;
         if (existingLabel) {
-          timeseriesConfig = timeseriesViews.find(
-            (view) => view.filterKeys.includes(existingLabel as any)
+          timeseriesConfig = timeseriesViews.find((view) =>
+            view.filterKeys.includes(existingLabel as any)
           );
         }
       }
       const geography = get().geography;
       const mapViewConfig =
-        view === "map" || view === 'mapDualView'
+        view === "map" || view === "mapDualView"
           ? mapConfig.find((f) => f.layer == geography) || mapConfig[0]
           : ({} as any);
-          
+
       const filterKeys = timeseriesConfig.filterKeys || [];
       const timeseriesType = timeseriesConfig.label || get().timeseriesType;
-      const queryEndpoint = timeseriesConfig.endpoint || mapViewConfig.endpoint || get().queryEndpoint;
+      const queryEndpoint =
+        timeseriesConfig.endpoint ||
+        mapViewConfig.endpoint ||
+        get().queryEndpoint;
 
       set({
         view,
@@ -82,8 +93,8 @@ export const useStore = create<State>(
         geography,
         // @ts-ignore
         filterKeys,
-        timeseriesType
-      })
+        timeseriesType,
+      });
     },
     timeseriesType: "AI Class",
     setTimeseriesType: (type: string) => {
@@ -91,12 +102,15 @@ export const useStore = create<State>(
         (view) => view.label === type
       );
       if (timeseriesConfig) {
-        const filterKeys = (timeseriesConfig.filterKeys || []) as unknown as string[]
+        const filterKeys = (timeseriesConfig.filterKeys ||
+          []) as unknown as string[];
         set({
           timeseriesType: type,
           filterKeys,
           queryEndpoint: timeseriesConfig?.endpoint || "",
-          uiFilters: get().uiFilters.filter((f) => filterKeys.includes(f.label)),
+          uiFilters: get().uiFilters.filter((f) =>
+            filterKeys.includes(f.label)
+          ),
           loadingState: "settings-changed",
         });
       }
@@ -227,6 +241,108 @@ export const useStore = create<State>(
       }
     },
     setMapLayer: (mapLayer) => set({ mapLayer }),
+    setSaveMessage: (message) => set({ saveMessage: message }),
+    saveMessage: undefined,
+    saveQueries: (title, format) => {
+      const output = {
+        uiFilters: get().uiFilters,
+        view: get().view,
+        geography: get().geography,
+        timeseriesType: get().timeseriesType,
+        mapLayer: get().mapLayer,
+      };
+
+      const date = new Date().toISOString();
+      const cleanTitle = title?.length ? title : `Pesticide Explorer Query ${date}`
+      const compressed = compressToEncodedURIComponent(JSON.stringify(output))
+      switch (format) {
+        case 'download':
+          const blob = new Blob([JSON.stringify(output)], { type: "application/json" });
+          const saveUrl = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = saveUrl;
+          a.download = `${cleanTitle}.json`;
+          a.click();
+          set({ saveMessage: "Query JSON downloaded" });
+          break;
+        case 'url':
+          const url = new URL(window.location.href);
+          url.searchParams.set("query", compressed);
+          window.history.pushState({}, "", url.toString());
+          // copy to clipboard
+          navigator.clipboard.writeText(url.toString());
+          set({ saveMessage: `Use this URL to share your data filter selections with others:\n\n ${url}\n\n(The URL has been copied to your clipboard)` });
+          break
+        case 'localStorage':
+          let prev = JSON.parse(localStorage.getItem("saved-queries") || "[]")
+          const titleInUse = prev?.find((f: any)=>f.title === cleanTitle)
+          if (titleInUse) {
+            prev = prev.filter((f: any)=>f.title !== cleanTitle)
+          }
+          prev = [
+            ...prev,
+            {
+              title,
+              date: new Date().toISOString(),
+              data: compressed
+            }
+          ]
+          localStorage.setItem("saved-queries", JSON.stringify(prev))
+          set({ saveMessage: "Queried saved to your browser" });
+          break;
+      }
+    },
+    loadQueries: (title, format, _args) => {
+      let args = {
+        ...(_args || {})
+      }
+      switch (format) {
+        case 'url':
+          const url = new URL(window.location.href);
+          const urlQuery = url.searchParams.get("query");
+          if (urlQuery) {
+            args = JSON.parse(decompressFromEncodedURIComponent(urlQuery))
+          }
+          break
+        case "download":
+          break
+        case 'localStorage':
+          const prev = JSON.parse(localStorage.getItem("saved-queries") || "[]")
+          const localStorageQuery = prev.find((f: any)=>f.title === title)
+          if (localStorageQuery) {
+            args = JSON.parse(decompressFromEncodedURIComponent(localStorageQuery.data))
+          }
+          break
+    }
+    switch (args.view) {
+      case "timeseries":
+        const timeseriesType = timeseriesViews.find((view) => view.label === args.timeseriesType);
+        if (timeseriesType) {
+          args = {
+            ...args,
+            // @ts-ignore
+            filterKeys: timeseriesType.filterKeys || [],
+            queryEndpoint: timeseriesType.endpoint,
+          }
+        }
+        break;
+      case "mapDualView":
+      case "map":
+        const geoData = mapConfig.find((config) => config.layer === args.geography);
+        if (geoData) {
+          args = {
+            ...args,
+            queryEndpoint: geoData.endpoint,
+            filterKeys: geoData.filterKeys || [],
+          }
+        break
+    }
+  }
+    set({
+      ...args,
+      loadingState: "settings-changed"
+    })
+    }
   }))
 );
 

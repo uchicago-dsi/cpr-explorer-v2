@@ -9,6 +9,8 @@ import { useStore } from "./state/store";
 import { DualMapWidget } from "./components/DualMapWidget";
 import { DataTableModal } from "./components/TableViewer";
 import { DownloadButtons } from "./components/DownloadButtons";
+import { LoadSaveSelectionModal } from "./components/LoadSaveSelectionModal";
+import { useEffect } from "react";
 
 const componentMapping = {
   map: MapWidget,
@@ -80,6 +82,18 @@ function App() {
   const currentView = useStore(state => state.view) as keyof typeof componentMapping;
   const setCurrentView = useStore(state => state.setView);
   const View = componentMapping[currentView];
+  const loadQueries = useStore(state => state.loadQueries);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const query = url.searchParams.get("query");
+    if (query) {
+      loadQueries('', 'url', {});
+      // clear query param
+      url.searchParams.delete("query");
+      window.history.pushState({}, "", url.toString());
+    }
+  }, [])
 
   return (
     <>
@@ -109,6 +123,7 @@ function App() {
         >
           <DownloadButtons />
           <DataTableModal />
+          <LoadSaveSelectionModal />
         </Box>
       )}
     </>

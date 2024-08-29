@@ -59,7 +59,7 @@ export const ingredientSection: FilterSection = {
           },
           {
             value: "*",
-            label: "Both",
+            label: "Both Agricultural and Non-Agricultural",
           },
         ],
       },

@@ -172,13 +172,14 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
     dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Class",
-    //     value: ["Microbial", "Organic"],
-    //     valueLabels: ["Microbial", "Organic"],
-    //   },
-    // ],
+    defaultFilterOptions: [
+      {
+        label: "AI Class",
+        queryParam: "ai_class",
+        value: ["Microbial", "Organic"],
+        valueLabels: ["Microbial", "Organic"],
+      },
+    ],
   },
   {
     label: "AI Type",

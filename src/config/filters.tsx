@@ -39,6 +39,32 @@ export const ingredientSection: FilterSection = {
   title: "Data Filters",
   defaultOpen: false,
   filters: [
+
+    {
+      queryParam: "usetype",
+      label: "Agricultural Use",
+      default: "AG",
+      defaultLabel: "Agricultural",
+      alwaysInclude: true,
+      options: {
+        type: "static",
+        values: [
+          {
+            value: "AG",
+            label: "Agricultural",
+          },
+          {
+            value: "NON-AG",
+            label: "Non-Agricultural (County only)",
+          },
+          {
+            value: "*",
+            label: "Both Agricultural and Non-Agricultural",
+          },
+        ],
+      },
+      component: "dropdown",
+    },
     {
       queryParam: "chemical",
       label: "Active Ingredient (AI)",
@@ -139,28 +165,6 @@ export const ingredientSection: FilterSection = {
       },
       component: "dropdown",
     },
-    {
-      queryParam: "usetype",
-      label: "Agricultural Use",
-      options: {
-        type: "static",
-        values: [
-          {
-            value: "AG",
-            label: "Agricultural",
-          },
-          {
-            value: "NON-AG",
-            label: "Non-Agricultural (County only)",
-          },
-          {
-            value: "*",
-            label: "Both",
-          },
-        ],
-      },
-      component: "dropdown",
-    },
   ],
 };
 
@@ -172,14 +176,15 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
     dateCol: "monthyear",
-    sortKeys: ["monthyear","ai_class"]
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Class",
-    //     value: ["Microbial", "Organic"],
-    //     valueLabels: ["Microbial", "Organic"],
-    //   },
-    // ],
+    sortKeys: ["monthyear","ai_class"],
+    defaultFilterOptions: [
+      {
+        label: "AI Class",
+        queryParam: "ai_class",
+        value: ["Microbial", "Organic"],
+        valueLabels: ["Microbial", "Organic"],
+      },
+    ],
   },
   {
     label: "AI Type",
@@ -189,13 +194,6 @@ export const timeseriesViews = [
     keyCol: "ai_type",
     dateCol: "monthyear",
     sortKeys: ["monthyear","ai_type"]
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Type",
-    //     value: ["Defoliant", "Fumigant", "Insecticide"],
-    //     valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
-    //   },
-    // ],
   },
   {
     label: "AI Type Specific",
@@ -205,13 +203,6 @@ export const timeseriesViews = [
     keyCol: "ai_type_specific",
     dateCol: "monthyear",
     sortKeys: ["monthyear","ai_type_specific"]
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Type Specific",
-    //     value: ["Defoliant", "Fumigant", "Insecticide"],
-    //     valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
-    //   },
-    // ],
   },
   {
     label: "Active Ingredient",
@@ -221,13 +212,6 @@ export const timeseriesViews = [
     keyCol: "chem_code",
     dateCol: "monthyear",
     sortKeys: ["monthyear","chem_code"]
-    // defaultFilterOptions: [
-    //   {
-    //     label: "Active Ingredient (AI)",
-    //     value: [510, 2297, 1685],
-    //     valueLabels: ["Pyrethrins", "Lambda-Cyhalothrin", "Acephate"],
-    //   },
-    // ],
   },
   {
     label: "Product",
@@ -237,13 +221,6 @@ export const timeseriesViews = [
     keyCol: "prodno",
     dateCol: "monthyear",
     sortKeys: ["monthyear","prodno"]
-    // defaultFilterOptions: [
-    //   {
-    //     label: "Product",
-    //     value: [47884, 12723],
-    //     valueLabels: ["70% Neem Oil", "1-10 Pyrenone Insect Spray"],
-    //   },
-    // ],
   },
 ] as const;
 

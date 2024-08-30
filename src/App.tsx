@@ -10,21 +10,18 @@ import { DualMapWidget } from "./components/DualMapWidget";
 import { DataTableModal } from "./components/TableViewer";
 import { DownloadButtons } from "./components/DownloadButtons";
 import { LoadSaveSelectionModal } from "./components/LoadSaveSelectionModal";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Quickstart } from "./components/Quickstart";
 
 const componentMapping = {
   map: MapWidget,
   demography: Demography,
   timeseries: TimeseriesWidget,
-  about:  AboutWidget,
-  mapDualView: DualMapWidget
+  about: AboutWidget,
+  mapDualView: DualMapWidget,
 } as const;
 
-const dataViews = [
-  "map",
-  "timeseries",
-  "mapDualView",
-]
+const dataViews = ["map", "timeseries", "mapDualView"];
 
 const selectConfig = [
   {
@@ -76,29 +73,40 @@ const TabButton = styled(Button)`
     background: rgb(59, 83, 103);
     color: white;
   }
-`
+`;
 
 function App() {
-  const currentView = useStore(state => state.view) as keyof typeof componentMapping;
-  const setCurrentView = useStore(state => state.setView);
+  const [showQuickStart, setShowQuickStart] = useState(
+    localStorage.getItem("showQuickStart") === null
+  );
+  const currentView = useStore(
+    (state) => state.view
+  ) as keyof typeof componentMapping;
+  const setCurrentView = useStore((state) => state.setView);
   const View = componentMapping[currentView];
-  const loadQueries = useStore(state => state.loadQueries);
+  const loadQueries = useStore((state) => state.loadQueries);
 
   useEffect(() => {
     const url = new URL(window.location.href);
     const query = url.searchParams.get("query");
     if (query) {
-      loadQueries('', 'url', {});
+      loadQueries("", "url", {});
       // clear query param
       url.searchParams.delete("query");
       window.history.pushState({}, "", url.toString());
     }
-  }, [])
+  }, []);
 
   return (
     <>
-      <NavContainer>
+      {showQuickStart && (
+        <Quickstart onClose={() => setShowQuickStart(false)} />
+      )}
+      <NavContainer id="nav-container">
         <Box component={"div"} flexDirection={"row"} display="flex" gap="2px">
+          <TabButton onClick={() => setShowQuickStart(true)} color="secondary">
+            Quickstart
+          </TabButton>
           {selectConfig.map((config) => (
             <TabButton
               key={config.value}
@@ -115,11 +123,14 @@ function App() {
           ))}
         </Box>
       </NavContainer>
-      <View />
+      <span id="data-view">
+        <View />
+      </span>
       {!!dataViews.includes(currentView) && (
         <Box
           component={"div"}
-          sx={{ display: "flex", justifyContent: "center", py: 2, gap:2 }}
+          id="meta-data-stuff"
+          sx={{ display: "flex", justifyContent: "center", py: 2, gap: 2 }}
         >
           <DownloadButtons />
           <DataTableModal />

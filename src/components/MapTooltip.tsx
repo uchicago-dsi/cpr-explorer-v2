@@ -34,24 +34,26 @@ export const MapTooltip: React.FC<{
       }}
     >
       <List style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        {!!mapLayerTooltips  && (
+        {!!mapLayerTooltips &&
           Object.entries(mapLayerTooltips).map(([key, value]) => (
             <ListItem key={key}>
               <Typography component="p">
-                <b>{value || "Data"}:</b> {tooltip?.data?.[key] as string || "N/A"}
+                <b>{value || "Data"}:</b>{" "}
+                {!isNaN(tooltip?.data?.[key] as any)
+                  ? tooltip?.data?.[key]?.toLocaleString()
+                  : "N/A"}
               </Typography>
             </ListItem>
-          ))
-        )}
-        {!!geographyTooltips && (
+          ))}
+        {!!geographyTooltips &&
           Object.entries(geographyTooltips).map(([key, value]) => (
             <ListItem key={key}>
               <Typography component="p">
-                <b>{value || "Data"}:</b> {tooltip?.data?.[key] as string || "N/A"}
+                <b>{value || "Data"}:</b>{" "}
+                {(tooltip?.data?.[key] as string) || "N/A"}
               </Typography>
             </ListItem>
-          ))
-        )}
+          ))}
       </List>
     </Box>
   );

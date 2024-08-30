@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { FilterState, State } from "../types/state";
-import { allFilterSections, timeseriesFiltersNotDateRange, timeseriesViews } from "../config/filters";
+import {
+  allFilterSections,
+  timeseriesFiltersNotDateRange,
+  timeseriesViews,
+} from "../config/filters";
 import { mapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
 import { exportData } from "../utils/packageAndZipData";
@@ -9,7 +13,10 @@ import { wrapper } from "../utils/stateUtils";
 import { findExistingFilter } from "../utils/findExistingFilter";
 import { constructQuery } from "../utils/constructQuery";
 import { deepCloneRecords } from "../utils/deepCloneRecords";
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+import {
+  compressToEncodedURIComponent,
+  decompressFromEncodedURIComponent,
+} from "lz-string";
 
 export let staticData: any = [];
 const timeoutDuration = 500;
@@ -74,16 +81,30 @@ export const useStore = create<State>(
     setView: (view: string) => {
       let timeseriesConfig =
         view === "timeseries" ? timeseriesViews[0] : ({} as any);
-      const uiFilters = get().uiFilters;
+      let uiFilters = get().uiFilters;
       if (view === "timeseries") {
-        const existingFilter = uiFilters.find((f) =>
-          timeseriesFiltersNotDateRange.includes(f.label)
+        const existingFilter = uiFilters.find(
+          (f) =>
+            timeseriesFiltersNotDateRange.includes(f.label) &&
+            (((Array.isArray(f.value || f.valueLabels) ||
+              typeof (f.value || f.valueLabels) === "string") &&
+              ((f.value as any[])?.length ||
+                (f.valueLabels as any[])?.length)) ||
+              typeof f.value === "number")
         );
         const existingLabel = existingFilter?.label as string;
         if (existingLabel) {
           timeseriesConfig = timeseriesViews.find((view) =>
             view.filterKeys.includes(existingLabel as any)
           );
+        } else {
+          const newFilters: FilterState[] =
+            timeseriesConfig?.defaultFilterOptions || [];
+          uiFilters = uiFilters.filter((f) =>
+            newFilters.every((nf) => nf.queryParam !== f.queryParam)
+          );
+
+          uiFilters = [...uiFilters, ...newFilters];
         }
       }
       const geography = get().geography;
@@ -104,10 +125,13 @@ export const useStore = create<State>(
         loadingState: "settings-changed",
         queryEndpoint,
         geography,
+        uiFilters,
         // @ts-ignore
         filterKeys,
         timeseriesType,
       });
+
+      get().executeQuery();
     },
     timeseriesType: "AI Class",
     setTimeseriesType: (type: string) => {
@@ -136,7 +160,7 @@ export const useStore = create<State>(
           queryParam: filter.queryParam,
           value: filter.default || null,
           label: filter.label,
-          valueLabels: filter.default || null,
+          valueLabels: filter.defaultLabel || filter.default || null,
         }))
     ),
     filterKeys: mapConfig[0].filterKeys || [],
@@ -225,7 +249,14 @@ export const useStore = create<State>(
         }
         // @ts-ignore
         window.staticData = staticData;
-        if (staticData.length === 0) {
+        const agFilter = uiFilters.find((f) => f.queryParam === "usetype")?.value === 'NON-AG';
+        if (get().geography !== "Counties" && agFilter) {
+          set({
+            loadingState: "ag-on-not-counties",
+            queriedFilters: deepCloneRecords(uiFilters),
+            timestamp,
+          });
+        } else if (staticData.length === 0) {
           set({
             loadingState: "no-data",
             queriedFilters: deepCloneRecords(uiFilters),
@@ -266,11 +297,15 @@ export const useStore = create<State>(
       };
 
       const date = new Date().toISOString();
-      const cleanTitle = title?.length ? title : `Pesticide Explorer Query ${date}`
-      const compressed = compressToEncodedURIComponent(JSON.stringify(output))
+      const cleanTitle = title?.length
+        ? title
+        : `Pesticide Explorer Query ${date}`;
+      const compressed = compressToEncodedURIComponent(JSON.stringify(output));
       switch (format) {
-        case 'download':
-          const blob = new Blob([JSON.stringify(output)], { type: "application/json" });
+        case "download":
+          const blob = new Blob([JSON.stringify(output)], {
+            type: "application/json",
+          });
           const saveUrl = URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = saveUrl;
@@ -278,87 +313,96 @@ export const useStore = create<State>(
           a.click();
           set({ saveMessage: "Query JSON downloaded" });
           break;
-        case 'url':
+        case "url":
           const url = new URL(window.location.href);
           url.searchParams.set("query", compressed);
           window.history.pushState({}, "", url.toString());
           // copy to clipboard
           navigator.clipboard.writeText(url.toString());
-          set({ saveMessage: `Use this URL to share your data filter selections with others:\n\n ${url}\n\n(The URL has been copied to your clipboard)` });
-          break
-        case 'localStorage':
-          let prev = JSON.parse(localStorage.getItem("saved-queries") || "[]")
-          const titleInUse = prev?.find((f: any)=>f.title === cleanTitle)
+          set({
+            saveMessage: `Use this URL to share your data filter selections with others:\n\n ${url}\n\n(The URL has been copied to your clipboard)`,
+          });
+          break;
+        case "localStorage":
+          let prev = JSON.parse(localStorage.getItem("saved-queries") || "[]");
+          const titleInUse = prev?.find((f: any) => f.title === cleanTitle);
           if (titleInUse) {
-            prev = prev.filter((f: any)=>f.title !== cleanTitle)
+            prev = prev.filter((f: any) => f.title !== cleanTitle);
           }
           prev = [
             ...prev,
             {
               title,
               date: new Date().toISOString(),
-              data: compressed
-            }
-          ]
-          localStorage.setItem("saved-queries", JSON.stringify(prev))
+              data: compressed,
+            },
+          ];
+          localStorage.setItem("saved-queries", JSON.stringify(prev));
           set({ saveMessage: "Queried saved to your browser" });
           break;
       }
     },
     loadQueries: (title, format, _args) => {
       let args = {
-        ...(_args || {})
-      }
+        ...(_args || {}),
+      };
       switch (format) {
-        case 'url':
+        case "url":
           const url = new URL(window.location.href);
           const urlQuery = url.searchParams.get("query");
           if (urlQuery) {
-            args = JSON.parse(decompressFromEncodedURIComponent(urlQuery))
+            args = JSON.parse(decompressFromEncodedURIComponent(urlQuery));
           }
-          break
+          break;
         case "download":
-          break
-        case 'localStorage':
-          const prev = JSON.parse(localStorage.getItem("saved-queries") || "[]")
-          const localStorageQuery = prev.find((f: any)=>f.title === title)
+          break;
+        case "localStorage":
+          const prev = JSON.parse(
+            localStorage.getItem("saved-queries") || "[]"
+          );
+          const localStorageQuery = prev.find((f: any) => f.title === title);
           if (localStorageQuery) {
-            args = JSON.parse(decompressFromEncodedURIComponent(localStorageQuery.data))
+            args = JSON.parse(
+              decompressFromEncodedURIComponent(localStorageQuery.data)
+            );
           }
-          break
-    }
-    switch (args.view) {
-      case "timeseries":
-        const timeseriesType = timeseriesViews.find((view) => view.label === args.timeseriesType);
-        if (timeseriesType) {
-          args = {
-            ...args,
-            // @ts-ignore
-            filterKeys: timeseriesType.filterKeys || [],
-            queryEndpoint: timeseriesType.endpoint,
+          break;
+      }
+      switch (args.view) {
+        case "timeseries":
+          const timeseriesType = timeseriesViews.find(
+            (view) => view.label === args.timeseriesType
+          );
+          if (timeseriesType) {
+            args = {
+              ...args,
+              // @ts-ignore
+              filterKeys: timeseriesType.filterKeys || [],
+              queryEndpoint: timeseriesType.endpoint,
+            };
           }
-        }
-        break;
-      case "mapDualView":
-      case "map":
-        const geoData = mapConfig.find((config) => config.layer === args.geography);
-        if (geoData) {
-          args = {
-            ...args,
-            queryEndpoint: geoData.endpoint,
-            filterKeys: geoData.filterKeys || [],
+          break;
+        case "mapDualView":
+        case "map":
+          const geoData = mapConfig.find(
+            (config) => config.layer === args.geography
+          );
+          if (geoData) {
+            args = {
+              ...args,
+              queryEndpoint: geoData.endpoint,
+              filterKeys: geoData.filterKeys || [],
+            };
+            break;
           }
-        break
-    }
-  }
-    set({
-      ...args,
-      loadingState: "settings-changed"
-    })
-    }
+      }
+      set({
+        ...args,
+        loadingState: "settings-changed",
+      });
+    },
   }))
 );
-
 
 useStore.subscribe((state, prev) => {
   const somethingChanged =

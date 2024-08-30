@@ -196,7 +196,7 @@ export const AboutWidget = () => {
           >
             California Pesticide Information Portal (CalPIP).
           </a>{" "}
-          PUR data is managed and collected by California's Department of
+          PUR data are managed and collected by California's Department of
           Pesticide Regulation, and it is refreshed about once per year. More
           information is available from{" "}
           <a
@@ -324,7 +324,7 @@ export const AboutWidget = () => {
           county code and township range identifiers provided in CalPip data.
           <br />
           For census geographic units, additional processing is required to
-          connect the PUR data census areas. The data is processed using areal
+          connect the PUR data census areas. The data are processed using areal
           interpolation, a method to estimate the proportion of a section that
           falls within each census geography. This method is widely used in
           spatial data analysis to estimate the proportion of an area that falls
@@ -376,7 +376,7 @@ export const AboutWidget = () => {
               districts from rounding and geometry errors.
             </li>
             <li>
-              For Zip Code Tabulation Areas (ZCTAs), around 2% of data is
+              For Zip Code Tabulation Areas (ZCTAs), around 2% of data are
               missing due to lack of total coverage from ZCTA boundaries.{" "}
             </li>
             <li>
@@ -384,7 +384,7 @@ export const AboutWidget = () => {
               and have effectively no data uncertainty added in our processing.
             </li>
             <li>
-              Census demographic data is joined based on relevant geographic
+              Census demographic data are joined based on relevant geographic
               identifier (GEOID, FIPS, or ZCTA).
             </li>
           </ul>

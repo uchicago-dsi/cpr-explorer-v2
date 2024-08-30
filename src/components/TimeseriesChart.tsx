@@ -95,7 +95,7 @@ export default withTooltip<LineChartProps>(
         // find the nearest polygon to the current mouse position
         const point = localPoint(svgRef.current, event);
         if (!point) return;
-        const x = point.x - margin.left
+        const x = point.x
         if (x < 0 || x > xMax) {
           return
         }

@@ -6,11 +6,15 @@ import Popper from "@mui/material/Popper";
 import { useTheme, styled } from "@mui/material/styles";
 import { VariableSizeList, ListChildComponentProps } from "react-window";
 import Typography from "@mui/material/Typography";
-import { FilterSpec, FilterState } from "../types/state";
+import { FilterSpec, FilterState, OptionLabel } from "../types/state";
 import { useOptions } from "../hooks/useOptions";
 import Box from "@mui/material/Box";
 import { FilterValue } from "../config/filters";
 import { theme } from "../main";
+import { create, useStore } from "zustand";
+import { Button } from "@mui/material";
+import { FixedSizeList as List } from 'react-window';
+
 const LISTBOX_PADDING = 8; // px
 
 function renderRow(props: ListChildComponentProps) {
@@ -28,6 +32,7 @@ function renderRow(props: ListChildComponentProps) {
   return (
     <Box
       component="div"
+      height={"40px"}
       sx={{
         display: "flex",
       }}
@@ -68,6 +73,7 @@ const ListboxComponent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLElement>
 >(function ListboxComponent(props, ref) {
+  console.log("!!!props", props);
   const { children, ...other } = props;
   const itemData: React.ReactElement[] = [];
   (children as React.ReactElement[]).forEach(
@@ -81,6 +87,7 @@ const ListboxComponent = React.forwardRef<
   const smUp = useMediaQuery(theme.breakpoints.up("sm"), {
     noSsr: true,
   });
+
   const itemCount = itemData.length;
   const itemSize = smUp ? 54 : 72;
   const lineLength = 24;
@@ -91,9 +98,9 @@ const ListboxComponent = React.forwardRef<
     if (child.hasOwnProperty("group")) {
       return 48;
     }
-    const name = (child as unknown as any)?.[0]?.key || ''
-    const _lines = Math.ceil(name.length / lineLength)
-    const lines = _lines > 2 ? Math.ceil(name.length / longLineLength) : _lines
+    const name = (child as unknown as any)?.[0]?.key || "";
+    const _lines = Math.ceil(name.length / lineLength);
+    const lines = _lines > 2 ? Math.ceil(name.length / longLineLength) : _lines;
     return lines * lineHeight;
   };
 
@@ -127,24 +134,23 @@ const ListboxComponent = React.forwardRef<
   );
 });
 
-const StyledPopper = styled(Popper)<{width?: number}>(({}) => ({
-  '.MuiAutocomplete-listbox': {
-
-    maxHeight: 'none', // Remove max height restriction
-    overflow: 'auto', // Enable scrolling if content exceeds viewport height
-    '& .MuiAutocomplete-option': {
+const StyledPopper = styled(Popper)<{ width?: number }>(({}) => ({
+  ".MuiAutocomplete-listbox": {
+    maxHeight: "none", // Remove max height restriction
+    overflow: "auto", // Enable scrolling if content exceeds viewport height
+    "& .MuiAutocomplete-option": {
       // fontSize: "0.75rem",
       lineHeight: 1,
-      height: '100px',
-      whiteSpace: 'normal', // Allow text to wrap
-      wordBreak: 'break-all', // Allow text to wrap
-      minHeight: '48px', // Set minimum height for individual options
-      margin: '0.5rem 0',
+      height: "100px",
+      whiteSpace: "normal", // Allow text to wrap
+      wordBreak: "break-all", // Allow text to wrap
+      minHeight: "48px", // Set minimum height for individual options
+      margin: "0.5rem 0",
 
       '&[data-focus="true"]': {
         color: theme.palette.primary.main,
       },
-      '&:hover': {
+      "&:hover": {
         color: theme.palette.primary.main,
       },
     },
@@ -158,17 +164,42 @@ const StyledPopper = styled(Popper)<{width?: number}>(({}) => ({
   },
 }));
 
-export const AutoComplete: React.FC<{
+const fallbackTime = 100;
+
+export const _AutoComplete: React.FC<{
   spec: FilterSpec;
   onChange: (value: FilterValue, valueLabels: FilterValue) => void;
   state?: FilterState;
-  focused?:boolean;
+  focused?: boolean;
 }> = ({ spec, onChange, state, focused }) => {
   const _options = useOptions(spec);
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
   const [textValue, setTextValue] = React.useState("");
+  const keyboardfallbackRef = React.useRef<ReturnType<typeof setTimeout>>(null);
 
+  const clearKeyboardFallback = () => {
+    if (keyboardfallbackRef.current) {
+      clearTimeout(keyboardfallbackRef.current);
+    }
+  };
+
+  const keyDownListener = React.useRef<any>((e: KeyboardEvent) => {
+    clearKeyboardFallback();
+    // if e.key is alphanumeric
+    if (e.key.length === 1) {
+      // @ts-ignore
+      keyboardfallbackRef.current = setTimeout(() => {
+        if (e.metaKey || e.ctrlKey || e.altKey) {
+          return;
+        }
+        console.log("!!!FALLBACK", textValue, e);
+        // setTextValue(textValue => `${textValue}${e.key}`);
+      }, fallbackTime);
+    }
+  });
+
+  const keyDownListenerActive = React.useRef(false);
 
   const [open, setOpen] = React.useState(false);
 
@@ -181,11 +212,17 @@ export const AutoComplete: React.FC<{
   React.useEffect(() => {
     // on mount, set text value to the current value if it exists
     setTextValue(valueLabels.join(", "));
+    // add listener for keydown while open
   }, []);
 
   React.useEffect(() => {
     if (!open) {
+      window.removeEventListener("keydown", keyDownListener.current);
+      keyDownListenerActive.current = false;
       setTextValue(valueLabels.join(", "));
+    } else if (!keyDownListenerActive.current) {
+      window.addEventListener("keydown", keyDownListener.current);
+      keyDownListenerActive.current = true;
     }
   }, [valueLabels, open]);
 
@@ -203,6 +240,7 @@ export const AutoComplete: React.FC<{
       // a.label and b.label text compare
       a.label.localeCompare(b.label)
     );
+
   const availableOptions = _options
     .filter((o) => !value.includes(o.value))
     .map((f) => ({
@@ -210,7 +248,7 @@ export const AutoComplete: React.FC<{
       current: false,
     }));
 
-  const allOptions = [...currentOptions, ...availableOptions];
+  const allOptions = [...currentOptions, ...availableOptions].slice(0, 100);
 
   if (!allOptions.length) {
     return null;
@@ -284,7 +322,6 @@ export const AutoComplete: React.FC<{
         onClose={handleClose}
         onFocus={() => {
           setOpen(true);
-          setTextValue("");
         }}
         onBlur={() => {
           setOpen(false);
@@ -299,6 +336,7 @@ export const AutoComplete: React.FC<{
         options={allOptions}
         onInputChange={(e, newInputValue) => {
           if (e?.type && e.type !== "click") {
+            clearKeyboardFallback();
             setTextValue(newInputValue);
           }
         }}
@@ -315,7 +353,13 @@ export const AutoComplete: React.FC<{
           e.preventDefault();
         }}
         renderInput={(params) => {
-          return <TextField {...params} label={spec.label} />;
+          return (
+            <TextField
+              {...params}
+              label={spec.label}
+              onChange={(e) => console.log("!!!TEXT", e)}
+            />
+          );
         }}
         renderOption={(props, option, state) =>
           [props, option, state.index] as React.ReactNode
@@ -325,3 +369,276 @@ export const AutoComplete: React.FC<{
     </>
   );
 };
+
+const getAutocompleteState = () =>
+  create<{
+    isOpen: boolean;
+    filterValue: string;
+    setfilterValue: (value: string) => void;
+    toggleOpen: () => void;
+    setOpen: (value: boolean) => void;
+  }>((set) => ({
+    isOpen: false,
+    toggleOpen: () => set((state) => ({ isOpen: !state.isOpen })),
+    setOpen: (value) => set({ isOpen: value }),
+    filterValue: "",
+    setfilterValue: (value) => set({ filterValue: value }),
+  }));
+
+export const ListComponent: React.FC<{
+  autocompleteState: ReturnType<typeof getAutocompleteState>;
+  textFieldRef: React.RefObject<HTMLInputElement>;
+  listBoxRef: React.RefObject<HTMLUListElement>;
+  spec: FilterSpec;
+  value?: FilterValue;
+  handleChange: (newValue: any, newLabel: any) => void;
+  handlePopperClick: (event: any) => void;
+}> = ({
+  autocompleteState,
+  spec,
+  value,
+  handleChange,
+  textFieldRef,
+  handlePopperClick,
+  listBoxRef,
+}) => {
+  const isOpen = autocompleteState((state) => state.isOpen);
+  const filterValue = autocompleteState((state) => state.filterValue);
+  const _options = useOptions(spec);
+
+  const handleClick = (e: MouseEvent) => {
+    console.log("!!!click", e);
+    e.preventDefault();
+    e.stopPropagation();
+    // Re-focus the text field manually
+    if (textFieldRef.current) {
+      console.log("!!! textfield focus");
+      textFieldRef.current.focus();
+    }
+  };
+
+  React.useLayoutEffect(() => {
+    console.log("!!! listbox instantiate", listBoxRef);
+    // on click in listBoxRef set focus to textFieldRef
+    if (isOpen) {
+      document.addEventListener("click", handleClick);
+    } else {
+      document.removeEventListener("click", handleClick);
+    }
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [isOpen]);
+
+  // @ts-ignore
+  const valueCol = spec.options.value;
+  // @ts-ignore
+  const labelCol = spec.options.label;
+  const allOptions = React.useMemo(() => {
+    const currentOptions = !Array.isArray(value)
+      ? []
+      : value
+          .map((o) => ({
+            ...(_options.find((f) => f.value === o)! || {}),
+            current: true,
+          }))
+          .sort((a, b) =>
+            // a.label and b.label text compare
+            a.label.localeCompare(b.label)
+          );
+
+    const lowerCaseFilterValue = filterValue.toLowerCase();
+
+    const availableOptions =
+      !Array.isArray(value) && !`${value}`?.length
+        ? _options
+        : _options
+            .filter(
+              (o) =>
+                // @ts-ignore
+                !value?.includes(o.value) &&
+                o.label.toLowerCase().includes(lowerCaseFilterValue)
+            )
+            .map((f) => ({
+              ...f,
+              current: false,
+            }));
+
+    return [...currentOptions, ...availableOptions];
+  }, [value, _options, filterValue]);
+
+  const Row = ({ index, key }: any) => {
+    const f = allOptions[index] as OptionLabel & { current: boolean };
+    return (
+      <Button
+        key={key}
+        variant="text"
+        sx={{
+          textTransform: "none",
+          display: "block",
+          textAlign: "left",
+          width: "100%",
+          p: 2,
+          borderRadius: 0,
+          background: f.current ? theme.palette.secondary.main : "white",
+          color: f.current ? "white" : "black",
+        }}
+        onClick={(e) => {
+          handleClick(e);
+          handleChange(f.value, f.label);
+        }}
+      >
+        {f.label}
+        <span style={{ float: "right", marginRight: "1rem" }}>
+          {f.current ? "✓" : ""}
+        </span>
+      </Button>
+    );
+  };
+
+  return (
+    <Box
+      position="relative"
+      width="100%"
+      display={isOpen ? "block" : "none"}
+      sx={{
+        border: "1px solid gray",
+        height: "40vh",
+        overflowY: "auto",
+        transform: "translateY(0.25rem)",
+      }}
+      boxShadow={4}
+      ref={listBoxRef}
+    >
+      {!!isOpen && (
+        
+        
+      <OuterElementContext.Provider>
+      <VariableSizeList
+        itemData={allOptions}
+        height={ 2 * LISTBOX_PADDING}
+        width="100%"
+        outerElementType={OuterElementType}
+        innerElementType="ul"
+        itemSize={(index) => 40}
+        overscanCount={5}
+        itemCount={allOptions.length}
+      >
+      {Row}
+      </VariableSizeList>
+    </OuterElementContext.Provider>
+      )}
+      {!!(isOpen && !allOptions.length) && (
+        <Typography sx={{ p: 2 }}>No results found</Typography>
+      )}
+    </Box>
+  );
+};
+
+export const AutoComplete: React.FC<{
+  spec: FilterSpec;
+  onChange: (value: FilterValue, valueLabels: FilterValue) => void;
+  state?: FilterState;
+  focused?: boolean;
+}> = ({ spec, onChange, state, focused }) => {
+  const isFocused = React.useRef(false);
+  const textFieldRef = React.useRef<HTMLInputElement>(null);
+  const listBoxRef = React.useRef<HTMLUListElement>(null);
+
+  const autoCompleteState = React.useRef(getAutocompleteState());
+  const setOpen = autoCompleteState.current((state) => state.setOpen);
+  const setTextValue = autoCompleteState.current(
+    (state) => state.setfilterValue
+  );
+
+  const textValue = autoCompleteState.current((state) => state.filterValue);
+  const value = (state?.value || []) as any[];
+  const valueLabels = (state?.valueLabels || []) as any[];
+
+  const handleChange = (newValue: any, newLabel: any) => {
+    if (typeof newValue !== "number" && !newValue.trim().length) {
+      return;
+    }
+
+    if (value.includes(newValue)) {
+      const index = value.indexOf(newValue);
+      const newValueList = value
+        .slice(0, index)
+        .concat(value.slice(index + 1)) as any;
+      const newLabelList = valueLabels
+        .slice(0, index)
+        .concat(valueLabels.slice(index + 1)) as any;
+      onChange(newValueList, newLabelList);
+    } else {
+      onChange(
+        [...(value || []), newValue],
+        [...(valueLabels || []), newLabel]
+      );
+    }
+  };
+
+  const handlePopperClick = (event: any) => {
+    // Prevent the popper's click from causing the text field to lose focus
+    event.stopPropagation();
+    // Re-focus the text field manually
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+    }
+  };
+
+  const handleBlur = (event: any) => {
+    // check if event is within the listbox
+    // if not, close the listbox
+    const clickInListbox = listBoxRef.current?.contains(event.relatedTarget);
+    if (clickInListbox) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (textFieldRef.current) {
+        const inputElement = textFieldRef.current?.querySelector("input");
+        inputElement?.focus();
+      }
+    } else {
+      console.log("!!!blurred out", valueLabels.join(", "));
+      isFocused.current = false;
+      setTextValue(valueLabels.join(", "));
+      setOpen(false);
+    }
+  };
+
+  const handleFocus = () => {
+    if (!isFocused.current) {
+      setOpen(true);
+      setTextValue("");
+      isFocused.current = true;
+    } else {
+    }
+  };
+
+  return (
+    <Box position="relative" sx={{ my: 2 }}>
+      <TextField
+        ref={textFieldRef}
+        fullWidth
+        label={spec.label}
+        autoComplete="off"
+        onFocus={handleFocus}
+        value={textValue}
+        onBlur={handleBlur}
+        onChange={(e) => setTextValue(e.target.value)}
+        sx={{
+          position: "relative",
+        }}
+      />
+      <ListComponent
+        autocompleteState={autoCompleteState.current}
+        spec={spec}
+        value={state?.value}
+        textFieldRef={textFieldRef}
+        handleChange={handleChange}
+        handlePopperClick={handlePopperClick}
+        listBoxRef={listBoxRef}
+      />
+    </Box>
+  );
+};
+

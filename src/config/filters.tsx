@@ -176,6 +176,7 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
     dateCol: "monthyear",
+    sortKeys: ["monthyear","ai_class"],
     defaultFilterOptions: [
       {
         label: "AI Class",
@@ -192,13 +193,7 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
     dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Type",
-    //     value: ["Defoliant", "Fumigant", "Insecticide"],
-    //     valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
-    //   },
-    // ],
+    sortKeys: ["monthyear","ai_type"]
   },
   {
     label: "AI Type Specific",
@@ -207,13 +202,7 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_type_specific",
     dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Type Specific",
-    //     value: ["Defoliant", "Fumigant", "Insecticide"],
-    //     valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
-    //   },
-    // ],
+    sortKeys: ["monthyear","ai_type_specific"]
   },
   {
     label: "Active Ingredient",
@@ -222,13 +211,7 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
     dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "Active Ingredient (AI)",
-    //     value: [510, 2297, 1685],
-    //     valueLabels: ["Pyrethrins", "Lambda-Cyhalothrin", "Acephate"],
-    //   },
-    // ],
+    sortKeys: ["monthyear","chem_code"]
   },
   {
     label: "Product",
@@ -237,13 +220,7 @@ export const timeseriesViews = [
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
     dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "Product",
-    //     value: [47884, 12723],
-    //     valueLabels: ["70% Neem Oil", "1-10 Pyrenone Insect Spray"],
-    //   },
-    // ],
+    sortKeys: ["monthyear","prodno"]
   },
 ] as const;
 

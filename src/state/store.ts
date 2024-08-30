@@ -24,7 +24,7 @@ let timeoutFn: any = null;
 
 export const useStore = create<State>(
   wrapper((set, get) => ({
-    download: (format, indices) => {
+    download: (format, indices, sortKeys) => {
       const view = get().view;
 
       const info: any = {
@@ -39,15 +39,28 @@ export const useStore = create<State>(
       const filters = get().queriedFilters.filter((f) =>
         filterKeys.includes(f.label)
       );
+
       const outputData = indices
         ? indices.map((i) => staticData[i])
         : staticData;
+
+      const sortFn = !sortKeys ? null : Array.isArray(sortKeys) 
+        ? (a: any, b: any) => {
+          const aKey = sortKeys.map((key) => a[key]).join("");
+          const bKey = sortKeys.map((key) => b[key]).join("");
+          return aKey.localeCompare(bKey);
+        } 
+        : (a: any, b: any) => a[sortKeys].localeCompare(b[sortKeys])
+
+        const sortedOutputData = sortFn 
+          ? outputData.sort(sortFn)
+          : outputData
 
       exportData(
         format,
         get().view,
         filters,
-        outputData,
+        sortedOutputData,
         view in info ? info[view] : undefined
       );
     },

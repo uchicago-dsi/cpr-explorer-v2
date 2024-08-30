@@ -39,6 +39,32 @@ export const ingredientSection: FilterSection = {
   title: "Data Filters",
   defaultOpen: false,
   filters: [
+
+    {
+      queryParam: "usetype",
+      label: "Agricultural Use",
+      default: "AG",
+      defaultLabel: "Agricultural",
+      alwaysInclude: true,
+      options: {
+        type: "static",
+        values: [
+          {
+            value: "AG",
+            label: "Agricultural",
+          },
+          {
+            value: "NON-AG",
+            label: "Non-Agricultural (County only)",
+          },
+          {
+            value: "*",
+            label: "Both Agricultural and Non-Agricultural",
+          },
+        ],
+      },
+      component: "dropdown",
+    },
     {
       queryParam: "chemical",
       label: "Active Ingredient (AI)",
@@ -139,28 +165,6 @@ export const ingredientSection: FilterSection = {
       },
       component: "dropdown",
     },
-    {
-      queryParam: "usetype",
-      label: "Agricultural Use",
-      options: {
-        type: "static",
-        values: [
-          {
-            value: "AG",
-            label: "Agricultural",
-          },
-          {
-            value: "NON-AG",
-            label: "Non-Agricultural (County only)",
-          },
-          {
-            value: "*",
-            label: "Both",
-          },
-        ],
-      },
-      component: "dropdown",
-    },
   ],
 };
 
@@ -172,13 +176,14 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
     dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Class",
-    //     value: ["Microbial", "Organic"],
-    //     valueLabels: ["Microbial", "Organic"],
-    //   },
-    // ],
+    defaultFilterOptions: [
+      {
+        label: "AI Class",
+        queryParam: "ai_class",
+        value: ["Microbial", "Organic"],
+        valueLabels: ["Microbial", "Organic"],
+      },
+    ],
   },
   {
     label: "AI Type",

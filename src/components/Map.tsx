@@ -118,9 +118,9 @@ export const MainMapView: React.FC<{
     if (loadingState === "settings-changed") setTooltip(undefined);
   }, [loadingState, executeQuery]);
 
-  useEffect(() => {
-    if (loadingState === "settings-changed") executeQuery();
-  }, [executeQuery]);
+  // useEffect(() => {
+  //   if (loadingState === "settings-changed") executeQuery();
+  // }, [executeQuery]);
 
   return (
     <>

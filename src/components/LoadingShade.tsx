@@ -20,118 +20,128 @@ export const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }
     (state) => state.toggleAlwaysApplyFilters
   );
   const alwaysApplyFilters = useStore((state) => state.alwaysApplyFilters);
-  if (loadingState === "loading") {
-    return (
-      <LoadingStateContainer>
-        <CircularProgress />
-        <Typography component="h4" fontWeight={"bold"} mt={2}>
-          Loading...
-        </Typography>
-      </LoadingStateContainer>
-    );
-  }
-  if (loadingState === "error") {
-    return (
-      <LoadingStateContainer>
-        <Alert variant="outlined" severity="error">
-          Error loading data
-        </Alert>
-      </LoadingStateContainer>
-    );
-  }
-  if (loadingState === "timeseries-none") {
-    return (
-      <LoadingStateContainer>
-        <Alert variant="outlined" severity="error">
-          Please select at least one AI, class, type, or product in the data filters menu to view timeseries data
-        </Alert>
-      </LoadingStateContainer>
-    );
-  }
-  if (loadingState === "timeseries-too-many") {
-    return (
-      <LoadingStateContainer>
-        <Alert variant="outlined" severity="error">
-          Please select up to nine (9) AI, class, type, or product in the data filters menu  to view timeseries data
-        </Alert>
-      </LoadingStateContainer>
-    );
-  }
-  if (loadingState === "no-data") {
-    return (
-      <LoadingStateContainer>
-        <Alert variant="outlined" severity="error">
-          No data matches the selected filters
-        </Alert>
-      </LoadingStateContainer>
-    );
-  }
-  if (loadingState === "settings-changed" && alwaysApplyFilters) {
-    return (
-      <LoadingStateContainer>
-        <Alert
-          variant="outlined"
-          severity="info"
-          sx={{
-            background: "white",
-          }}
-        >
-          <Typography component="p">
-            Settings updated. Applying changes...
+  switch (loadingState) {
+    // ag-on-not-counties
+    case "loading":
+      return (
+        <LoadingStateContainer>
+          <CircularProgress />
+          <Typography component="h4" fontWeight={"bold"} mt={2}>
+            Loading...
           </Typography>
-        </Alert>
-      </LoadingStateContainer>
-    );
-  }
-  if (loadingState === "settings-changed") {
-    return (
-      <LoadingStateContainer>
-        <Alert
-          variant="outlined"
-          severity="info"
-          sx={{
-            background: "white",
-          }}
-        >
-          <Typography component="p">
-            Settings updated. Click 'Apply Changes' to refresh the data view.
-          </Typography>
-          <Box
-            component="div"
-            display={"flex"}
-            flexDirection={"row"}
-            gap={2}
-            mt={2}
-          >
-            <Button
-              variant="contained"
-              onClick={executeQuery}
+        </LoadingStateContainer>
+      );
+    case "error":
+      return (
+        <LoadingStateContainer>
+          <Alert variant="outlined" severity="error">
+            Error loading data
+          </Alert>
+        </LoadingStateContainer>
+      );
+    case "timeseries-none":
+      return (
+        <LoadingStateContainer>
+          <Alert variant="outlined" severity="error">
+            Please select at least one AI, class, type, or product in the data
+            filters menu to view timeseries data
+          </Alert>
+        </LoadingStateContainer>
+      );
+    case "timeseries-too-many":
+      return (
+        <LoadingStateContainer>
+          <Alert variant="outlined" severity="error">
+            Please select up to nine (9) AI, class, type, or product in the data
+            filters menu to view timeseries data
+          </Alert>
+        </LoadingStateContainer>
+      );
+    case "no-data":
+      return (
+        <LoadingStateContainer>
+          <Alert variant="outlined" severity="error">
+            No data matches the selected filters
+          </Alert>
+        </LoadingStateContainer>
+      );
+    case "settings-changed":
+      if (alwaysApplyFilters) {
+        return (
+          <LoadingStateContainer>
+            <Alert
+              variant="outlined"
+              severity="info"
               sx={{
-                textTransform: "none",
-                position: "sticky",
-                top: "1rem",
+                background: "white",
               }}
             >
-              Apply Changes
-            </Button>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={alwaysApplyFilters}
-                    onClick={toggleAlwaysApplyFilters}
+              <Typography component="p">
+                Settings updated. Applying changes...
+              </Typography>
+            </Alert>
+          </LoadingStateContainer>
+        );
+      } else {
+        return (
+          <LoadingStateContainer>
+            <Alert
+              variant="outlined"
+              severity="info"
+              sx={{
+                background: "white",
+              }}
+            >
+              <Typography component="p">
+                Settings updated. Click 'Apply Changes' to refresh the data
+                view.
+              </Typography>
+              <Box
+                component="div"
+                display={"flex"}
+                flexDirection={"row"}
+                gap={2}
+                mt={2}
+              >
+                <Button
+                  variant="contained"
+                  onClick={executeQuery}
+                  sx={{
+                    textTransform: "none",
+                    position: "sticky",
+                    top: "1rem",
+                  }}
+                >
+                  Apply Changes
+                </Button>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={alwaysApplyFilters}
+                        onClick={toggleAlwaysApplyFilters}
+                      />
+                    }
+                    sx={{
+                      fontSize: "0.5rem",
+                    }}
+                    label="Automatically Apply Changes"
                   />
-                }
-                sx={{
-                  fontSize: "0.5rem",
-                }}
-                label="Automatically Apply Changes"
-              />
-            </FormGroup>
-          </Box>
-        </Alert>
-      </LoadingStateContainer>
-    );
+                </FormGroup>
+              </Box>
+            </Alert>
+          </LoadingStateContainer>
+        );
+      }
+      case "ag-on-not-counties":
+        return (
+          <LoadingStateContainer>
+            <Alert variant="outlined" severity="error">
+              Non-agricultural data are only available for counties
+            </Alert>
+          </LoadingStateContainer>
+        );
+      default:
+        return null;
   }
-  return null;
 };

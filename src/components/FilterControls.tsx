@@ -159,7 +159,10 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <FilterScrollingContainer isOpen={allowToggle ? open : true}>
+    <FilterScrollingContainer
+      isOpen={allowToggle ? open : true}
+      id="filter-controls"
+    >
       {allowToggle && (
         <button
           id="toggle-filters"
@@ -216,16 +219,18 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
       )}
       {!!view.includes("map") && (
         <>
-          <Typography component="h3" variant="h6">
-            Geography
-          </Typography>
+          <span id="geography">
+            <Typography component="h3" variant="h6">
+              Geography
+            </Typography>
 
-          <MultipleSelectCheckmarks
-            multiple={false}
-            spec={mapConfigFilterSpec}
-            onChange={(value) => setGeography(value as string)}
-            state={{ value: geography, label: geography } as any}
-          />
+            <MultipleSelectCheckmarks
+              multiple={false}
+              spec={mapConfigFilterSpec}
+              onChange={(value) => setGeography(value as string)}
+              state={{ value: geography, label: geography } as any}
+            />
+          </span>
           <SectionBreak />
         </>
       )}
@@ -251,7 +256,9 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
           )
         )
         .map((section, i) => (
-          <Box key={section.title} component="div">
+          <Box key={section.title} component="div"
+          id={`filters-section-${section.title.replace(/\s/g, "-").toLowerCase()}`}
+          >
             {" "}
             <Typography component="h3" variant="h6" paddingBottom="1rem">
               {section.title}

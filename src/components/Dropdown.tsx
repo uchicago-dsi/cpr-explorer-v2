@@ -37,7 +37,6 @@ export const MultipleSelectCheckmarks: React.FC<{
   const options = useOptions(spec);
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
-  const currentOptions = value
 
   const handleChange = (_event: SelectChangeEvent<any>, _e: any) => {
     const newValue = _e.props.value
@@ -61,7 +60,7 @@ export const MultipleSelectCheckmarks: React.FC<{
       );
     }
   };
-  
+
   return (
     <div>
       <FormControl sx={{ my: 1, width: '100%' }}>
@@ -70,7 +69,7 @@ export const MultipleSelectCheckmarks: React.FC<{
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple={multiple}
-          value={currentOptions}
+          value={valueLabels?.length ? valueLabels : value}
           onChange={handleChange}
           input={<OutlinedInput label={spec.label} />}
           renderValue={(selected) => multiple ? selected.join(", ") : selected}

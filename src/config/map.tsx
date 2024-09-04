@@ -119,47 +119,47 @@ export const mapConfig: {
   tooltipKeys?: Record<string, string>;
   sortKeys?: string | string[];
 }[] = [
-  // {
-  //   layer: "Townships",
-  //   tileset: "cpr2024.62lnnt0z",
-  //   endpoint: "66c364f46cea330008e258c2",
-  //   tileId: "MeridianTownshipRange",
-  //   dataId: "MeridianTownshipRange",
-  //   sortKeys: "MeridianTownshipRange",
-  //   filterKeys: defaultKeys,
-  //   tooltipKeys: {
-  //     MeridianTownshipRange: "MeridianTownshipRange",
-  //   },
-  // },
-  // {
-  //   layer: "Counties",
-  //   tileset: "cpr2024.47ns3kc2",
-  //   endpoint: "66c3a44c698c0f0008ae926b",
-  //   tileId: "GEOID",
-  //   dataId: "FIPS",
-  //   sortKeys: "Area Name",
-  //   filterKeys: [
-  //     ...defaultKeys,
-  //     "Agricultural Use"
-  //   ],
-  //   tooltipKeys: {
-  //     "Area Name": "Name",
-  //     GEOID: "GEOID",
-  //   },
-  // },
-  // {
-  //   layer: "School Districts",
-  //   tileset: "cpr2024.5i4j8yha",
-  //   endpoint: "66c3a4e0698c0f0008ae926c",
-  //   tileId: "FIPS",
-  //   dataId: "FIPS",
-  //   filterKeys: defaultKeys,
-  //   sortKeys: "Area Name",
-  //   tooltipKeys: {
-  //     "Area Name": "Name",
-  //     FIPS: "FIPS",
-  //   },
-  // },
+  {
+    layer: "Townships",
+    tileset: "cpr2024.62lnnt0z",
+    endpoint: "66c364f46cea330008e258c2",
+    tileId: "MeridianTownshipRange",
+    dataId: "MeridianTownshipRange",
+    sortKeys: "MeridianTownshipRange",
+    filterKeys: defaultKeys,
+    tooltipKeys: {
+      MeridianTownshipRange: "MeridianTownshipRange",
+    },
+  },
+  {
+    layer: "Counties",
+    tileset: "cpr2024.47ns3kc2",
+    endpoint: "66c3a44c698c0f0008ae926b",
+    tileId: "GEOID",
+    dataId: "FIPS",
+    sortKeys: "Area Name",
+    filterKeys: [
+      ...defaultKeys,
+      "Agricultural Use"
+    ],
+    tooltipKeys: {
+      "Area Name": "Name",
+      GEOID: "GEOID",
+    },
+  },
+  {
+    layer: "School Districts",
+    tileset: "cpr2024.5i4j8yha",
+    endpoint: "66c3a4e0698c0f0008ae926c",
+    tileId: "FIPS",
+    dataId: "FIPS",
+    filterKeys: defaultKeys,
+    sortKeys: "Area Name",
+    tooltipKeys: {
+      "Area Name": "Name",
+      FIPS: "FIPS",
+    },
+  },
   {
     layer: "Tracts",
     tileset: "cpr2024.0n14fhc6",

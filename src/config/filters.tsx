@@ -202,6 +202,7 @@ export const timeseriesViews = [
     keyCol: "ai_class",
     dateCol: "monthyear",
     sortKeys: ["monthyear","ai_class"],
+    labelMapping: "Chemical Class",
     defaultFilterOptions: [
       {
         label: "Chemical Class",
@@ -218,7 +219,8 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
     dateCol: "monthyear",
-    sortKeys: ["monthyear","ai_type"]
+    sortKeys: ["monthyear","ai_type"],
+    labelMapping: "Use Type",
   },
   {
     label: "Active Ingredient",
@@ -227,7 +229,8 @@ export const timeseriesViews = [
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
     dateCol: "monthyear",
-    sortKeys: ["monthyear","chem_code"]
+    sortKeys: ["monthyear","chem_code"],
+    labelMapping: "Active Ingredient (AI)",
   },
   {
     label: "Product",
@@ -236,7 +239,8 @@ export const timeseriesViews = [
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
     dateCol: "monthyear",
-    sortKeys: ["monthyear","prodno"]
+    sortKeys: ["monthyear","prodno"],
+    labelMapping: "Product",
   },
   // TODO
   // {
@@ -261,21 +265,6 @@ export const timeseriesViews = [
 
 export const timeseriesFiltersNotDateRange: any[] = timeseriesViews.map((config) => config.filterKeys)
   .flat().filter((key) => key !== "Date Range");
-
-export const timeseriesLabelMapping = {
-  "Product": {
-    filter: "Product"
-  },
-  "Active Ingredient": {
-    filter: "Active Ingredient (AI)"
-  },
-  "Chemical Class": {
-    filter: "Chemical Class"
-  },
-  "Use Type": {
-    filter: "Use Type"
-  },
-}
 
 
 export const timeseriesFilterSpec: FilterSpec = {

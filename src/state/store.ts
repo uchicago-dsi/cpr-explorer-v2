@@ -266,13 +266,15 @@ export const useStore = create<State>(
           const config = timeseriesViews.find(
             (view) => view.label === get().timeseriesType
           );
-          const dateRange = get().uiFilters.find(
+          const filters = get().uiFilters
+          const dateRange = filters.find(
             (filter) => filter.label === "Date Range"
           );
           staticData = infillTimeseries(
             staticData,
             config,
-            dateRange?.value as string[]
+            dateRange?.value as string[],
+            filters
           );
         }
         // @ts-ignore

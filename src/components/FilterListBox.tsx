@@ -5,6 +5,21 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { useStore } from "../state/store";
 import { StyledOverlayBox } from "./StyledOverlayBox";
+import Button from "@mui/material/Button";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import InfoIcon from "@mui/icons-material/Info";
+
+const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}));
 
 export const FilterListBox = () => {
   const uiFilters = useStore((state) => state.uiFilters);
@@ -12,6 +27,10 @@ export const FilterListBox = () => {
   const view = useStore((state) => state.view);
   const timeseriesType = useStore((state) => state.timeseriesType);
   const filterKeys = useStore((state) => state.filterKeys);
+  const filterKeysNotUsed = filterKeys
+    .filter((f) => !uiFilters.find((u) => u.label === f))
+    .sort((a, b) => a.localeCompare(b))
+    .join(", ");
 
   return (
     <StyledOverlayBox
@@ -31,6 +50,17 @@ export const FilterListBox = () => {
         fontWeight="bold"
       >
         Your Selections:
+        {filterKeysNotUsed.length > 0 && (
+          <LightTooltip
+            title={`The following filters are available but not applied to this query:\n\n${filterKeysNotUsed}`}
+          >
+            <InfoIcon color="primary" fontSize="small"
+            sx={{
+              transform: "translateY(25%)",
+            }}
+            />
+          </LightTooltip>
+        )}
       </Typography>
       <List
         style={{
@@ -41,7 +71,7 @@ export const FilterListBox = () => {
         }}
       >
         <ListItem>
-          <Typography component="p" sx={{lineHeight: 1.7}}>
+          <Typography component="p" sx={{ lineHeight: 1.7 }}>
             {view === "map" && (
               <>
                 <b>Geography:</b> {geography}

@@ -133,7 +133,7 @@ export const useStore = create<State>(
 
       get().executeQuery();
     },
-    timeseriesType: "AI Class",
+    timeseriesType: timeseriesViews[0].label,
     setTimeseriesType: (type: string) => {
       const timeseriesConfig = timeseriesViews.find(
         (view) => view.label === type
@@ -250,7 +250,7 @@ export const useStore = create<State>(
         // @ts-ignore
         window.staticData = staticData;
         const agFilter = uiFilters.find((f) => f.queryParam === "usetype")?.value === 'NON-AG';
-        if (get().geography !== "Counties" && agFilter) {
+        if (get().view.toLowerCase().includes("map") && get().geography !== "Counties" && agFilter) {
           set({
             loadingState: "ag-on-not-counties",
             queriedFilters: deepCloneRecords(uiFilters),

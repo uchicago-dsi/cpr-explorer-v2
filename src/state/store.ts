@@ -82,6 +82,14 @@ export const useStore = create<State>(
       let timeseriesConfig =
         view === "timeseries" ? timeseriesViews[0] : ({} as any);
       let uiFilters = get().uiFilters;
+
+      const geography = get().geography;
+      const mapViewConfig =
+        view === "map" || view === "mapDualView"
+          ? mapConfig.find((f) => f.layer == geography) || mapConfig[0]
+          : ({} as any);
+
+      let  filterKeys = timeseriesConfig.filterKeys || [];
       if (view === "timeseries") {
         const existingFilter = uiFilters.find(
           (f) =>
@@ -106,14 +114,10 @@ export const useStore = create<State>(
 
           uiFilters = [...uiFilters, ...newFilters];
         }
+      } else if (view.toLowerCase().includes("map")) {
+        filterKeys = mapViewConfig.filterKeys || [];
       }
-      const geography = get().geography;
-      const mapViewConfig =
-        view === "map" || view === "mapDualView"
-          ? mapConfig.find((f) => f.layer == geography) || mapConfig[0]
-          : ({} as any);
 
-      const filterKeys = timeseriesConfig.filterKeys || [];
       const timeseriesType = timeseriesConfig.label || get().timeseriesType;
       const queryEndpoint =
         timeseriesConfig.endpoint ||

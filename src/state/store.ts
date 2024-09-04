@@ -39,6 +39,18 @@ export const useStore = create<State>(
       const filters = get().queriedFilters.filter((f) =>
         filterKeys.includes(f.label)
       );
+      const uiFilters = get().uiFilters;
+      const availableFiltersNotUsed = filterKeys.filter(
+        (f) => !filters.find((u) => u.label === f)
+      ).map(f => ({
+        ...(uiFilters.find((u) => u.queryParam === f) || {}),
+        value: "Not Used"
+      }))
+
+      const allFilters = [
+        ...filters,
+        ...availableFiltersNotUsed
+      ]
 
       const outputData = indices
         ? indices.map((i) => staticData[i])
@@ -55,11 +67,11 @@ export const useStore = create<State>(
         const sortedOutputData = sortFn 
           ? outputData.sort(sortFn)
           : outputData
-
+        
       exportData(
         format,
         get().view,
-        filters,
+        allFilters,
         sortedOutputData,
         view in info ? info[view] : undefined
       );
@@ -89,7 +101,7 @@ export const useStore = create<State>(
           ? mapConfig.find((f) => f.layer == geography) || mapConfig[0]
           : ({} as any);
 
-      let  filterKeys = timeseriesConfig.filterKeys || [];
+      let filterKeys = timeseriesConfig.filterKeys || [];
       if (view === "timeseries") {
         const existingFilter = uiFilters.find(
           (f) =>

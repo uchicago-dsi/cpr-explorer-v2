@@ -35,11 +35,10 @@ const dateSection: FilterSection = {
   ],
 };
 
-export const ingredientSection: FilterSection = {
-  title: "Data Filters",
+export const applicationFilters: FilterSection = {
+  title: "Pesticide Application",
   defaultOpen: false,
   filters: [
-
     {
       queryParam: "usetype",
       label: "Agricultural Use",
@@ -64,90 +63,6 @@ export const ingredientSection: FilterSection = {
         ],
       },
       component: "dropdown",
-    },
-    {
-      queryParam: "health",
-      label: "Health/Environmental Impact",
-      options: {
-        type: "dynamic",
-        endpoint: "66d8a25592868e000864e899",
-        value: "id",
-        label: "label",
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "risk",
-      label: "Risk Category",
-      options: {
-        type: "static",
-        values: [
-          {
-            label: "All",
-            value: "*",
-          },
-          {
-            value: "HIGH",
-            label: "High",
-          },
-          {
-            value: "LOW",
-            label: "Low",
-          },
-          {
-            value: "OTHER",
-            label: "Other",
-          },
-        ],
-      },
-      component: "dropdown",
-    },
-    {
-      queryParam: "chemical",
-      label: "Active Ingredient (AI)",
-      options: {
-        type: "dynamic",
-        value: "chem_code",
-        label: "chem_name",
-        // @ts-ignore
-        endpoint: `66d88452ae7ce10008a9473f`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "ai_class",
-      label: "Chemical Class",
-      options: {
-        type: "dynamic",
-        value: "ai_class_ID",
-        label: "ai_class",
-        endpoint: `66d88473ae7ce10008a94740`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "ai_type",
-      label: "Use Type",
-      options: {
-        type: "dynamic",
-        value: "ai_type_ID",
-        label: "ai_type",
-        // @ts-ignore
-        endpoint: `66d88483ae7ce10008a94741`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "product",
-      label: "Product",
-      options: {
-        type: "dynamic",
-        value: "product_code",
-        label: "product_name",
-        // @ts-ignore
-        endpoint: `66d8a20a92868e000864e897`,
-      },
-      component: "autocomplete",
     },
     {
       queryParam: "site",
@@ -192,6 +107,104 @@ export const ingredientSection: FilterSection = {
     },
   ],
 };
+
+export const pesticideInfoFilters: FilterSection = {
+  title: "Chemical and Product Information",
+  defaultOpen: false,
+  filters: [
+    {
+      queryParam: "chemical",
+      label: "Active Ingredient (AI)",
+      options: {
+        type: "dynamic",
+        value: "chem_code",
+        label: "chem_name",
+        // @ts-ignore
+        endpoint: `66d88452ae7ce10008a9473f`,
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "product",
+      label: "Product",
+      options: {
+        type: "dynamic",
+        value: "product_code",
+        label: "product_name",
+        // @ts-ignore
+        endpoint: `66d8a20a92868e000864e897`,
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "ai_class",
+      label: "Chemical Class",
+      options: {
+        type: "dynamic",
+        value: "ai_class_ID",
+        label: "ai_class",
+        endpoint: `66d88473ae7ce10008a94740`,
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "ai_type",
+      label: "Use Type",
+      options: {
+        type: "dynamic",
+        value: "ai_type_ID",
+        label: "ai_type",
+        // @ts-ignore
+        endpoint: `66d88483ae7ce10008a94741`,
+      },
+      component: "autocomplete",
+    },
+  ]
+}
+
+export const impactFilters: FilterSection = {
+  title: "Risk and Impact",
+  defaultOpen: false,
+  filters: [
+    {
+      queryParam: "health",
+      label: "Health/Environmental Impact",
+      options: {
+        type: "dynamic",
+        endpoint: "66d8a25592868e000864e899",
+        value: "id",
+        label: "label",
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "risk",
+      label: "Risk Category",
+      options: {
+        type: "static",
+        values: [
+          {
+            label: "All",
+            value: "*",
+          },
+          {
+            value: "HIGH",
+            label: "High",
+          },
+          {
+            value: "LOW",
+            label: "Low",
+          },
+          {
+            value: "OTHER",
+            label: "Other",
+          },
+        ],
+      },
+      component: "dropdown",
+    },
+  ]
+}
 
 export const timeseriesViews = [
   {
@@ -400,7 +413,9 @@ const demographyFilters: FilterSection = {
 
 export const allFilterSections: FilterSection[] = [
   dateSection,
-  ingredientSection,
+  applicationFilters,
+  pesticideInfoFilters,
+  impactFilters,
   // geographyFilters,
   demographyFilters,
 ]

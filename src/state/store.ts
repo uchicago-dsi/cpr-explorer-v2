@@ -39,13 +39,12 @@ export const useStore = create<State>(
       const filters = get().queriedFilters.filter((f) =>
         filterKeys.includes(f.label)
       );
-      const uiFilters = get().uiFilters;
-      const availableFiltersNotUsed = filterKeys.filter(
-        (f) => !filters.find((u) => u.label === f)
-      ).map(f => ({
-        ...(uiFilters.find((u) => u.queryParam === f) || {}),
-        value: "Not Used"
-      }))
+      const availableFiltersNotUsed = filterKeys
+        .filter((f) => !filters.find((u) => u.label === f))
+        .map((f) => ({
+          label: f,
+          value: "Not Used",
+        }));
 
       const allFilters = [
         ...filters,
@@ -67,7 +66,7 @@ export const useStore = create<State>(
         const sortedOutputData = sortFn 
           ? outputData.sort(sortFn)
           : outputData
-        
+
       exportData(
         format,
         get().view,

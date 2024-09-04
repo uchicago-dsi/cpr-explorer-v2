@@ -5,7 +5,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { useStore } from "../state/store";
 import { StyledOverlayBox } from "./StyledOverlayBox";
-import Button from "@mui/material/Button";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";

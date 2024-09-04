@@ -3,7 +3,7 @@ import { unparse } from "papaparse";
 import { downloadZip } from "client-zip"
 import { FilterState } from "../types/state";
 
-const cleanFitlersText = (view: string, filters: FilterState[], info?: Record<string,any>) => {
+const cleanFitlersText = (view: string, filters: Partial<FilterState>[], info?: Record<string,any>) => {
   let filterText = `Data Filters\n--\nView: ${view}\n`
   if (info) {
     Object.entries(info).forEach(([key, value]) => {
@@ -16,7 +16,7 @@ const cleanFitlersText = (view: string, filters: FilterState[], info?: Record<st
       for (let i=0; i<filter.queryParam.length; i++) {
         let value = `${filter.value[i]}`
         const valueLabel = (filter.valueLabels as any[])?.[i]
-        if (valueLabel && valueLabel !== value) value += ` (${valueLabel})`
+        if (valueLabel && valueLabel !== value) value += `${valueLabel} (${value})`
         filterText += `${filter.label} - ${filter.queryParam[i]}: ${value}\n`
       }
     } else if (Array.isArray(filter.value)) {
@@ -38,7 +38,7 @@ const cleanFitlersText = (view: string, filters: FilterState[], info?: Record<st
 
 export const packageAndZipData = async (
   view: string,
-  filters: FilterState[],
+  filters: Partial<FilterState>[],
   data: Array<Record<string,any>>,
   info?: Record<string,any>
 ) => {
@@ -84,7 +84,7 @@ export const packageAndZipData = async (
 
 export const excelExportData = async (
   view: string,
-  filters: FilterState[],
+  filters: Partial<FilterState>[],
   data: Array<Record<string,any>>,
   info?: Record<string,any>
 ) => {
@@ -151,7 +151,7 @@ export const excelExportData = async (
 export const exportData = async (
   format: string,
   view: string,
-  filters: FilterState[],
+  filters: Partial<FilterState>[],
   data: Array<Record<string,any>>,
   info?: Record<string,any>,
 ) => {

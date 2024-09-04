@@ -39,6 +39,18 @@ export const useStore = create<State>(
       const filters = get().queriedFilters.filter((f) =>
         filterKeys.includes(f.label)
       );
+      const uiFilters = get().uiFilters;
+      const availableFiltersNotUsed = filterKeys.filter(
+        (f) => !filters.find((u) => u.label === f)
+      ).map(f => ({
+        ...(uiFilters.find((u) => u.queryParam === f) || {}),
+        value: "Not Used"
+      }))
+
+      const allFilters = [
+        ...filters,
+        ...availableFiltersNotUsed
+      ]
 
       const outputData = indices
         ? indices.map((i) => staticData[i])
@@ -55,11 +67,11 @@ export const useStore = create<State>(
         const sortedOutputData = sortFn 
           ? outputData.sort(sortFn)
           : outputData
-
+        
       exportData(
         format,
         get().view,
-        filters,
+        allFilters,
         sortedOutputData,
         view in info ? info[view] : undefined
       );
@@ -82,6 +94,14 @@ export const useStore = create<State>(
       let timeseriesConfig =
         view === "timeseries" ? timeseriesViews[0] : ({} as any);
       let uiFilters = get().uiFilters;
+
+      const geography = get().geography;
+      const mapViewConfig =
+        view === "map" || view === "mapDualView"
+          ? mapConfig.find((f) => f.layer == geography) || mapConfig[0]
+          : ({} as any);
+
+      let filterKeys = timeseriesConfig.filterKeys || [];
       if (view === "timeseries") {
         const existingFilter = uiFilters.find(
           (f) =>
@@ -106,14 +126,10 @@ export const useStore = create<State>(
 
           uiFilters = [...uiFilters, ...newFilters];
         }
+      } else if (view.toLowerCase().includes("map")) {
+        filterKeys = mapViewConfig.filterKeys || [];
       }
-      const geography = get().geography;
-      const mapViewConfig =
-        view === "map" || view === "mapDualView"
-          ? mapConfig.find((f) => f.layer == geography) || mapConfig[0]
-          : ({} as any);
 
-      const filterKeys = timeseriesConfig.filterKeys || [];
       const timeseriesType = timeseriesConfig.label || get().timeseriesType;
       const queryEndpoint =
         timeseriesConfig.endpoint ||
@@ -133,7 +149,7 @@ export const useStore = create<State>(
 
       get().executeQuery();
     },
-    timeseriesType: "AI Class",
+    timeseriesType: timeseriesViews[0].label,
     setTimeseriesType: (type: string) => {
       const timeseriesConfig = timeseriesViews.find(
         (view) => view.label === type
@@ -228,9 +244,21 @@ export const useStore = create<State>(
         uiFilters,
         filterKeys
       );
-      const response = await fetch(url);
 
       const timestamp = performance.now();
+      const agFilter = uiFilters.find((f) => f.queryParam === "usetype")?.value === 'NON-AG';
+
+      if (get().view.toLowerCase().includes("map") && get().geography !== "Counties" && agFilter) {
+        set({
+          loadingState: "ag-on-not-counties",
+          queriedFilters: deepCloneRecords(uiFilters),
+          timestamp,
+        });
+        return
+      }
+
+      const response = await fetch(url);
+
       if (response.ok) {
         const buffer = await response.arrayBuffer();
         staticData = unpack(buffer as Buffer);
@@ -238,25 +266,20 @@ export const useStore = create<State>(
           const config = timeseriesViews.find(
             (view) => view.label === get().timeseriesType
           );
-          const dateRange = get().uiFilters.find(
+          const filters = get().uiFilters
+          const dateRange = filters.find(
             (filter) => filter.label === "Date Range"
           );
           staticData = infillTimeseries(
             staticData,
             config,
-            dateRange?.value as string[]
+            dateRange?.value as string[],
+            filters
           );
         }
         // @ts-ignore
         window.staticData = staticData;
-        const agFilter = uiFilters.find((f) => f.queryParam === "usetype")?.value === 'NON-AG';
-        if (get().geography !== "Counties" && agFilter) {
-          set({
-            loadingState: "ag-on-not-counties",
-            queriedFilters: deepCloneRecords(uiFilters),
-            timestamp,
-          });
-        } else if (staticData.length === 0) {
+        if (staticData.length === 0) {
           set({
             loadingState: "no-data",
             queriedFilters: deepCloneRecords(uiFilters),

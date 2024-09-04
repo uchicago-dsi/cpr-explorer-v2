@@ -66,6 +66,43 @@ export const ingredientSection: FilterSection = {
       component: "dropdown",
     },
     {
+      queryParam: "health",
+      label: "Health/Hazard Category",
+      options: {
+        type: "dynamic",
+        endpoint: "66d8a25592868e000864e899",
+        value: "id",
+        label: "label",
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "risk",
+      label: "Risk Category",
+      options: {
+        type: "static",
+        values: [
+          {
+            label: "All",
+            value: "*",
+          },
+          {
+            value: "HIGH",
+            label: "High",
+          },
+          {
+            value: "LOW",
+            label: "Low",
+          },
+          {
+            value: "OTHER",
+            label: "Other",
+          },
+        ],
+      },
+      component: "dropdown",
+    },
+    {
       queryParam: "chemical",
       label: "Active Ingredient (AI)",
       options: {
@@ -73,7 +110,7 @@ export const ingredientSection: FilterSection = {
         value: "chem_code",
         label: "chem_name",
         // @ts-ignore
-        endpoint: `65675fb7b041550008c7b6ba`,
+        endpoint: `66d88452ae7ce10008a9473f`,
       },
       component: "autocomplete",
     },
@@ -82,9 +119,9 @@ export const ingredientSection: FilterSection = {
       label: "AI Class",
       options: {
         type: "dynamic",
-        value: "ai_class",
+        value: "ai_class_ID",
         label: "ai_class",
-        endpoint: `6567637aaeb11300087fbd82`,
+        endpoint: `66d88473ae7ce10008a94740`,
       },
       component: "autocomplete",
     },
@@ -93,22 +130,10 @@ export const ingredientSection: FilterSection = {
       label: "AI Type",
       options: {
         type: "dynamic",
-        value: "ai_type",
+        value: "ai_type_ID",
         label: "ai_type",
         // @ts-ignore
-        endpoint: `6567630eaeb11300087fbd80`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "ai_type_specific",
-      label: "AI Type Specific",
-      options: {
-        type: "dynamic",
-        value: "ai_type_specific",
-        label: "ai_type_specific",
-        // @ts-ignore
-        endpoint: `656763b1aeb11300087fbd83`,
+        endpoint: `66d88483ae7ce10008a94741`,
       },
       component: "autocomplete",
     },
@@ -120,7 +145,7 @@ export const ingredientSection: FilterSection = {
         value: "product_code",
         label: "product_name",
         // @ts-ignore
-        endpoint: `6542775ca570c6000898f983`,
+        endpoint: `66d8a20a92868e000864e897`,
       },
       component: "autocomplete",
     },
@@ -131,7 +156,7 @@ export const ingredientSection: FilterSection = {
         type: "dynamic",
         value: "site_code",
         label: "site_name",
-        endpoint: "65676456aeb11300087fbd85",
+        endpoint: "66d8a22692868e000864e898",
       },
       component: "autocomplete",
     },

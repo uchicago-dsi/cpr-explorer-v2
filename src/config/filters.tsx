@@ -208,6 +208,25 @@ export const impactFilters: FilterSection = {
 
 export const timeseriesViews = [
   {
+    label: "Use Type",
+    filterKeys: ["Date Range", "Agricultural Use", "Use Type"],
+    endpoint: "66bd0312a3735500086e76d2",
+    dataCol: "lbs_chm_used",
+    keyCol: "ai_type",
+    dateCol: "monthyear",
+    sortKeys: ["monthyear","ai_type"],
+    labelMapping: "Use Type",
+    defaultFilterOptions: [
+      {
+        label: "Use Type",
+        queryParam: "ai_type",
+        value: [4, 0, 5, 2],
+        valueLabels: ["Adjuvant", "Fungicide", "Herbicide", "Inseticide"],
+      },
+    ],
+  },
+
+  {
     label: "Chemical Class",
     filterKeys: ["Date Range", "Agricultural Use", "Chemical Class"],
     endpoint: "66a3dcb42bbe320009739fb9",
@@ -224,16 +243,6 @@ export const timeseriesViews = [
         valueLabels: ["Microbial", "Organic"],
       },
     ],
-  },
-  {
-    label: "Use Type",
-    filterKeys: ["Date Range", "Agricultural Use", "Use Type"],
-    endpoint: "66bd0312a3735500086e76d2",
-    dataCol: "lbs_chm_used",
-    keyCol: "ai_type",
-    dateCol: "monthyear",
-    sortKeys: ["monthyear","ai_type"],
-    labelMapping: "Use Type",
   },
   {
     label: "Active Ingredient",
@@ -276,9 +285,9 @@ export const timeseriesViews = [
   // },
 ] as const;
 
+const excludeKeys = ["Date Range", "Agricultural Use"];
 export const timeseriesFiltersNotDateRange: any[] = timeseriesViews.map((config) => config.filterKeys)
-  .flat().filter((key) => key !== "Date Range");
-
+  .flat().filter((key) => !excludeKeys.includes(key));
 
 export const timeseriesFilterSpec: FilterSpec = {
   queryParam: "na",

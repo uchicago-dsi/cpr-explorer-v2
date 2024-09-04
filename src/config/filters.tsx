@@ -67,7 +67,7 @@ export const ingredientSection: FilterSection = {
     },
     {
       queryParam: "health",
-      label: "Health/Hazard Category",
+      label: "Health/Environmental Impact",
       options: {
         type: "dynamic",
         endpoint: "66d8a25592868e000864e899",
@@ -116,7 +116,7 @@ export const ingredientSection: FilterSection = {
     },
     {
       queryParam: "ai_class",
-      label: "AI Class",
+      label: "Chemical Class",
       options: {
         type: "dynamic",
         value: "ai_class_ID",
@@ -127,7 +127,7 @@ export const ingredientSection: FilterSection = {
     },
     {
       queryParam: "ai_type",
-      label: "AI Type",
+      label: "Use Type",
       options: {
         type: "dynamic",
         value: "ai_type_ID",
@@ -151,7 +151,7 @@ export const ingredientSection: FilterSection = {
     },
     {
       queryParam: "site",
-      label: "Site",
+      label: "Crop or Site",
       options: {
         type: "dynamic",
         value: "site_code",
@@ -195,8 +195,8 @@ export const ingredientSection: FilterSection = {
 
 export const timeseriesViews = [
   {
-    label: "AI Class",
-    filterKeys: ["Date Range", "AI Class"],
+    label: "Chemical Class",
+    filterKeys: ["Date Range", "Agricultural Use", "Chemical Class"],
     endpoint: "66a3dcb42bbe320009739fb9",
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
@@ -204,7 +204,7 @@ export const timeseriesViews = [
     sortKeys: ["monthyear","ai_class"],
     defaultFilterOptions: [
       {
-        label: "AI Class",
+        label: "Chemical Class",
         queryParam: "ai_class",
         value: ["Microbial", "Organic"],
         valueLabels: ["Microbial", "Organic"],
@@ -212,8 +212,8 @@ export const timeseriesViews = [
     ],
   },
   {
-    label: "AI Type",
-    filterKeys: ["Date Range", "AI Type"],
+    label: "Use Type",
+    filterKeys: ["Date Range", "Agricultural Use", "Use Type"],
     endpoint: "66bd0312a3735500086e76d2",
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
@@ -221,17 +221,8 @@ export const timeseriesViews = [
     sortKeys: ["monthyear","ai_type"]
   },
   {
-    label: "AI Type Specific",
-    filterKeys: ["Date Range", "AI Type Specific"],
-    endpoint: "66bd03bda3735500086e76d3",
-    dataCol: "lbs_chm_used",
-    keyCol: "ai_type_specific",
-    dateCol: "monthyear",
-    sortKeys: ["monthyear","ai_type_specific"]
-  },
-  {
     label: "Active Ingredient",
-    filterKeys: ["Date Range", "Active Ingredient (AI)"],
+    filterKeys: ["Date Range", "Agricultural Use", "Active Ingredient (AI)"],
     endpoint: "66bd07645c06060008989308",
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
@@ -240,13 +231,32 @@ export const timeseriesViews = [
   },
   {
     label: "Product",
-    filterKeys: ["Date Range", "Product"],
+    filterKeys: ["Date Range", "Agricultural Use", "Product"],
     endpoint: "66bd07e85c06060008989309",
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
     dateCol: "monthyear",
     sortKeys: ["monthyear","prodno"]
   },
+  // TODO
+  // {
+  //   label: "Health Impact",
+  //   filterKeys: ["Date Range", "Agricultural Use", "Health/Environmental Impact"],
+  //   endpoint: "",
+  //   dataCol: "lbs_prd_used",
+  //   keyCol: "",
+  //   dateCol: "monthyear",
+  //   sortKeys: ["monthyear",""]
+  // },
+  // {
+  //   label: "Risk",
+  //   filterKeys: ["Date Range", "Agricultural Use", "Risk Category"],
+  //   endpoint: "",
+  //   dataCol: "lbs_prd_used",
+  //   keyCol: "",
+  //   dateCol: "monthyear",
+  //   sortKeys: ["monthyear",""]
+  // },
 ] as const;
 
 export const timeseriesFiltersNotDateRange: any[] = timeseriesViews.map((config) => config.filterKeys)
@@ -258,7 +268,13 @@ export const timeseriesLabelMapping = {
   },
   "Active Ingredient": {
     filter: "Active Ingredient (AI)"
-  }
+  },
+  "Chemical Class": {
+    filter: "Chemical Class"
+  },
+  "Use Type": {
+    filter: "Use Type"
+  },
 }
 
 

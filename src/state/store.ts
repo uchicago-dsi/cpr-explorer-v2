@@ -228,9 +228,21 @@ export const useStore = create<State>(
         uiFilters,
         filterKeys
       );
-      const response = await fetch(url);
 
       const timestamp = performance.now();
+      const agFilter = uiFilters.find((f) => f.queryParam === "usetype")?.value === 'NON-AG';
+
+      if (get().view.toLowerCase().includes("map") && get().geography !== "Counties" && agFilter) {
+        set({
+          loadingState: "ag-on-not-counties",
+          queriedFilters: deepCloneRecords(uiFilters),
+          timestamp,
+        });
+        return
+      }
+
+      const response = await fetch(url);
+
       if (response.ok) {
         const buffer = await response.arrayBuffer();
         staticData = unpack(buffer as Buffer);
@@ -249,14 +261,7 @@ export const useStore = create<State>(
         }
         // @ts-ignore
         window.staticData = staticData;
-        const agFilter = uiFilters.find((f) => f.queryParam === "usetype")?.value === 'NON-AG';
-        if (get().view.toLowerCase().includes("map") && get().geography !== "Counties" && agFilter) {
-          set({
-            loadingState: "ag-on-not-counties",
-            queriedFilters: deepCloneRecords(uiFilters),
-            timestamp,
-          });
-        } else if (staticData.length === 0) {
+        if (staticData.length === 0) {
           set({
             loadingState: "no-data",
             queriedFilters: deepCloneRecords(uiFilters),

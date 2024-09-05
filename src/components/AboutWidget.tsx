@@ -223,7 +223,12 @@ export const AboutWidget = () => {
             <li>Application method (aerial, ground, fumigation, or other)</li>
             <li>Agricultural or non-agricultural use</li>
           </ul>
-          PUR data was accessed in Summer 2024.
+          PUR data was accessed in Summer 2024. Pesticide product, active
+          ingredients, and site lists for filtering were obtained from the PUR
+          2022 data release files. The chemical class, use type,
+          health/environment impact, and risk category were assigned from a
+          category spreadsheet provided by of the Department of Pesticide
+          Regulation.
           <br />
           <br />
           Spatial Data (GIS) Spatial data enables users to query data based on
@@ -271,6 +276,74 @@ export const AboutWidget = () => {
               {/* pct over 16 working in agriculture */}
               Percent of population over 16 working in agriculture: ACS 2021
               data
+            </li>
+          </ul>
+          Demographic data can be accessed through{" "}
+          <a
+            href="https://data.census.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Census website
+          </a>{" "}
+          or tools like
+          <a
+            href="https://www.census.gov/programs-surveys/acs/data/data-via-api.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Census API
+          </a>{" "}
+          or{" "}
+          <a
+            href="https://www.socialexplorer.com/explore-maps"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Social Explorer
+          </a>
+          .
+        </Typography>
+
+        <Typography component={"h5"} fontWeight={"bold"}>
+          Works Cited
+        </Typography>
+        <Typography component={"p"} className="bib">
+          <ul>
+            <li>
+              California Department of Pesticide Regulation, 2022. AI Categories
+              Table.
+            </li>
+            <li>
+              CalPIP Home - California Pesticide Information Portal [WWW
+              Document], 2024. URL{" "}
+              <a href="https://calpip.cdpr.ca.gov/main.cfm">
+                https://calpip.cdpr.ca.gov/main.cfm
+              </a>{" "}
+              (accessed 9.5.24).
+            </li>
+            <li>
+              Pesticide Use Reporting [WWW Document], 2022, URL{" "}
+              <a href="https://www.cdpr.ca.gov/docs/pur/purmain.htm">
+                https://www.cdpr.ca.gov/docs/pur/purmain.htm
+              </a>{" "}
+              (accessed 9.5.24).
+            </li>
+            <li>
+              Social Explorer - Tables - ACS 2021 (5-Year Estimates) [WWW
+              Document], 2021. Social Explorer. URL{" "}
+              <a href="https://www.socialexplorer.com/explore-maps">
+                https://www.socialexplorer.com/explore-maps
+              </a>{" "}
+              (accessed 9.5.24).
+            </li>
+            <li>
+              US Census Bureau, 2020. TIGER/Line Shapefiles [WWW Document].
+              Census.gov. URL{" "}
+              <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html">
+                https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html
+              </a>{" "}
+              (accessed 9.5.24).
             </li>
           </ul>
         </Typography>

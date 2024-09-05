@@ -1,5 +1,5 @@
 import { FilterSpec } from "../types/state"
-import { ingredientSection } from "./filters"
+import { applicationFilters, impactFilters, pesticideInfoFilters } from "./filters"
 import * as d3 from "d3"
 
 const demographiFilterKeys = [
@@ -8,7 +8,9 @@ const demographiFilterKeys = [
   "Percent Hispanic or Latino",
 ]
 const ingredientKeys = [
-  ...ingredientSection.filters.map(filter => filter.label)
+  ...applicationFilters.filters.map(filter => filter.label),
+  ...pesticideInfoFilters.filters.map(filter => filter.label),
+  ...impactFilters.filters.map(filter => filter.label),
 ]
 
 const defaultKeys = [ 
@@ -117,6 +119,7 @@ export const mapConfig: {
   dataId: string;
   filterKeys?: string[];
   tooltipKeys?: Record<string, string>;
+  sortKeys?: string | string[];
 }[] = [
   {
     layer: "Townships",
@@ -124,6 +127,7 @@ export const mapConfig: {
     endpoint: "66c364f46cea330008e258c2",
     tileId: "MeridianTownshipRange",
     dataId: "MeridianTownshipRange",
+    sortKeys: "MeridianTownshipRange",
     filterKeys: defaultKeys,
     tooltipKeys: {
       MeridianTownshipRange: "MeridianTownshipRange",
@@ -135,6 +139,7 @@ export const mapConfig: {
     endpoint: "66c3a44c698c0f0008ae926b",
     tileId: "GEOID",
     dataId: "FIPS",
+    sortKeys: "Area Name",
     filterKeys: [
       ...defaultKeys,
       "Agricultural Use"
@@ -151,6 +156,7 @@ export const mapConfig: {
     tileId: "FIPS",
     dataId: "FIPS",
     filterKeys: defaultKeys,
+    sortKeys: "Area Name",
     tooltipKeys: {
       "Area Name": "Name",
       FIPS: "FIPS",
@@ -163,6 +169,7 @@ export const mapConfig: {
     tileId: "GEOID",
     dataId: "GEOID",
     filterKeys: defaultKeys,
+    sortKeys: ["NAMELSADCO", "NAMELSAD"],
     tooltipKeys: {
       NAMELSADCO: "County",
       NAMELSAD: "Name",
@@ -175,6 +182,7 @@ export const mapConfig: {
     endpoint: "66c3a5be698c0f0008ae926e",
     tileId: "CO_MTRS",
     dataId: "comtrs",
+    sortKeys: "comtrs",
     filterKeys: defaultKeys,
     tooltipKeys: { NAMELSAD: "Name", REGIONNAME: "Region", comtrs: "CO_MTRS" },
   },
@@ -184,6 +192,7 @@ export const mapConfig: {
     endpoint: "66c3a63a698c0f0008ae926f",
     tileId: "ZCTA5CE20",
     dataId: "ZCTA5CE20",
+    sortKeys: "ZCTA5CE20",
     filterKeys: defaultKeys,
     tooltipKeys: { ZCTA5CE20: "Zip Code", USPS_ZIP_PREF_CITY: "City" },
   },

@@ -35,11 +35,10 @@ const dateSection: FilterSection = {
   ],
 };
 
-export const ingredientSection: FilterSection = {
-  title: "Data Filters",
+export const applicationFilters: FilterSection = {
+  title: "Pesticide Application",
   defaultOpen: false,
   filters: [
-
     {
       queryParam: "usetype",
       label: "Agricultural Use",
@@ -66,72 +65,13 @@ export const ingredientSection: FilterSection = {
       component: "dropdown",
     },
     {
-      queryParam: "chemical",
-      label: "Active Ingredient (AI)",
-      options: {
-        type: "dynamic",
-        value: "chem_code",
-        label: "chem_name",
-        // @ts-ignore
-        endpoint: `65675fb7b041550008c7b6ba`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "ai_class",
-      label: "AI Class",
-      options: {
-        type: "dynamic",
-        value: "ai_class",
-        label: "ai_class",
-        endpoint: `6567637aaeb11300087fbd82`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "ai_type",
-      label: "AI Type",
-      options: {
-        type: "dynamic",
-        value: "ai_type",
-        label: "ai_type",
-        // @ts-ignore
-        endpoint: `6567630eaeb11300087fbd80`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "ai_type_specific",
-      label: "AI Type Specific",
-      options: {
-        type: "dynamic",
-        value: "ai_type_specific",
-        label: "ai_type_specific",
-        // @ts-ignore
-        endpoint: `656763b1aeb11300087fbd83`,
-      },
-      component: "autocomplete",
-    },
-    {
-      queryParam: "product",
-      label: "Product",
-      options: {
-        type: "dynamic",
-        value: "product_code",
-        label: "product_name",
-        // @ts-ignore
-        endpoint: `6542775ca570c6000898f983`,
-      },
-      component: "autocomplete",
-    },
-    {
       queryParam: "site",
-      label: "Site",
+      label: "Crop or Site",
       options: {
         type: "dynamic",
         value: "site_code",
         label: "site_name",
-        endpoint: "65676456aeb11300087fbd85",
+        endpoint: "66d8a22692868e000864e898",
       },
       component: "autocomplete",
     },
@@ -168,17 +108,136 @@ export const ingredientSection: FilterSection = {
   ],
 };
 
+export const pesticideInfoFilters: FilterSection = {
+  title: "Chemical and Product Information",
+  defaultOpen: false,
+  filters: [
+    {
+      queryParam: "chemical",
+      label: "Active Ingredient (AI)",
+      options: {
+        type: "dynamic",
+        value: "chem_code",
+        label: "chem_name",
+        // @ts-ignore
+        endpoint: `66d88452ae7ce10008a9473f`,
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "product",
+      label: "Product",
+      options: {
+        type: "dynamic",
+        value: "product_code",
+        label: "product_name",
+        // @ts-ignore
+        endpoint: `66d8a20a92868e000864e897`,
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "ai_class",
+      label: "Chemical Class",
+      options: {
+        type: "dynamic",
+        value: "ai_class_ID",
+        label: "ai_class",
+        endpoint: `66d88473ae7ce10008a94740`,
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "ai_type",
+      label: "Use Type",
+      options: {
+        type: "dynamic",
+        value: "ai_type_ID",
+        label: "ai_type",
+        // @ts-ignore
+        endpoint: `66d88483ae7ce10008a94741`,
+      },
+      component: "autocomplete",
+    },
+  ]
+}
+
+export const impactFilters: FilterSection = {
+  title: "Risk and Impact",
+  defaultOpen: false,
+  filters: [
+    {
+      queryParam: "health",
+      label: "Health/Environmental Impact",
+      options: {
+        type: "dynamic",
+        endpoint: "66d8a25592868e000864e899",
+        value: "id",
+        label: "label",
+      },
+      component: "autocomplete",
+    },
+    {
+      queryParam: "risk",
+      label: "Risk Category",
+      options: {
+        type: "static",
+        values: [
+          {
+            label: "All",
+            value: "*",
+          },
+          {
+            value: "HIGH",
+            label: "High",
+          },
+          {
+            value: "LOW",
+            label: "Low",
+          },
+          {
+            value: "OTHER",
+            label: "Other",
+          },
+        ],
+      },
+      component: "dropdown",
+    },
+  ]
+}
+
 export const timeseriesViews = [
   {
-    label: "AI Class",
-    filterKeys: ["Date Range", "AI Class"],
+    label: "Use Type",
+    filterKeys: ["Date Range", "Agricultural Use", "Use Type"],
+    endpoint: "66bd0312a3735500086e76d2",
+    dataCol: "lbs_chm_used",
+    keyCol: "ai_type",
+    dateCol: "monthyear",
+    sortKeys: ["monthyear","ai_type"],
+    labelMapping: "Use Type",
+    defaultFilterOptions: [
+      {
+        label: "Use Type",
+        queryParam: "ai_type",
+        value: [4, 0, 5, 2],
+        valueLabels: ["Adjuvant", "Fungicide", "Herbicide", "Inseticide"],
+      },
+    ],
+  },
+
+  {
+    label: "Chemical Class",
+    filterKeys: ["Date Range", "Agricultural Use", "Chemical Class"],
     endpoint: "66a3dcb42bbe320009739fb9",
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
     dateCol: "monthyear",
+    sortKeys: ["monthyear","ai_class"],
+    labelMapping: "Chemical Class",
     defaultFilterOptions: [
       {
-        label: "AI Class",
+        label: "Chemical Class",
         queryParam: "ai_class",
         value: ["Microbial", "Organic"],
         valueLabels: ["Microbial", "Organic"],
@@ -186,79 +245,49 @@ export const timeseriesViews = [
     ],
   },
   {
-    label: "AI Type",
-    filterKeys: ["Date Range", "AI Type"],
-    endpoint: "66bd0312a3735500086e76d2",
-    dataCol: "lbs_chm_used",
-    keyCol: "ai_type",
-    dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Type",
-    //     value: ["Defoliant", "Fumigant", "Insecticide"],
-    //     valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
-    //   },
-    // ],
-  },
-  {
-    label: "AI Type Specific",
-    filterKeys: ["Date Range", "AI Type Specific"],
-    endpoint: "66bd03bda3735500086e76d3",
-    dataCol: "lbs_chm_used",
-    keyCol: "ai_type_specific",
-    dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "AI Type Specific",
-    //     value: ["Defoliant", "Fumigant", "Insecticide"],
-    //     valueLabels: ["Defoliant", "Fumigant", "Insecticide"],
-    //   },
-    // ],
-  },
-  {
     label: "Active Ingredient",
-    filterKeys: ["Date Range", "Active Ingredient (AI)"],
+    filterKeys: ["Date Range", "Agricultural Use", "Active Ingredient (AI)"],
     endpoint: "66bd07645c06060008989308",
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
     dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "Active Ingredient (AI)",
-    //     value: [510, 2297, 1685],
-    //     valueLabels: ["Pyrethrins", "Lambda-Cyhalothrin", "Acephate"],
-    //   },
-    // ],
+    sortKeys: ["monthyear","chem_code"],
+    labelMapping: "Active Ingredient (AI)",
   },
   {
     label: "Product",
-    filterKeys: ["Date Range", "Product"],
+    filterKeys: ["Date Range", "Agricultural Use", "Product"],
     endpoint: "66bd07e85c06060008989309",
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
     dateCol: "monthyear",
-    // defaultFilterOptions: [
-    //   {
-    //     label: "Product",
-    //     value: [47884, 12723],
-    //     valueLabels: ["70% Neem Oil", "1-10 Pyrenone Insect Spray"],
-    //   },
-    // ],
+    sortKeys: ["monthyear","prodno"],
+    labelMapping: "Product",
   },
+  // TODO
+  // {
+  //   label: "Health Impact",
+  //   filterKeys: ["Date Range", "Agricultural Use", "Health/Environmental Impact"],
+  //   endpoint: "",
+  //   dataCol: "lbs_prd_used",
+  //   keyCol: "",
+  //   dateCol: "monthyear",
+  //   sortKeys: ["monthyear",""]
+  // },
+  // {
+  //   label: "Risk",
+  //   filterKeys: ["Date Range", "Agricultural Use", "Risk Category"],
+  //   endpoint: "",
+  //   dataCol: "lbs_prd_used",
+  //   keyCol: "",
+  //   dateCol: "monthyear",
+  //   sortKeys: ["monthyear",""]
+  // },
 ] as const;
 
+const excludeKeys = ["Date Range", "Agricultural Use"];
 export const timeseriesFiltersNotDateRange: any[] = timeseriesViews.map((config) => config.filterKeys)
-  .flat().filter((key) => key !== "Date Range");
-
-export const timeseriesLabelMapping = {
-  "Product": {
-    filter: "Product"
-  },
-  "Active Ingredient": {
-    filter: "Active Ingredient (AI)"
-  }
-}
-
+  .flat().filter((key) => !excludeKeys.includes(key));
 
 export const timeseriesFilterSpec: FilterSpec = {
   queryParam: "na",
@@ -393,7 +422,9 @@ const demographyFilters: FilterSection = {
 
 export const allFilterSections: FilterSection[] = [
   dateSection,
-  ingredientSection,
+  applicationFilters,
+  pesticideInfoFilters,
+  impactFilters,
   // geographyFilters,
   demographyFilters,
 ]

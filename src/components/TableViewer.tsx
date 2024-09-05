@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useMemo } from "react";
-import { staticData } from "../state/store";
+import { staticData, useStore } from "../state/store";
 import { DownloadButtons } from "./DownloadButtons";
 
 const DataTable: React.FC<{onSelect?: (row: any) => void}> = ({
@@ -52,10 +52,12 @@ export const DataTableModal = () => {
   const [selectedIndices, setSelectedIndices] = React.useState<number[]>([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const isLoaded = useStore((state) => state.loadingState === "loaded");
 
   return (
     <Box>
       <Button
+        disabled={!isLoaded}
         onClick={handleOpen}
         variant="contained"
         sx={{
@@ -67,7 +69,7 @@ export const DataTableModal = () => {
         View Data Table
       </Button>
       <Modal
-        open={open}
+        open={isLoaded && open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"

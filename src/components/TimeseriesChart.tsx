@@ -14,6 +14,12 @@ import localPoint from "@visx/event/lib/localPointGeneric";
 import { Typography } from "@mui/material";
 import * as d3 from "d3";
 import { Grid } from "@visx/grid";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
 let tooltipTimeout: number;
 
 const compactFormatter = d3.format(".2s");
@@ -27,11 +33,15 @@ type LineChartProps = {
   dateCol: string;
   width: number;
   height: number;
-  yAxisLabel?: string;
   labelMapping?: Record<string, string>;
 };
 
 const parseDate = timeParse("%Y-%m");
+
+const axisLabels = {
+  lbs_chm_used: "Pounds of Chemical Used",
+  lbs_prd_used: "Pounds of Product Used",
+};
 
 export default withTooltip<LineChartProps>(
   ({
@@ -50,8 +60,9 @@ export default withTooltip<LineChartProps>(
     width,
     height,
     labelMapping,
-    yAxisLabel = "Pounds of Chemical Used",
   }: LineChartProps & WithTooltipProvidedProps<any>) => {
+    const [currentDataCol, setCurrentDataCol] = React.useState(dataCol);
+    const yAxisLabel = axisLabels[currentDataCol as keyof typeof axisLabels];
     const svgRef = React.useRef<SVGSVGElement>(null);
     const margin = { top: 20, right: 20, bottom: 50, left: 60 };
     const xMax = width - margin.left - margin.right;
@@ -65,12 +76,13 @@ export default withTooltip<LineChartProps>(
           cleanedData[d[keyCol]] = [];
         }
         cleanedData[d[keyCol]].push(d);
-        max = Math.max(max, d[dataCol] as number);
+        max = Math.max(max, d[currentDataCol] as number);
       }
-      const keys = Object.keys(cleanedData)
-        .sort((a,b) => `${a}`.localeCompare(`${b}`))
+      const keys = Object.keys(cleanedData).sort((a, b) =>
+        `${a}`.localeCompare(`${b}`)
+      );
       return { cleanedData, max, keys };
-    }, [data, minDate, maxDate, keyCol, dataCol]);
+    }, [data, minDate, maxDate, keyCol, currentDataCol]);
     // Scale
     const xScale = scaleTime({
       range: [0, xMax],
@@ -83,9 +95,14 @@ export default withTooltip<LineChartProps>(
     });
     // Color scale
     const keyLength = keys?.length;
-    const range = keyLength <= 10 ? schemeTableau10 : keys.map((_, i) => interpolateSpectral(i / keyLength));
+    const range =
+      keyLength <= 10
+        ? schemeTableau10
+        : keys.map((_, i) => interpolateSpectral(i / keyLength));
     const colorScale = scaleOrdinal().domain(keys).range(range);
-    const labelScale = scaleOrdinal().domain(keys.map(key => labelMapping?.[key] || key.replace(/_/g, " "))).range(range);
+    const labelScale = scaleOrdinal()
+      .domain(keys.map((key) => labelMapping?.[key] || key.replace(/_/g, " ")))
+      .range(range);
     // event handlers
     const handleMouseMove = useCallback(
       (event: React.MouseEvent | React.TouchEvent) => {
@@ -95,9 +112,9 @@ export default withTooltip<LineChartProps>(
         // find the nearest polygon to the current mouse position
         const point = localPoint(svgRef.current, event);
         if (!point) return;
-        const x = point.x
+        const x = point.x;
         if (x < 0 || x > xMax) {
-          return
+          return;
         }
         const nearest = xScale.invert(x);
         const month = nearest.getMonth() + 1;
@@ -107,7 +124,7 @@ export default withTooltip<LineChartProps>(
           .filter((d) => d[dateCol] === monthyear)
           .sort((a, b) => `${a[keyCol]}`.localeCompare(`${b[keyCol]}`))
           .reduce((acc, d) => {
-            acc[d[keyCol]] = d[dataCol];
+            acc[d[keyCol]] = d[currentDataCol];
             return acc;
           }, {} as Record<string, number>);
         const isOnRightHalf = point.x > width / 2;
@@ -146,12 +163,7 @@ export default withTooltip<LineChartProps>(
             onTouchEnd={handleMouseLeave}
           />
           <Group left={margin.left} top={margin.top} pointerEvents={"none"}>
-            <Grid
-              xScale={xScale}
-              yScale={yScale}
-              width={xMax}
-              height={yMax}
-            />
+            <Grid xScale={xScale} yScale={yScale} width={xMax} height={yMax} />
             <AxisBottom
               scale={xScale}
               top={yMax}
@@ -170,7 +182,7 @@ export default withTooltip<LineChartProps>(
                 key={key}
                 data={cleanedData[key]}
                 x={(d) => xScale(parseDate(d[dateCol]) as Date) ?? 0}
-                y={(d) => yScale(parseFloat(d[dataCol])) ?? 0}
+                y={(d) => yScale(parseFloat(d[currentDataCol])) ?? 0}
                 // @ts-ignore
                 stroke={colorScale(key)}
                 strokeWidth={2}
@@ -235,11 +247,7 @@ export default withTooltip<LineChartProps>(
               }}
             >
               <Typography component="p" padding={0} fontSize={"md"}>
-                <b>
-                  {dataCol.includes("prd")
-                    ? "Pounds of Product Applied "
-                    : "Pounds of Chemical Applied "}
-                </b>
+                <b>{yAxisLabel}</b>
                 <br />
                 <i>{tooltipData.monthyear}</i>
               </Typography>
@@ -260,6 +268,46 @@ export default withTooltip<LineChartProps>(
               </Typography>
             </Tooltip>
           )}
+
+        <Box 
+          position={"absolute"}
+          top={0}
+          left={margin.left + 5}
+          sx={{
+            background: 'white',
+            p: 1
+          }}
+
+          component={"div"}
+          >
+          <FormControl size="small" sx={{ padding: 0, m: "0.5rem 0" }}>
+            <InputLabel
+              id="demo-select-small-label"
+              sx={{ background: "white", px: 1 }}
+            >
+              Timeseries Y Axis
+            </InputLabel>
+            <Select
+              labelId="timeseries-select-small-label"
+              id="timeseries-select-small"
+              value={currentDataCol}
+              sx={{
+                fontSize: "0.75rem",
+                padding: "0",
+                borderRadius: "0.25rem",
+                width: "100%",
+              }}
+              label=""
+              onChange={(e) => setCurrentDataCol(e.target.value)}
+            >
+              {Object.keys(axisLabels).map((option, index) => (
+                <MenuItem key={index} value={option}>
+                  {axisLabels[option as keyof typeof axisLabels]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
       </>
     );
   }

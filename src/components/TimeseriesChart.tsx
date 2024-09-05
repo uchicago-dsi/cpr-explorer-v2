@@ -68,31 +68,50 @@ export default withTooltip<LineChartProps>(
     const xMax = width - margin.left - margin.right;
     const yMax = height - margin.top - margin.bottom;
 
-    const { cleanedData, max, keys } = useMemo(() => {
-      const cleanedData: Record<string, Array<Record<string, any>>> = {};
-      let max = 0;
-      for (const d of data) {
-        if (!cleanedData[d[keyCol]]) {
-          cleanedData[d[keyCol]] = [];
+    const { cleanedData, numberOfXTicks, keys, xScale, yScale, numberOfMonths } =
+      useMemo(() => {
+        const cleanedData: Record<string, Array<Record<string, any>>> = {};
+        let max = 0;
+        for (const d of data) {
+          if (!cleanedData[d[keyCol]]) {
+            cleanedData[d[keyCol]] = [];
+          }
+          cleanedData[d[keyCol]].push(d);
+          max = Math.max(max, d[currentDataCol] as number);
         }
-        cleanedData[d[keyCol]].push(d);
-        max = Math.max(max, d[currentDataCol] as number);
-      }
-      const keys = Object.keys(cleanedData).sort((a, b) =>
-        `${a}`.localeCompare(`${b}`)
-      );
-      return { cleanedData, max, keys };
-    }, [data, minDate, maxDate, keyCol, currentDataCol]);
-    // Scale
-    const xScale = scaleTime({
-      range: [0, xMax],
-      domain: [parseDate(minDate) as Date, parseDate(maxDate) as Date],
-    });
+        const keys = Object.keys(cleanedData).sort((a, b) =>
+          `${a}`.localeCompare(`${b}`)
+        );
+        const dateRange = [
+          parseDate(minDate) as Date,
+          parseDate(maxDate) as Date,
+        ];
+        const numberOfMonths = d3.timeMonth.count(dateRange[0], dateRange[1]);
+        const numberOfYears = d3.timeYear.count(dateRange[0], dateRange[1]);
+        const numberOfXTicks =
+          numberOfMonths <= 12 ? numberOfMonths : numberOfYears * 2;
 
-    const yScale = scaleLinear<number>({
-      range: [yMax, 0],
-      domain: [0, max],
-    });
+        // Scale
+        const xScale = scaleTime({
+          range: [0, xMax],
+          domain: dateRange,
+        });
+        const yScale = scaleLinear<number>({
+          range: [yMax, 0],
+          domain: [0, max],
+        });
+        return {
+          cleanedData,
+          max,
+          keys,
+          dateRange,
+          numberOfXTicks,
+          xScale,
+          yScale,
+          numberOfMonths
+        };
+      }, [data, minDate, maxDate, keyCol, currentDataCol, width, height, xMax, yMax]);
+
     // Color scale
     const keyLength = keys?.length;
     const range =
@@ -103,6 +122,7 @@ export default withTooltip<LineChartProps>(
     const labelScale = scaleOrdinal()
       .domain(keys.map((key) => labelMapping?.[key] || key.replace(/_/g, " ")))
       .range(range);
+
     // event handlers
     const handleMouseMove = useCallback(
       (event: React.MouseEvent | React.TouchEvent) => {
@@ -112,12 +132,14 @@ export default withTooltip<LineChartProps>(
         // find the nearest polygon to the current mouse position
         const point = localPoint(svgRef.current, event);
         if (!point) return;
-        const x = point.x;
+        const x = point.x - margin.left;
         if (x < 0 || x > xMax) {
           return;
         }
         const nearest = xScale.invert(x);
-        const month = nearest.getMonth() + 1;
+        const day = nearest.getDate();
+        const increase = day > 15 ? 2: 1
+        const month = nearest.getMonth() + increase;
         const year = nearest.getFullYear();
         const monthyear = `${year}-${month.toString().padStart(2, "0")}`;
         const monthData = data
@@ -163,13 +185,18 @@ export default withTooltip<LineChartProps>(
             onTouchEnd={handleMouseLeave}
           />
           <Group left={margin.left} top={margin.top} pointerEvents={"none"}>
-            <Grid xScale={xScale} yScale={yScale} width={xMax} height={yMax} />
+            <Grid xScale={xScale} yScale={yScale} width={xMax} height={yMax}
+              numTicksColumns={numberOfXTicks}
+            />
             <AxisBottom
+              numTicks={numberOfXTicks}
               scale={xScale}
               top={yMax}
               label="Date"
               tickFormat={(value) =>
-                (value as Date).toISOString().substring(0, 7)
+                numberOfMonths <= 12 
+                  ? (value as Date).toISOString().substring(0, 7) 
+                  : (value as Date).getFullYear().toString()
               }
             />
             <AxisLeft
@@ -269,17 +296,16 @@ export default withTooltip<LineChartProps>(
             </Tooltip>
           )}
 
-        <Box 
+        <Box
           position={"absolute"}
           top={0}
           left={margin.left + 5}
           sx={{
-            background: 'white',
-            p: 1
+            background: "white",
+            p: 1,
           }}
-
           component={"div"}
-          >
+        >
           <FormControl size="small" sx={{ padding: 0, m: "0.5rem 0" }}>
             <InputLabel
               id="demo-select-small-label"

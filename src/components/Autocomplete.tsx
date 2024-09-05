@@ -311,9 +311,6 @@ export const AutoComplete: React.FC<{
             );
           }
         }}
-        onSelect={(e) => {
-          e.preventDefault();
-        }}
         renderInput={(params) => {
           return <TextField {...params} label={spec.label} />;
         }}

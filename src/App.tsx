@@ -9,7 +9,7 @@ import { useStore } from "./state/store";
 import { DualMapWidget } from "./components/DualMapWidget";
 import { DataTableModal } from "./components/TableViewer";
 import { DownloadButtons } from "./components/DownloadButtons";
-// import { LoadSaveSelectionModal } from "./components/LoadSaveSelectionModal";
+import { LoadSaveSelectionModal } from "./components/LoadSaveSelectionModal";
 import { useEffect, useState } from "react";
 import { Quickstart } from "./components/Quickstart";
 
@@ -134,7 +134,7 @@ function App() {
         >
           <DownloadButtons />
           <DataTableModal />
-          {/* <LoadSaveSelectionModal /> */}
+          <LoadSaveSelectionModal />
         </Box>
       )}
     </>

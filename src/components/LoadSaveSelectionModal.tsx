@@ -216,7 +216,7 @@ export const LoadSaveSelectionModal = () => {
                 }}
               >
                 <Box flex={1}>
-                  <Typography component="h4" fontWeight="bold" sx={{mb:2}}>
+                  <Typography component="h4" fontWeight="bold" sx={{ mb: 2 }}>
                     Save to your web browser
                     <Tooltip
                       title="Your selections will be saved to your browser's local storage. You can find them again on this device only."
@@ -255,7 +255,7 @@ export const LoadSaveSelectionModal = () => {
                         <Button
                           variant="outlined"
                           onClick={() =>
-                            loadQueries(query.title, "loadStorage", {})
+                            loadQueries(query.title, "localStorage", {})
                           }
                           sx={{
                             mr: 2,

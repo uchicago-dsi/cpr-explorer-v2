@@ -166,51 +166,81 @@ export const AboutWidget = () => {
           About
         </Typography>
         <Typography variant="body1">
-          This one-of-a-kind tool makes it easier to explore California's
-          Pesticide Use Reporting (PUR) data and combine that data with common
-          demographic census variables. This tool also makes PUR data available
-          at various census geographies, which are often helpful for
-          understanding the use of pesticides in a community and to support
-          data-driven advocacy.
+          The California Pesticide Use Data Explorer is a one-of-a-kind tool
+          that makes it easier to view, map, and download California&#x27;s
+          pesticide use report data, and serves as a resource for scientists,
+          growers, advocates, and the general public. This interactive data tool
+          links pesticide use data with community demographic data and makes
+          data available at common census geographies, from townships to zip
+          codes and counties.
           <br />
           <br />
-          Developed by the Open Spatial Lab at the University of Chicago Data
-          Science Institute in collaboration with Californians for Pesticide
-          Reform (CPR) and Pesticide Action Network North American (PANNA),
-          project support for this tool was provided by the Robert Wood Johnson
-          Foundation and 11th Hour Foundation. The views expressed here do not
-          necessarily reflect the views of the Foundations.
+          This project was developed by
+          <a
+            href="https://www.pesticidereform.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Californians for Pesticide Reform
+          </a>
+          and
+          <a
+            href="https://www.panna.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pesticide Action &amp; Agroecology Network
+          </a>
+          North America, with the
+          <a
+            href="https://datascience.uchicago.edu/research/open-spatial-lab/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open Spatial Lab
+          </a>
+          at the
+          <a
+            href="https://datascience.uchicago.edu/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            University of Chicago Data Science Institute
+          </a>
+          . Support was provided by the Robert Wood Johnson Foundation and 11th
+          Hour Foundation. The views expressed here do not necessarily reflect
+          the views of the Foundations.
         </Typography>
         <Typography component={"h4"} fontWeight={"bold"}>
           Data Description
         </Typography>
+        <Typography component={"h5"} fontWeight={"bold"}>
+          Pesticide Data
+        </Typography>
         <Typography variant="body1">
-          California's Pesticide Use Reporting (PUR) program has collected data
-          on California's agriculture and many non-agriculture pesticide uses
-          across the state since 1970 through present day. PUR data for this
-          tool was accessed from the{" "}
-          <a
-            href="https://calpip.cdpr.ca.gov/main.cfm"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            California Pesticide Information Portal (CalPIP).
-          </a>{" "}
-          PUR data are managed and collected by California's Department of
-          Pesticide Regulation, and it is refreshed about once per year. More
-          information is available from{" "}
-          <a
-            href="https://www.cdpr.ca.gov/docs/pur/purmain.htm"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            CA DPR
+          California&#x27;s
+          <a href="https://www.cdpr.ca.gov/docs/pur/purmain.htm">
+            Pesticide Use Report (PUR) program
           </a>
+          has collected data on California&#x27;s agriculture and many
+          non-agriculture pesticide uses across the state since 1970 through
+          present day. PUR data for this tool was accessed from the{" "}
+          <strong>
+            <a href="https://calpip.cdpr.ca.gov/main.cfm">
+              California Pesticide Information Portal (CalPIP).
+            </a>
+          </strong>{" "}
+          PUR data are managed and collected by California&#x27;s Department of
+          Pesticide Regulation, and it is updated about once per year. More
+          information is available from{" "}
+          <strong>
+            <a href="https://www.cdpr.ca.gov/docs/pur/purmain.htm">CA DPR</a>
+          </strong>
           .
           <br />
           <br />
-          This interactive data explorer enables users to filter or summarize
-          publicly available California PUR data based on the following
+          This interactive data tool enables users to filter or summarize
+          publicly-available California PUR data based on the following
           parameters:
           <ul>
             <li>Start and end month</li>
@@ -223,7 +253,7 @@ export const AboutWidget = () => {
             <li>Application method (aerial, ground, fumigation, or other)</li>
             <li>Agricultural or non-agricultural use</li>
           </ul>
-          PUR data was accessed in Summer 2024. Pesticide product, active
+          PUR data was accessed in July 2024. Pesticide product, active
           ingredients, and site lists for filtering were obtained from the PUR
           2022 data release files. The chemical class, use type,
           health/environment impact, and risk category were assigned from a
@@ -231,51 +261,68 @@ export const AboutWidget = () => {
           Regulation.
           <br />
           <br />
-          Spatial Data (GIS) Spatial data enables users to query data based on
-          the following areas, or spatial units:
+        </Typography>
+        <Typography component={"h5"} fontWeight={"bold"}>
+          Spatial Data (GIS)
+        </Typography>
+        <Typography variant="body1">
+          Spatial data enables users to query data based on the following areas,
+          or spatial units:
           <ul>
             <li>
-              Census Administrative Boundaries: ACS 2021 and 2020 boundaries,
-              via census.gov
+              Census Administrative Boundaries: American Community Survey 2021
+              and 2020 boundaries, via census.gov
             </li>
-            <li>Counties Zip codes (ZCTA / Zip Code Tabulation Area)</li>
-            <li>Census tracts</li>
+            <li>Counties</li>
+            <li>Zip Codes (Zip Code Tabulation Areas/ZCTA)</li>
+            <li>Census Tracts</li>
             <li>
               School districts: elementary, secondary, and unified school
               districts
             </li>
           </ul>
+        </Typography>
+        <Typography component={"h5"} fontWeight={"bold"}>
           <b>Community Data:</b>
-          <br />
-          <br />
+        </Typography>
+        <Typography variant="body1">
           Community and demographic data allow users to better understand the
           impact of pesticide use on different populations locally and across
           the state. Demographic data available to filter includes:
           <ul>
             <li>
-              Percent Black or African American: ACS 2021 data non-hispanic
-              black or african american population divided by total population
+              {" "}
+              <strong>Percent Black or African American</strong>: American
+              Community Survey (ACS) 2021 5-Year Average, non-Hispanic Black or
+              African American Population divided by Total Population
             </li>
             <li>
-              Percent Hispanic or Latino: ACS 2021 data hispanic or latino
-              population divided by total population
+              <strong>Percent Hispanic or Latino</strong>: American Community
+              Survey (ACS) 2021 5-Year Average, Hispanic or Latino Population
+              divided by Total Population
             </li>
-            <li>Median household income: ACS 2021 data</li>
+            <li>
+              <strong>Median Household Income:</strong> American Community
+              Survey (ACS) 2021 5-Year Average
+            </li>
           </ul>
           Additional demographic data include:
           <ul>
             <li>
-              Total population: ACS 2021 data, total population of the area
+              <strong>Total Population:</strong> American Community Survey (ACS)
+              2021 5-Year Average
             </li>
             <li>
-              {/* pct without high school degree */}
-              Percent of population over 25 without a high school degree: ACS
-              2021 data
+              <strong>
+                Percent of population over 25 without a high school degree
+              </strong>
+              : American Community Survey (ACS) 2021 5-Year Average
             </li>
             <li>
-              {/* pct over 16 working in agriculture */}
-              Percent of population over 16 working in agriculture: ACS 2021
-              data
+              <strong>
+                Percent of population over 16 working in agriculture:
+              </strong>
+              American Community Survey (ACS) 2021 5-Year Average
             </li>
           </ul>
           Demographic data can be accessed through{" "}
@@ -348,10 +395,10 @@ export const AboutWidget = () => {
           </ul>
         </Typography>
         <Typography component={"h4"} fontWeight="bold">
-          Data Processing
+          Data Methods &amp; Processing
         </Typography>
         <Typography variant="body1">
-          Data processing for this tool includes the following steps:
+          Data processing for this tool included the following steps:
           <ol>
             <li>Data accessed from CalPip via web interface and downloaded</li>
             <li>
@@ -388,8 +435,9 @@ export const AboutWidget = () => {
               to optimize data size
             </li>
             <li>
-              Data are joined to active ingredient classes, types, and specific
-              types from previous work developed in the PUR WebGIS
+              Data are joined to active ingredient classes, types, and other
+              characteristics based on the AI Categories table provided by the
+              California Department of Pesticide Regulation (DPR)
             </li>
           </ol>
           For section-level data, no further processing is applied. For
@@ -402,7 +450,7 @@ export const AboutWidget = () => {
           falls within each census geography. This method is widely used in
           spatial data analysis to estimate the proportion of an area that falls
           within a specific area of interest; it has been formalized at least 50
-          years ago with numerous scholarly publications describing the approach{" "}
+          years ago with numerous scholarly publications describing the approach
           <Reference id="areal-interpolation" />.
           <br />
           <br />A simplified explanation of areal interpolation is described in
@@ -439,7 +487,7 @@ export const AboutWidget = () => {
           <ul>
             <li>
               Geoprocessing was done in CRS EPSG:3310, California Albers Equal
-              Area / NAD83.{" "}
+              Area / NAD83.
             </li>
             <li>
               As with any data processing, there is inherent uncertainty added.
@@ -450,7 +498,7 @@ export const AboutWidget = () => {
             </li>
             <li>
               For Zip Code Tabulation Areas (ZCTAs), around 2% of data are
-              missing due to lack of total coverage from ZCTA boundaries.{" "}
+              missing due to lack of total coverage from ZCTA boundaries.
             </li>
             <li>
               County, township, and section data are directly mapped to PUR data
@@ -465,12 +513,8 @@ export const AboutWidget = () => {
         </Typography>
         <Typography component={"h4"}>Data Filtering</Typography>
         <Typography variant="body1">
-          Several data filters are applied based on user data requests.
-          <br />
-          The following filters match using a SQL <InlineCode>
-            IN
-          </InlineCode>{" "}
-          where clause:
+          In filtering the data, the following filters match using a SQL{" "}
+          <InlineCode>IN</InlineCode> where clause:
           <ol>
             <li>
               Active Ingredient (AI): <InlineCode>CHEMICAL_CODE</InlineCode> in
@@ -483,11 +527,6 @@ export const AboutWidget = () => {
             <li>
               Active Ingredient Type: <InlineCode>ai_type</InlineCode> in
               selected active ingredient typees
-            </li>
-            <li>
-              Active Ingredient Type Specific:{" "}
-              <InlineCode>ai_type_specific</InlineCode> in selected specific
-              active ingredient types
             </li>
             <li>
               Product: <InlineCode>prodno</InlineCode> in selected product codes
@@ -510,18 +549,19 @@ export const AboutWidget = () => {
           <ol>
             <li>
               Percent Black or African American:{" "}
-              <InlineCode>pctblack</InlineCode> calculated from ACS 2021 data
-              non-hispanic black or african american population divided by total
-              population
+              <InlineCode>pctblack</InlineCode> calculated from American
+              Community Survey (ACS) 2021 5 Year-Average data Non-Hispanic Black
+              or African American population divided by Total Population
             </li>
             <li>
               Percent Hispanic or Latino: <InlineCode>pcthispanic</InlineCode>{" "}
-              calculated from ACS 2021 data hispanic or latino population
-              divided by total population
+              calculated from American Community Survey (ACS) 2021 5
+              Year-Average data Non-Hispanic Hispanic or Latino population
+              divided by Total Population
             </li>
             <li>
               Median household income: <InlineCode>hhincome</InlineCode>{" "}
-              calculated from ACS 2021 data
+              American Community Survey (ACS) 2021 5 Year-Average data
             </li>
           </ol>
         </Typography>

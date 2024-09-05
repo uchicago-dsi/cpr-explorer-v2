@@ -55,7 +55,7 @@ const Reference: React.FC<{ id: keyof typeof references }> = ({ id }) => {
     </span>
   ));
   return (
-    <Typography component={"p"} display="inline">
+    <Typography variant="body1" display="inline">
       ({refs})
     </Typography>
   );
@@ -165,7 +165,7 @@ export const AboutWidget = () => {
         <Typography component={"h3"} fontSize={"1.5rem"} fontWeight={"bold"}>
           About
         </Typography>
-        <Typography component={"p"}>
+        <Typography variant="body1">
           This one-of-a-kind tool makes it easier to explore California's
           Pesticide Use Reporting (PUR) data and combine that data with common
           demographic census variables. This tool also makes PUR data available
@@ -184,7 +184,7 @@ export const AboutWidget = () => {
         <Typography component={"h4"} fontWeight={"bold"}>
           Data Description
         </Typography>
-        <Typography component={"p"}>
+        <Typography variant="body1">
           California's Pesticide Use Reporting (PUR) program has collected data
           on California's agriculture and many non-agriculture pesticide uses
           across the state since 1970 through present day. PUR data for this
@@ -308,7 +308,7 @@ export const AboutWidget = () => {
         <Typography component={"h5"} fontWeight={"bold"}>
           Works Cited
         </Typography>
-        <Typography component={"p"} className="bib">
+        <Typography variant="body1" className="bib">
           <ul>
             <li>
               California Department of Pesticide Regulation, 2022. AI Categories
@@ -350,7 +350,7 @@ export const AboutWidget = () => {
         <Typography component={"h4"} fontWeight="bold">
           Data Processing
         </Typography>
-        <Typography component={"p"}>
+        <Typography variant="body1">
           Data processing for this tool includes the following steps:
           <ol>
             <li>Data accessed from CalPip via web interface and downloaded</li>
@@ -464,7 +464,7 @@ export const AboutWidget = () => {
           <br />
         </Typography>
         <Typography component={"h4"}>Data Filtering</Typography>
-        <Typography component={"p"}>
+        <Typography variant="body1">
           Several data filters are applied based on user data requests.
           <br />
           The following filters match using a SQL <InlineCode>
@@ -526,7 +526,7 @@ export const AboutWidget = () => {
           </ol>
         </Typography>
         <Typography component={"h4"}>Data Grouping</Typography>
-        <Typography component={"p"}>
+        <Typography variant="body1">
           After filtering, the following data groupings are applied:
           <br />
           <br />

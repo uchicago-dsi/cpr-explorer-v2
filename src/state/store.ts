@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { FilterState, State } from "../types/state";
 import {
   allFilterSections,
+  excludeKeys,
   timeseriesFiltersNotDateRange,
   timeseriesViews,
 } from "../config/filters";
@@ -214,7 +215,7 @@ export const useStore = create<State>(
       // if is timeseries and filters that are not date ragen is empty or greater than 10
       // error
       if (view === "timeseries") {
-        const nonDateKey = filterKeys.filter((f) => f !== "Date Range");
+        const nonDateKey = filterKeys.filter((f) => !excludeKeys.includes(f));
         for (const key of nonDateKey) {
           const filterState = uiFilters.find((filter) => filter.label === key);
           const filterExists = Array.isArray(filterState?.value)

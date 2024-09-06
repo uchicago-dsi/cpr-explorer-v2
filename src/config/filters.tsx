@@ -209,7 +209,7 @@ export const impactFilters: FilterSection = {
 export const timeseriesViews = [
   {
     label: "Use Type",
-    filterKeys: ["Date Range", "Agricultural Use", "Use Type", "County"],
+    filterKeys: ["Date Range", "Agricultural Use", "Use Type", "County", "Crop or Site"],
     endpoint: "66bd0312a3735500086e76d2",
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
@@ -228,7 +228,7 @@ export const timeseriesViews = [
 
   {
     label: "Chemical Class",
-    filterKeys: ["Date Range", "Agricultural Use", "Chemical Class", "County"],
+    filterKeys: ["Date Range", "Agricultural Use", "Chemical Class", "County", "Crop or Site"],
     endpoint: "66a3dcb42bbe320009739fb9",
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
@@ -246,7 +246,7 @@ export const timeseriesViews = [
   },
   {
     label: "Active Ingredient",
-    filterKeys: ["Date Range", "Agricultural Use", "Active Ingredient (AI)", "County"],
+    filterKeys: ["Date Range", "Agricultural Use", "Active Ingredient (AI)", "County", "Crop or Site"],
     endpoint: "66bd07645c06060008989308",
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
@@ -256,7 +256,7 @@ export const timeseriesViews = [
   },
   {
     label: "Product",
-    filterKeys: ["Date Range", "Agricultural Use", "Product", "County"],
+    filterKeys: ["Date Range", "Agricultural Use", "Product", "County", "Crop or Site"],
     endpoint: "66bd07e85c06060008989309",
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
@@ -285,7 +285,7 @@ export const timeseriesViews = [
   // },
 ] as const;
 
-const excludeKeys = ["Date Range", "Agricultural Use", "County"];
+export const excludeKeys = ["Date Range", "Agricultural Use", "County", "Crop or Site"];
 
 export const timeseriesFiltersNotDateRange: any[] = timeseriesViews.map((config) => config.filterKeys)
   .flat().filter((key) => !excludeKeys.includes(key));

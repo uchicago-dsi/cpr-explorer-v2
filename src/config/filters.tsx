@@ -209,7 +209,7 @@ export const impactFilters: FilterSection = {
 export const timeseriesViews = [
   {
     label: "Use Type",
-    filterKeys: ["Date Range", "Agricultural Use", "Use Type"],
+    filterKeys: ["Date Range", "Agricultural Use", "Use Type", "County"],
     endpoint: "66bd0312a3735500086e76d2",
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
@@ -228,7 +228,7 @@ export const timeseriesViews = [
 
   {
     label: "Chemical Class",
-    filterKeys: ["Date Range", "Agricultural Use", "Chemical Class"],
+    filterKeys: ["Date Range", "Agricultural Use", "Chemical Class", "County"],
     endpoint: "66a3dcb42bbe320009739fb9",
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
@@ -246,7 +246,7 @@ export const timeseriesViews = [
   },
   {
     label: "Active Ingredient",
-    filterKeys: ["Date Range", "Agricultural Use", "Active Ingredient (AI)"],
+    filterKeys: ["Date Range", "Agricultural Use", "Active Ingredient (AI)", "County"],
     endpoint: "66bd07645c06060008989308",
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
@@ -256,7 +256,7 @@ export const timeseriesViews = [
   },
   {
     label: "Product",
-    filterKeys: ["Date Range", "Agricultural Use", "Product"],
+    filterKeys: ["Date Range", "Agricultural Use", "Product", "County"],
     endpoint: "66bd07e85c06060008989309",
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
@@ -285,7 +285,8 @@ export const timeseriesViews = [
   // },
 ] as const;
 
-const excludeKeys = ["Date Range", "Agricultural Use"];
+const excludeKeys = ["Date Range", "Agricultural Use", "County"];
+
 export const timeseriesFiltersNotDateRange: any[] = timeseriesViews.map((config) => config.filterKeys)
   .flat().filter((key) => !excludeKeys.includes(key));
 
@@ -301,60 +302,60 @@ export const timeseriesFilterSpec: FilterSpec = {
     }))
   }
 }
-// const geographyFilters: FilterSection = {
-//   title: "Geography",
-//   defaultOpen: false,
-//   filters: [
-//     {
-//       queryParam: "county",
-//       label: "County",
-//       options: {
-//         type: "dynamic",
-//         value: "FIPS",
-//         label: "Area Name",
-//         // @ts-ignore
-//         endpoint: `6567683eafda330008b8c256`,
-//       },
-//       component: "autocomplete",
-//     },
-//     {
-//       queryParam: "townshiprange",
-//       label: "Township Range",
-//       options: {
-//         type: "dynamic",
-//         value: "TownshipRange",
-//         label: "TownshipRange",
-//         // @ts-ignore
-//         endpoint: `6569009ee5a32a0008930614`,
-//       },
-//       component: "autocomplete",
-//     },
-//     {
-//       queryParam: "schooldistrict",
-//       label: "School District",
-//       options: {
-//         type: "dynamic",
-//         value: "FIPS",
-//         label: "Area Name",
-//         // @ts-ignore
-//         endpoint: `656789dcb678c50008c54a00`,
-//       },
-//       component: "autocomplete",
-//     },
-//     {
-//       queryParam: "tract",
-//       label: "Census Tract",
-//       options: {
-//         type: "dynamic",
-//         value: "FIPS",
-//         label: "FIPS",
-//         // @ts-ignore
-//         endpoint: `656763f6aeb11300087fbd84`,
-//       },
-//       component: "autocomplete",
-//     },
-//   ],
-// };
+export const geographyFilters: FilterSection = {
+  title: "Geography",
+  defaultOpen: false,
+  filters: [
+    {
+      queryParam: "county",
+      label: "County",
+      options: {
+        type: "dynamic",
+        value: "CountyCode",
+        label: "Name",
+        // @ts-ignore
+        endpoint: `66db44c7f96f070008c08e39`,
+      },
+      component: "autocomplete",
+    },
+  //   {
+  //     queryParam: "townshiprange",
+  //     label: "Township Range",
+  //     options: {
+  //       type: "dynamic",
+  //       value: "TownshipRange",
+  //       label: "TownshipRange",
+  //       // @ts-ignore
+  //       endpoint: `6569009ee5a32a0008930614`,
+  //     },
+  //     component: "autocomplete",
+  //   },
+  //   {
+  //     queryParam: "schooldistrict",
+  //     label: "School District",
+  //     options: {
+  //       type: "dynamic",
+  //       value: "FIPS",
+  //       label: "Area Name",
+  //       // @ts-ignore
+  //       endpoint: `656789dcb678c50008c54a00`,
+  //     },
+  //     component: "autocomplete",
+  //   },
+  //   {
+  //     queryParam: "tract",
+  //     label: "Census Tract",
+  //     options: {
+  //       type: "dynamic",
+  //       value: "FIPS",
+  //       label: "FIPS",
+  //       // @ts-ignore
+  //       endpoint: `656763f6aeb11300087fbd84`,
+  //     },
+  //     component: "autocomplete",
+  //   },
+  ],
+};
 const demographyFilters: FilterSection = {
   title: "Demographics",
   defaultOpen: false,
@@ -425,6 +426,6 @@ export const allFilterSections: FilterSection[] = [
   applicationFilters,
   pesticideInfoFilters,
   impactFilters,
-  // geographyFilters,
+  geographyFilters,
   demographyFilters,
 ]

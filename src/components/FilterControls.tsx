@@ -6,7 +6,12 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 
-import { allFilterSections, timeseriesFilterSpec } from "../config/filters";
+import {
+  allFilterSections,
+  allFilterSpecs,
+  timeseriesFilterSpec,
+  timeseriesViews,
+} from "../config/filters";
 import { mapConfigFilterSpec } from "../config/map";
 import { useStore } from "../state/store";
 import { MultipleSelectCheckmarks } from "./Dropdown";
@@ -151,7 +156,23 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
   const timeseriesType = useStore((state) => state.timeseriesType);
   const setTimeseriesType = useStore((state) => state.setTimeseriesType);
   const view = useStore((state) => state.view);
-  const filterKeys = useStore((state) => state.filterKeys);
+  const { filterKeys, mainFilterKey, timeseriesMainConfig } = useStore(
+    (state) => {
+      const mainFilterKey =
+        state.view === "timeseries"
+          ? timeseriesViews.find((v) => v.label === state.timeseriesType)
+              ?.mainFilterKey
+          : undefined;
+      const timeseriesMainConfig = allFilterSpecs.find(
+        (f) => f.label === mainFilterKey
+      );
+      return {
+        filterKeys: state.filterKeys,
+        mainFilterKey,
+        timeseriesMainConfig,
+      };
+    }
+  );
   const alwaysApplyChanges = useStore((state) => state.alwaysApplyFilters);
   const toggleAlwaysApplyFilters = useStore(
     (state) => state.toggleAlwaysApplyFilters
@@ -246,25 +267,39 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
             onChange={(value) => setTimeseriesType(value as string)}
             state={{ value: timeseriesType, label: timeseriesType } as any}
           />
+          {!!timeseriesMainConfig && (
+            <FilterControl
+              key={JSON.stringify(timeseriesMainConfig.queryParam)}
+              spec={timeseriesMainConfig}
+            />
+          )}
+
           <SectionBreak />
         </>
       )}
       {allFilterSections
         .filter((section) =>
           section.filters.some(
-            (filter) => !filterKeys?.length || filterKeys.includes(filter.label)
+            (filter) =>
+              (!filterKeys?.length || filterKeys.includes(filter.label)) &&
+              mainFilterKey !== filter.label
           )
         )
         .map((section, i) => (
-          <Box key={section.title} component="div"
-          id={`filters-section-${section.title.replace(/\s/g, "-").toLowerCase()}`}
+          <Box
+            key={section.title}
+            component="div"
+            id={`filters-section-${section.title
+              .replace(/\s/g, "-")
+              .toLowerCase()}`}
           >
             {" "}
             <Typography component="h3" variant="h6" paddingBottom="1rem">
               {section.title}
             </Typography>
             {section.filters.map((filter) =>
-              !filterKeys?.length || filterKeys.includes(filter.label) ? (
+              (!filterKeys?.length || filterKeys.includes(filter.label)) &&
+              mainFilterKey !== filter.label ? (
                 <FilterControl
                   key={JSON.stringify(filter.queryParam)}
                   spec={filter}

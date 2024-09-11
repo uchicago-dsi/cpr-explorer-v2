@@ -220,8 +220,8 @@ export default withTooltip<LineChartProps>(
               <LinePath
                 key={key}
                 data={cleanedData[key]}
-                x={(d) => xScale(parseDate(d[dateCol]) as Date) ?? 0}
-                y={(d) => yScale(parseFloat(d[currentDataCol])) ?? 0}
+                x={(d: any) => xScale(parseDate(d[dateCol]) as Date) ?? 0}
+                y={(d: any) => yScale(parseFloat(d[currentDataCol])) ?? 0}
                 // @ts-ignore
                 stroke={colorScale(key)}
                 strokeWidth={2}

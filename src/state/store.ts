@@ -47,26 +47,23 @@ export const useStore = create<State>(
           value: "Not Used",
         }));
 
-      const allFilters = [
-        ...filters,
-        ...availableFiltersNotUsed
-      ]
+      const allFilters = [...filters, ...availableFiltersNotUsed];
 
       const outputData = indices
         ? indices.map((i) => staticData[i])
         : staticData;
 
-      const sortFn = !sortKeys ? null : Array.isArray(sortKeys) 
+      const sortFn = !sortKeys
+        ? null
+        : Array.isArray(sortKeys)
         ? (a: any, b: any) => {
-          const aKey = sortKeys.map((key) => a[key]).join("");
-          const bKey = sortKeys.map((key) => b[key]).join("");
-          return aKey.localeCompare(bKey);
-        } 
-        : (a: any, b: any) => a[sortKeys].localeCompare(b[sortKeys])
+            const aKey = sortKeys.map((key) => a[key]).join("");
+            const bKey = sortKeys.map((key) => b[key]).join("");
+            return aKey.localeCompare(bKey);
+          }
+        : (a: any, b: any) => a[sortKeys].localeCompare(b[sortKeys]);
 
-        const sortedOutputData = sortFn 
-          ? outputData.sort(sortFn)
-          : outputData
+      const sortedOutputData = sortFn ? outputData.sort(sortFn) : outputData;
 
       exportData(
         format,
@@ -157,13 +154,21 @@ export const useStore = create<State>(
       if (timeseriesConfig) {
         const filterKeys = (timeseriesConfig.filterKeys ||
           []) as unknown as string[];
+        const previousFilters = get().uiFilters.filter((f) =>
+          filterKeys.includes(f.label)
+        );
+        const defaultFilter =
+          timeseriesConfig?.defaultFilterOptions &&
+          !previousFilters.find(
+            (f) => f.label === timeseriesConfig?.defaultFilterOptions?.[0].label
+          )
+            ? (timeseriesConfig?.defaultFilterOptions as unknown as FilterState[])
+            : ([] as FilterState[]);
         set({
           timeseriesType: type,
           filterKeys,
           queryEndpoint: timeseriesConfig?.endpoint || "",
-          uiFilters: get().uiFilters.filter((f) =>
-            filterKeys.includes(f.label)
-          ),
+          uiFilters: [...previousFilters, ...defaultFilter],
           loadingState: "settings-changed",
         });
       }
@@ -246,15 +251,20 @@ export const useStore = create<State>(
       );
 
       const timestamp = performance.now();
-      const agFilter = uiFilters.find((f) => f.queryParam === "usetype")?.value === 'NON-AG';
+      const agFilter =
+        uiFilters.find((f) => f.queryParam === "usetype")?.value === "NON-AG";
 
-      if (get().view.toLowerCase().includes("map") && get().geography !== "Counties" && agFilter) {
+      if (
+        get().view.toLowerCase().includes("map") &&
+        get().geography !== "Counties" &&
+        agFilter
+      ) {
         set({
           loadingState: "ag-on-not-counties",
           queriedFilters: deepCloneRecords(uiFilters),
           timestamp,
         });
-        return
+        return;
       }
 
       const response = await fetch(url);
@@ -266,7 +276,7 @@ export const useStore = create<State>(
           const config = timeseriesViews.find(
             (view) => view.label === get().timeseriesType
           );
-          const filters = get().uiFilters
+          const filters = get().uiFilters;
           const dateRange = filters.find(
             (filter) => filter.label === "Date Range"
           );

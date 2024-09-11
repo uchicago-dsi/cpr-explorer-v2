@@ -8,6 +8,12 @@ export type DynamicOptionSpec = OptionLabel & {
   endpoint: string;
 }
 
+export type OptionFilterSpec = {
+  column: string;
+  type: ">" | "<" | "=" | "in" | "not in";
+  value: any;
+};
+
 export type FilterSpec = {
   queryParam: string | [string, string];
   label: string;
@@ -22,7 +28,12 @@ export type FilterSpec = {
   range?: number[];
   default?: string | string[] | number | number[];
   defaultLabel?: string | string[] | number | number[];
-  format?: 'percent' | 'dollars'
+  format?: 'percent' | 'dollars',
+  optionFilter?: Omit<OptionFilterSpec, 'value'> & {
+    interface: 'slider' | 'select';
+    range?: [number, number];
+    title?: string;
+  }
 }
 
 export type FilterState = Pick<FilterSpec, 'queryParam' | 'label'> & {

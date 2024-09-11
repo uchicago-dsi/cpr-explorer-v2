@@ -294,9 +294,14 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
               .toLowerCase()}`}
           >
             {" "}
-            <Typography component="h3" variant="h6" paddingBottom="1rem">
+            <Typography component="h3" variant="h6" margin="0" paddingBottom={section.subtitle ? "1rem": "0"}>
               {section.title}
             </Typography>
+            {section.subtitle && (
+              <Typography component="div" sx={{fontSize:"0.75rem", mt:0, pb:2}}>
+                {section.subtitle}
+              </Typography>
+            )}
             {section.filters.map((filter) =>
               (!filterKeys?.length || filterKeys.includes(filter.label)) &&
               mainFilterKey !== filter.label ? (

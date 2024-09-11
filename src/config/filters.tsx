@@ -4,6 +4,7 @@ export type FilterValue = string | string[] | number | number[] | null;
 
 type FilterSection = {
   title: string;
+  subtitle?: string;
   defaultOpen: boolean;
   filters: FilterSpec[];
 };
@@ -37,6 +38,7 @@ const dateSection: FilterSection = {
 
 export const applicationFilters: FilterSection = {
   title: "Pesticide Application",
+  subtitle: "Sublabels display average annual pounds of chemical used, where applicable",
   defaultOpen: false,
   filters: [
     {
@@ -74,6 +76,8 @@ export const applicationFilters: FilterSection = {
         endpoint: "66d8a22692868e000864e898",
       },
       component: "autocomplete",
+      subLabel: "Annual Average Pounds of Chemical Applied",
+      subcolumn: "yearly_average"
     },
     {
       queryParam: "aerial_ground",
@@ -110,6 +114,7 @@ export const applicationFilters: FilterSection = {
 
 export const pesticideInfoFilters: FilterSection = {
   title: "Chemical and Product Information",
+  subtitle: "Sublabels display average annual pounds of chemical used, where applicable",
   defaultOpen: false,
   filters: [
     {
@@ -130,9 +135,11 @@ export const pesticideInfoFilters: FilterSection = {
         type: "dynamic",
         value: "chem_code",
         label: "chem_name",
-        endpoint: `66db5d5811f41600080a3f8d`,
+        endpoint: `66d88452ae7ce10008a9473f`,
       },
       component: "autocomplete",
+      subLabel: "Annual Average Pounds of Chemical Applied",
+      subcolumn: "yearly_average"
       // optionFilter: {
       //   interface: "slider",
       //   type: ">",
@@ -151,6 +158,8 @@ export const pesticideInfoFilters: FilterSection = {
         // @ts-ignore
         endpoint: `66d8a20a92868e000864e897`,
       },
+      subLabel: "Annual Average Pounds of Chemical Applied",
+      subcolumn: "yearly_average",
       component: "autocomplete",
     },
     {

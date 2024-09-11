@@ -18,6 +18,7 @@ export type FilterSpec = {
   queryParam: string | [string, string];
   label: string;
   subLabel?: string;
+  subcolumn?: string;
   options: {
     type: 'static';
   } & {values: OptionLabel[] }| {

@@ -14,38 +14,59 @@ import { theme } from "../main";
 import { Slider } from "@mui/material";
 const LISTBOX_PADDING = 8; // px
 
-function renderRow(props: ListChildComponentProps) {
-  const { data, index, style } = props;
-  const dataSet = data[index];
-  const isSelected = dataSet[1].current;
-  const inlineStyle = {
-    ...style,
-    top: (style.top as number) + LISTBOX_PADDING,
-    background: isSelected ? theme.palette.secondary.main : "white",
+const getRenderRow = (spec: FilterSpec) => {
+  return function renderRow(props: ListChildComponentProps) {
+    const { data, index, style } = props;
+    const dataSet = data[index];
+    const isSelected = dataSet[1].current;
+    const inlineStyle = {
+      ...style,
+      top: (style.top as number) + LISTBOX_PADDING,
+      background: isSelected ? theme.palette.secondary.main : "white",
+      display: "flex",
+      flexDirection: "column",
+      // align left
+      justifyContent: "flex-start",
+      alignItems: "flex-start",
+      textAlign: "left",
+    };
+
+    const { key, ...optionProps } = dataSet[0];
+
+    return (
+      <Box component="div">
+        <Typography
+          key={key}
+          component="li"
+          {...optionProps}
+          // noWrap
+          style={inlineStyle}
+        >
+          <Typography sx={{pb:0,mb:0}}>
+            {dataSet[1].label}
+          </Typography>
+          <br />
+          {spec.subcolumn && dataSet[1][spec.subcolumn] && (
+            <Typography
+              variant="caption"
+              sx={{
+                color: "text.secondary",
+                p:0,
+                m:0,
+                transform: "translateY(-1rem)"
+              }}
+            >
+              {Math.round(dataSet[1][spec.subcolumn])?.toLocaleString()} lbs
+            </Typography>
+          )}
+          {isSelected && (
+            <span style={{ paddingLeft: "0.5rem" }}> &times;</span>
+          )}
+        </Typography>
+      </Box>
+    );
   };
-
-  const { key, ...optionProps } = dataSet[0];
-
-  return (
-    <Box
-      component="div"
-      sx={{
-        display: "flex",
-      }}
-    >
-      <Typography
-        key={key}
-        component="li"
-        {...optionProps}
-        noWrap
-        style={inlineStyle}
-      >
-        {dataSet[1].label}
-        {isSelected && <span style={{ paddingLeft: "0.5rem" }}> &times;</span>}
-      </Typography>
-    </Box>
-  );
-}
+};
 
 const OuterElementContext = React.createContext({});
 
@@ -96,72 +117,72 @@ const filterOptions = (
       });
     }
   }
-  console.log('selectedOptions', selectedOptions)
   return selectedOptions;
 };
-// Adapter for react-window
-const ListboxComponent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLElement>
->(function ListboxComponent(props, ref) {
-  const { children, ...other } = props;
-  const itemData: React.ReactElement[] = [];
-  (children as React.ReactElement[]).forEach(
-    (item: React.ReactElement & { children?: React.ReactElement[] }) => {
-      itemData.push(item);
-      itemData.push(...(item.children || []));
+
+const getListbox = (spec: FilterSpec) => {
+  // Adapter for react-window
+  return React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLElement>>(
+    function ListboxComponent(props, ref) {
+      const { children, ...other } = props;
+      const itemData: React.ReactElement[] = [];
+      (children as React.ReactElement[]).forEach(
+        (item: React.ReactElement & { children?: React.ReactElement[] }) => {
+          itemData.push(item);
+          itemData.push(...(item.children || []));
+        }
+      );
+
+      const theme = useTheme();
+      const smUp = useMediaQuery(theme.breakpoints.up("sm"), {
+        noSsr: true,
+      });
+      const itemCount = itemData.length;
+      let itemSize = smUp ? 54 : 72;
+      spec.subcolumn && (itemSize += 24);
+      const lineLength = 30;
+      const lineHeight = 36;
+
+      const getChildSize = (child: React.ReactElement) => {
+        if (child.hasOwnProperty("group")) {
+          return 48;
+        }
+        const name = (child as unknown as any)?.[0]?.key || "";
+        const lines = Math.ceil(name.length / lineLength);
+        return lines * lineHeight + (spec.subcolumn ? 24 : 0);
+      };
+
+      const getHeight = () => {
+        if (itemCount > 8) {
+          return 8 * itemSize;
+        }
+        return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
+      };
+
+      const gridRef = useResetCache(itemCount);
+
+      return (
+        <Box ref={ref} component="div">
+          <OuterElementContext.Provider value={other}>
+            <VariableSizeList
+              itemData={itemData}
+              height={getHeight() + 2 * LISTBOX_PADDING}
+              width="100%"
+              ref={gridRef}
+              outerElementType={OuterElementType}
+              innerElementType="ul"
+              itemSize={(index) => getChildSize(itemData[index])}
+              overscanCount={5}
+              itemCount={itemCount}
+            >
+              {getRenderRow(spec)}
+            </VariableSizeList>
+          </OuterElementContext.Provider>
+        </Box>
+      );
     }
   );
-
-  const theme = useTheme();
-  const smUp = useMediaQuery(theme.breakpoints.up("sm"), {
-    noSsr: true,
-  });
-  const itemCount = itemData.length;
-  const itemSize = smUp ? 54 : 72;
-  const lineLength = 24;
-  const longLineLength = 36;
-  const lineHeight = 36;
-
-  const getChildSize = (child: React.ReactElement) => {
-    if (child.hasOwnProperty("group")) {
-      return 48;
-    }
-    const name = (child as unknown as any)?.[0]?.key || "";
-    const _lines = Math.ceil(name.length / lineLength);
-    const lines = _lines > 2 ? Math.ceil(name.length / longLineLength) : _lines;
-    return lines * lineHeight;
-  };
-
-  const getHeight = () => {
-    if (itemCount > 8) {
-      return 8 * itemSize;
-    }
-    return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
-  };
-
-  const gridRef = useResetCache(itemCount);
-
-  return (
-    <Box ref={ref} component="div">
-      <OuterElementContext.Provider value={other}>
-        <VariableSizeList
-          itemData={itemData}
-          height={getHeight() + 2 * LISTBOX_PADDING}
-          width="100%"
-          ref={gridRef}
-          outerElementType={OuterElementType}
-          innerElementType="ul"
-          itemSize={(index) => getChildSize(itemData[index])}
-          overscanCount={5}
-          itemCount={itemCount}
-        >
-          {renderRow}
-        </VariableSizeList>
-      </OuterElementContext.Provider>
-    </Box>
-  );
-});
+};
 
 const StyledPopper = styled(Popper)<{ width?: number }>(({}) => ({
   ".MuiAutocomplete-listbox": {
@@ -254,7 +275,6 @@ export const AutoComplete: React.FC<{
     availableOptionsFilters,
     false
   );
-  console.log('availableOptions', availableOptions.length)
 
   const allOptions = [...currentOptions, ...availableOptions];
 
@@ -348,7 +368,7 @@ export const AutoComplete: React.FC<{
           setOpen(true);
         }}
         PopperComponent={StyledPopper}
-        ListboxComponent={ListboxComponent}
+        ListboxComponent={getListbox(spec)}
         options={allOptions}
         onInputChange={(e, newInputValue) => {
           if (e?.type && e.type !== "click") {

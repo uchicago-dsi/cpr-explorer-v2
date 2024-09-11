@@ -287,7 +287,7 @@ export const timeseriesViews = [
       {
         label: "Active Ingredient (AI)",
         queryParam: "chemical",
-        value: [560, 136],
+        value: ["560", "136"],
         valueLabels: ["Sulfur", "Chloropicrin"]
       },
     ],

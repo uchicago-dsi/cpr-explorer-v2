@@ -33,6 +33,8 @@ export const FilterControl: React.FC<{spec: FilterSpec}> = ({
     //   return <RadioButtonsGroup spec={spec} onChange={handleChange} value={filterState?.value as string || ''} />
     case 'autocomplete':
       return <AutoComplete spec={spec} onChange={handleChange} state={filterState} focused={stateIsTimeseriesError} />
+    case 'autocomplete-no-list':
+      return <AutoComplete spec={spec} onChange={handleChange} state={filterState} focused={stateIsTimeseriesError} showList={false}/>
     case 'dropdown':
       return <MultipleSelectCheckmarks spec={spec} onChange={handleChange} state={filterState} />
     // case 'date':

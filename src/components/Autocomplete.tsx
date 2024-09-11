@@ -34,7 +34,12 @@ const getRenderRow = (spec: FilterSpec) => {
     const { key, ...optionProps } = dataSet[0];
 
     return (
-      <Box component="div">
+      <Box component="div"
+        sx={{
+          pointerEvents: dataSet[1].disabled ? "none" : "auto",
+          opacity: dataSet[1].disabled ? 0.5 : 1,
+        }}
+      >
         <Typography
           key={key}
           component="li"
@@ -42,18 +47,16 @@ const getRenderRow = (spec: FilterSpec) => {
           // noWrap
           style={inlineStyle}
         >
-          <Typography sx={{pb:0,mb:0}}>
-            {dataSet[1].label}
-          </Typography>
+          <Typography sx={{ pb: 0, mb: 0 }}>{dataSet[1].label}</Typography>
           <br />
           {spec.subcolumn && dataSet[1][spec.subcolumn] && (
             <Typography
               variant="caption"
               sx={{
                 color: "text.secondary",
-                p:0,
-                m:0,
-                transform: "translateY(-1rem)"
+                p: 0,
+                m: 0,
+                transform: "translateY(-1rem)",
               }}
             >
               {Math.round(dataSet[1][spec.subcolumn])?.toLocaleString()} lbs
@@ -219,7 +222,8 @@ export const AutoComplete: React.FC<{
   onChange: (value: FilterValue, valueLabels: FilterValue) => void;
   state?: FilterState;
   focused?: boolean;
-}> = ({ spec, onChange, state, focused }) => {
+  showList?: boolean;
+}> = ({ spec, onChange, state, focused, showList=true }) => {
   const _options = useOptions(spec);
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
@@ -262,6 +266,7 @@ export const AutoComplete: React.FC<{
       type: "not in",
     },
   ];
+
   if (spec.optionFilter && optionFilterValue !== null) {
     availableOptionsFilters.push({
       column: spec.optionFilter.column,
@@ -270,11 +275,16 @@ export const AutoComplete: React.FC<{
     });
   }
 
-  const availableOptions = filterOptions(
-    _options,
-    availableOptionsFilters,
-    false
-  );
+  const availableOptions = (showList || textValue?.length) && open
+    ? filterOptions(_options, availableOptionsFilters, false)
+    : [
+      {
+        label: "Type to search for options",
+        value: undefined,
+        disabled: true,
+        current: false,
+      }
+    ];
 
   const allOptions = [...currentOptions, ...availableOptions];
 

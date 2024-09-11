@@ -24,7 +24,7 @@ export type FilterSpec = {
   } & {values: OptionLabel[] }| {
     type: 'dynamic';
   } & DynamicOptionSpec;
-  component: 'radio' | 'autocomplete' | 'dropdown' | 'range' | 'date' | 'month-range';
+  component: 'radio' | 'autocomplete' | 'dropdown' | 'range' | 'date' | 'month-range' | 'autocomplete-no-list';
   alwaysInclude?: boolean;
   range?: number[];
   default?: string | string[] | number | number[];

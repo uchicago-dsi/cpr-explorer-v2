@@ -137,7 +137,7 @@ export const pesticideInfoFilters: FilterSection = {
         label: "chem_name",
         endpoint: `66d88452ae7ce10008a9473f`,
       },
-      component: "autocomplete",
+      component: "autocomplete-no-list",
       subLabel: "Annual Average Pounds of Chemical Applied",
       subcolumn: "yearly_average"
       // optionFilter: {
@@ -160,7 +160,7 @@ export const pesticideInfoFilters: FilterSection = {
       },
       subLabel: "Annual Average Pounds of Chemical Applied",
       subcolumn: "yearly_average",
-      component: "autocomplete",
+      component: "autocomplete-no-list",
     },
     {
       queryParam: "ai_class",

@@ -113,16 +113,33 @@ export const pesticideInfoFilters: FilterSection = {
   defaultOpen: false,
   filters: [
     {
+      queryParam: "category",
+      label: "Major Category",
+      options: {
+        type: "dynamic",
+        value: "id",
+        label: "label",
+        endpoint: `66e1e112c640880008ba68f2`,
+      },
+      component:"autocomplete"
+    },
+    {
       queryParam: "chemical",
       label: "Active Ingredient (AI)",
       options: {
         type: "dynamic",
         value: "chem_code",
         label: "chem_name",
-        // @ts-ignore
-        endpoint: `66d88452ae7ce10008a9473f`,
+        endpoint: `66db5d5811f41600080a3f8d`,
       },
       component: "autocomplete",
+      // optionFilter: {
+      //   interface: "slider",
+      //   type: ">",
+      //   range: [0, 1000000],
+      //   column: "lbs_chm_used",
+      //   title: "Minimum Pounds Used",
+      // }
     },
     {
       queryParam: "product",
@@ -206,10 +223,12 @@ export const impactFilters: FilterSection = {
   ]
 }
 
+const timeseriesDefaultFilterKeys = ["Date Range", "Agricultural Use", "Crop or Site", "County"]
 export const timeseriesViews = [
   {
     label: "Use Type",
-    filterKeys: ["Date Range", "Agricultural Use", "Use Type", "County", "Crop or Site"],
+    mainFilterKey: "Use Type",
+    filterKeys: [...timeseriesDefaultFilterKeys, "Use Type"],
     endpoint: "66bd0312a3735500086e76d2",
     dataCol: "lbs_chm_used",
     keyCol: "ai_type",
@@ -228,7 +247,8 @@ export const timeseriesViews = [
 
   {
     label: "Chemical Class",
-    filterKeys: ["Date Range", "Agricultural Use", "Chemical Class", "County", "Crop or Site"],
+    mainFilterKey: "Chemical Class",
+    filterKeys: [...timeseriesDefaultFilterKeys, "Chemical Class"],
     endpoint: "66a3dcb42bbe320009739fb9",
     dataCol: "lbs_chm_used",
     keyCol: "ai_class",
@@ -239,30 +259,48 @@ export const timeseriesViews = [
       {
         label: "Chemical Class",
         queryParam: "ai_class",
-        value: ["Microbial", "Organic"],
-        valueLabels: ["Microbial", "Organic"],
+        value: [71, 53],
+        valueLabels: ["Microbial", "Inorganic"],
       },
     ],
   },
   {
     label: "Active Ingredient",
-    filterKeys: ["Date Range", "Agricultural Use", "Active Ingredient (AI)", "County", "Crop or Site"],
+    mainFilterKey: "Active Ingredient (AI)",
+    filterKeys: [...timeseriesDefaultFilterKeys, "Active Ingredient (AI)"],
     endpoint: "66bd07645c06060008989308",
     dataCol: "lbs_chm_used",
     keyCol: "chem_code",
     dateCol: "monthyear",
     sortKeys: ["monthyear","chem_code"],
     labelMapping: "Active Ingredient (AI)",
+    defaultFilterOptions: [
+      {
+        label: "Active Ingredient (AI)",
+        queryParam: "chemical",
+        value: [560, 136],
+        valueLabels: ["Sulfur", "Chloropicrin"]
+      },
+    ],
   },
   {
     label: "Product",
-    filterKeys: ["Date Range", "Agricultural Use", "Product", "County", "Crop or Site"],
+    mainFilterKey: "Product",
+    filterKeys: [...timeseriesDefaultFilterKeys, "Product"],
     endpoint: "66bd07e85c06060008989309",
     dataCol: "lbs_prd_used",
     keyCol: "prodno",
     dateCol: "monthyear",
     sortKeys: ["monthyear","prodno"],
     labelMapping: "Product",
+    defaultFilterOptions: [
+      {
+        label: "Product",
+        queryParam: "product",
+        value: ["62963", "44330"],
+        valueLabels: ["IAP SUMMER 415 SPRAY OIL", "K-PAM HL"],
+      },
+    ],
   },
   // TODO
   // {
@@ -420,7 +458,6 @@ const demographyFilters: FilterSection = {
   ],
 };
 
-
 export const allFilterSections: FilterSection[] = [
   dateSection,
   applicationFilters,
@@ -429,3 +466,5 @@ export const allFilterSections: FilterSection[] = [
   geographyFilters,
   demographyFilters,
 ]
+
+export const allFilterSpecs = allFilterSections.flatMap((section) => section.filters);

@@ -20,6 +20,7 @@ export const useOptions = (spec: FilterSpec) => {
             value: item[spec.options.value],
             // @ts-ignore
             label: item[spec.options.label].replace(/_/g, " "),
+            ...item
           }));
           setOptions(options);
         });

@@ -34,6 +34,7 @@ type LineChartProps = {
   width: number;
   height: number;
   labelMapping?: Record<string, string>;
+  loadingState?: string;
 };
 
 const parseDate = timeParse("%Y-%m");
@@ -60,6 +61,7 @@ export default withTooltip<LineChartProps>(
     width,
     height,
     labelMapping,
+    loadingState
   }: LineChartProps & WithTooltipProvidedProps<any>) => {
     const [currentDataCol, setCurrentDataCol] = React.useState(dataCol);
     const yAxisLabel = axisLabels[currentDataCol as keyof typeof axisLabels];
@@ -70,6 +72,16 @@ export default withTooltip<LineChartProps>(
 
     const { cleanedData, numberOfXTicks, keys, xScale, yScale, numberOfMonths } =
       useMemo(() => {
+        if (loadingState !== 'loaded') {
+          return {
+            cleanedData: {} as any,
+            numberOfXTicks: 0,
+            keys: [],
+            xScale: scaleTime({ range: [0, xMax], domain: [0, 1] }),
+            yScale: scaleLinear({ range: [yMax, 0], domain: [0, 1] }),
+            numberOfMonths: 0
+          }
+        }
         const cleanedData: Record<string, Array<Record<string, any>>> = {};
         let max = 0;
         for (const d of data) {
@@ -184,7 +196,7 @@ export default withTooltip<LineChartProps>(
             onTouchMove={handleMouseMove}
             onTouchEnd={handleMouseLeave}
           />
-          <Group left={margin.left} top={margin.top} pointerEvents={"none"}>
+          {loadingState === "loaded" && <Group left={margin.left} top={margin.top} pointerEvents={"none"}>
             <Grid xScale={xScale} yScale={yScale} width={xMax} height={yMax}
               numTicksColumns={numberOfXTicks}
             />
@@ -227,7 +239,7 @@ export default withTooltip<LineChartProps>(
                 strokeWidth={1}
               />
             )}
-          </Group>
+          </Group>}
         </svg>
         <LegendOrdinal
           scale={labelScale}

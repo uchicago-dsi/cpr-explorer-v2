@@ -6,11 +6,12 @@ import Popper from "@mui/material/Popper";
 import { useTheme, styled } from "@mui/material/styles";
 import { VariableSizeList, ListChildComponentProps } from "react-window";
 import Typography from "@mui/material/Typography";
-import { FilterSpec, FilterState } from "../types/state";
+import { FilterSpec, FilterState, OptionFilterSpec } from "../types/state";
 import { useOptions } from "../hooks/useOptions";
 import Box from "@mui/material/Box";
 import { FilterValue } from "../config/filters";
 import { theme } from "../main";
+import { Slider } from "@mui/material";
 const LISTBOX_PADDING = 8; // px
 
 function renderRow(props: ListChildComponentProps) {
@@ -63,6 +64,41 @@ function useResetCache(data: any) {
   return ref;
 }
 
+const handleFilter = (row: any, filter: OptionFilterSpec) => {
+  switch (filter.type) {
+    case ">":
+      return row[filter.column] > filter.value;
+    case "<":
+      return row[filter.column] < filter.value;
+    case "=":
+      return row[filter.column] === filter.value;
+    case "in":
+      return filter.value.includes(row[filter.column]);
+    case "not in":
+      return !filter.value.includes(row[filter.column]);
+    default:
+      return false;
+  }
+};
+
+const filterOptions = (
+  options: any[],
+  filters: OptionFilterSpec[],
+  current: boolean
+) => {
+  let selectedOptions = [];
+  for (let i = 0; i < options.length; i++) {
+    const isSelected = filters.every((f) => handleFilter(options[i], f));
+    if (isSelected) {
+      selectedOptions.push({
+        ...options[i],
+        current,
+      });
+    }
+  }
+  console.log('selectedOptions', selectedOptions)
+  return selectedOptions;
+};
 // Adapter for react-window
 const ListboxComponent = React.forwardRef<
   HTMLDivElement,
@@ -91,9 +127,9 @@ const ListboxComponent = React.forwardRef<
     if (child.hasOwnProperty("group")) {
       return 48;
     }
-    const name = (child as unknown as any)?.[0]?.key || ''
-    const _lines = Math.ceil(name.length / lineLength)
-    const lines = _lines > 2 ? Math.ceil(name.length / longLineLength) : _lines
+    const name = (child as unknown as any)?.[0]?.key || "";
+    const _lines = Math.ceil(name.length / lineLength);
+    const lines = _lines > 2 ? Math.ceil(name.length / longLineLength) : _lines;
     return lines * lineHeight;
   };
 
@@ -127,24 +163,23 @@ const ListboxComponent = React.forwardRef<
   );
 });
 
-const StyledPopper = styled(Popper)<{width?: number}>(({}) => ({
-  '.MuiAutocomplete-listbox': {
-
-    maxHeight: 'none', // Remove max height restriction
-    overflow: 'auto', // Enable scrolling if content exceeds viewport height
-    '& .MuiAutocomplete-option': {
+const StyledPopper = styled(Popper)<{ width?: number }>(({}) => ({
+  ".MuiAutocomplete-listbox": {
+    maxHeight: "none", // Remove max height restriction
+    overflow: "auto", // Enable scrolling if content exceeds viewport height
+    "& .MuiAutocomplete-option": {
       // fontSize: "0.75rem",
       lineHeight: 1,
-      height: '100px',
-      whiteSpace: 'normal', // Allow text to wrap
-      wordBreak: 'break-all', // Allow text to wrap
-      minHeight: '48px', // Set minimum height for individual options
-      margin: '0.5rem 0',
+      height: "100px",
+      whiteSpace: "normal", // Allow text to wrap
+      wordBreak: "break-all", // Allow text to wrap
+      minHeight: "48px", // Set minimum height for individual options
+      margin: "0.5rem 0",
 
       '&[data-focus="true"]': {
         color: theme.palette.primary.main,
       },
-      '&:hover': {
+      "&:hover": {
         color: theme.palette.primary.main,
       },
     },
@@ -162,13 +197,13 @@ export const AutoComplete: React.FC<{
   spec: FilterSpec;
   onChange: (value: FilterValue, valueLabels: FilterValue) => void;
   state?: FilterState;
-  focused?:boolean;
+  focused?: boolean;
 }> = ({ spec, onChange, state, focused }) => {
   const _options = useOptions(spec);
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
   const [textValue, setTextValue] = React.useState("");
-
+  const [optionFilterValue, setOptionFilterValue] = React.useState<any>(null);
 
   const [open, setOpen] = React.useState(false);
 
@@ -193,22 +228,33 @@ export const AutoComplete: React.FC<{
   const valueCol = spec.options.value;
   // @ts-ignore
   const labelCol = spec.options.label;
-  const currentOptions = _options
-    .filter((o) => value.includes(o.value))
-    .map((f) => ({
-      ...f,
-      current: true,
-    }))
-    .sort((a, b) =>
-      // a.label and b.label text compare
-      a.label.localeCompare(b.label)
-    );
-  const availableOptions = _options
-    .filter((o) => !value.includes(o.value))
-    .map((f) => ({
-      ...f,
-      current: false,
-    }));
+  const currentValueFilter: OptionFilterSpec = {
+    column: "value",
+    type: "in",
+    value: value,
+  };
+  const currentOptions = filterOptions(_options, [currentValueFilter], true);
+
+  const availableOptionsFilters: OptionFilterSpec[] = [
+    {
+      ...currentValueFilter,
+      type: "not in",
+    },
+  ];
+  if (spec.optionFilter && optionFilterValue !== null) {
+    availableOptionsFilters.push({
+      column: spec.optionFilter.column,
+      type: spec.optionFilter.type,
+      value: optionFilterValue,
+    });
+  }
+
+  const availableOptions = filterOptions(
+    _options,
+    availableOptionsFilters,
+    false
+  );
+  console.log('availableOptions', availableOptions.length)
 
   const allOptions = [...currentOptions, ...availableOptions];
 
@@ -271,6 +317,13 @@ export const AutoComplete: React.FC<{
       {v.label}        
 </Button>
     })}</Box></Box>} */}
+      {!!spec.optionFilter && (
+        <OptionFilter
+          spec={spec.optionFilter}
+          value={optionFilterValue}
+          setValue={setOptionFilterValue}
+        />
+      )}
       <Autocomplete
         id="virtualize-demo"
         disableClearable={true}
@@ -321,4 +374,34 @@ export const AutoComplete: React.FC<{
       />
     </>
   );
+};
+
+export const OptionFilter: React.FC<{
+  spec: FilterSpec["optionFilter"];
+  value: any;
+  setValue: (value: any) => void;
+}> = ({ spec, value, setValue }) => {
+  if (!spec) {
+    return null;
+  }
+
+  switch (spec.interface) {
+    case "slider":
+      const [min, max] = spec.range || [0, 100];
+      return (
+        <Box sx={{ width: "100%", boxSizing: "border-box" }}>
+          <Slider
+            value={value}
+            title={spec.title}
+            onChange={(_e, newValue) => setValue(newValue)}
+            valueLabelDisplay="auto"
+            valueLabelFormat={(v) => `${v}`}
+            min={min}
+            max={max}
+          />
+        </Box>
+      );
+    default:
+      return null;
+  }
 };

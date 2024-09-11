@@ -56,6 +56,7 @@ export const TimeseriesWidget = () => {
           keyCol={currentConfig?.keyCol || "ai_class"}
           dateCol={currentConfig?.dateCol || "monthyear"}
           dataCol={currentConfig?.dataCol || "lbs_chm_used"}
+          loadingState={loadingState}
         />
         <FilterListBox />
       </div>

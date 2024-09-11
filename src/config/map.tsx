@@ -1,5 +1,5 @@
 import { FilterSpec } from "../types/state"
-import { applicationFilters, impactFilters, pesticideInfoFilters } from "./filters"
+import { applicationFilters, geographyFilters, impactFilters, pesticideInfoFilters } from "./filters"
 import * as d3 from "d3"
 
 const demographiFilterKeys = [
@@ -7,16 +7,14 @@ const demographiFilterKeys = [
   "Percent Black or African American",
   "Percent Hispanic or Latino",
 ]
-const ingredientKeys = [
-  ...applicationFilters.filters.map(filter => filter.label),
-  ...pesticideInfoFilters.filters.map(filter => filter.label),
-  ...impactFilters.filters.map(filter => filter.label),
-]
 
 const defaultKeys = [ 
   "Date Range",
   ...demographiFilterKeys,
-  ...ingredientKeys
+  ...applicationFilters.filters.map(filter => filter.label),
+  ...pesticideInfoFilters.filters.map(filter => filter.label),
+  ...impactFilters.filters.map(filter => filter.label),
+  ...geographyFilters.filters.map(filter => filter.label)
 ]
 // const sectionTownshipKeys = [ 
 //   "Date Range",

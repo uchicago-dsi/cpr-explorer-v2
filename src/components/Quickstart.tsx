@@ -11,6 +11,7 @@ import { Checkbox } from "@mui/material";
 import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 import { FilterState, State } from "../types/state";
 import { useStore } from "../state/store";
+import { styled } from "@mui/system";
 
 interface JoyrideState {
   run: boolean;
@@ -18,6 +19,48 @@ interface JoyrideState {
 }
 let sub: () => void = () => {};
 
+const QuickstartHeaderRow = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  flex: 0;
+  align-items: center;
+  justify-content: space-between;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    position: relative;
+  }
+`;
+
+const QuickstartContainer = styled(Box)`
+  height: 50vh;
+  background-color: white;
+  width: 75vw;
+  left: 12.5vw;
+  top: 25vh;
+  position: absolute;
+  border-radius: 0.25rem;
+  background: white;
+  border: 2px solid ${theme => (theme as any)?.palette?.secondary?.main};
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  @media (max-width: 600px) {
+    width: 95vw;
+    left: 2.5vw;
+    height: 95vh;
+    top: 2.5vh;
+  }
+`
+
+const QuickstartCloseButton = styled(Button)`
+  flex: 0;
+  height: 2rem;
+  width: 1rem;
+  margin: 0 1rem;
+  @media (max-width: 600px) {
+    position: absolute;
+    top: 1rem;
+    right: 0;
+  }
+`
 const getStepLogic: (
   state: State,
   setStepIndex: React.Dispatch<React.SetStateAction<number>>
@@ -375,7 +418,7 @@ export const Quickstart: React.FC<{
 }> = ({ onClose }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [stepIndex, setStepIndex] = useState(0);
-  
+
   const StepButtons = () => (
     <Box
       width="100%"
@@ -437,7 +480,6 @@ export const Quickstart: React.FC<{
       setJoyrideState((p) => ({ ...p, run: false }));
       onClose();
     }
-
   };
 
   const handleToggleClosePreference = () => {
@@ -470,22 +512,7 @@ export const Quickstart: React.FC<{
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box
-          sx={{
-            height: "50vh",
-            backgroundColor: "white",
-            width: "75vw",
-            left: "12.5vw",
-            top: "25vh",
-            position: "absolute",
-
-            borderRadius: "0.25rem",
-            background: "white",
-            border: `2px solid ${theme.palette.secondary.main}`,
-            // shadow
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          }}
-        >
+        <QuickstartContainer>
           <Box
             sx={{
               position: "relative",
@@ -496,13 +523,7 @@ export const Quickstart: React.FC<{
             }}
           >
             {/* close button */}
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              flex="0"
-              alignItems={"center"}
-              justifyContent={"space-between"}
-            >
+            <QuickstartHeaderRow>
               <Typography component="h2" variant="h5" padding="1rem">
                 Quickstart: Pesticide Explorer
               </Typography>
@@ -516,19 +537,13 @@ export const Quickstart: React.FC<{
                 }
                 label="Do not show this on load"
               />
-              <Button
+              <QuickstartCloseButton
                 onClick={onClose}
-                sx={{
-                  flex: 0,
-                  height: "2rem",
-                  width: "1rem",
-                  margin: "0 1rem",
-                }}
                 variant="contained"
               >
                 &times;
-              </Button>
-            </Box>
+              </QuickstartCloseButton>
+            </QuickstartHeaderRow>
             <Box
               sx={{
                 borderTop: `2px solid ${theme.palette.secondary.main}`,
@@ -570,13 +585,13 @@ export const Quickstart: React.FC<{
                 This tool by the Open Spatial Lab at the University of Chicago
                 Data Science Institute in collaboration with Californians for
                 Pesticide Reform (CPR) and Pesticide Action Network North
-                American (PANNA). Data are sourced from the California Department
-                of Pesticide Regulation (CDPR) California Pesticide Information
-                Portal project (CalPIP) and the US Census Bureau.
+                American (PANNA). Data are sourced from the California
+                Department of Pesticide Regulation (CDPR) California Pesticide
+                Information Portal project (CalPIP) and the US Census Bureau.
               </Typography>
             </Box>
           </Box>
-        </Box>
+        </QuickstartContainer>
       </Modal>
     </>
   );

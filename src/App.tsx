@@ -10,7 +10,7 @@ import { DualMapWidget } from "./components/DualMapWidget";
 import { DataTableModal } from "./components/TableViewer";
 import { DownloadButtons } from "./components/DownloadButtons";
 import { LoadSaveSelectionModal } from "./components/LoadSaveSelectionModal";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Quickstart } from "./components/Quickstart";
 
 const componentMapping = {

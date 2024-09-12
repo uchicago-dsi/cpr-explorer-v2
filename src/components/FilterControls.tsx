@@ -156,27 +156,28 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
   const timeseriesType = useStore((state) => state.timeseriesType);
   const setTimeseriesType = useStore((state) => state.setTimeseriesType);
   const view = useStore((state) => state.view);
-  const { filterKeys, mainFilterKey, timeseriesMainConfig } = useStore(
-    (state) => {
-      const mainFilterKey =
-        state.view === "timeseries"
-          ? timeseriesViews.find((v) => v.label === state.timeseriesType)
-              ?.mainFilterKey
-          : undefined;
-      const timeseriesMainConfig = allFilterSpecs.find(
-        (f) => f.label === mainFilterKey
-      );
-      return {
-        filterKeys: state.filterKeys,
-        mainFilterKey,
-        timeseriesMainConfig,
-      };
-    }
+
+  const filterKeys = useStore((state) => state.filterKeys);
+
+  const mainFilterKey = useStore((state) => {
+    const mainFilterKey =
+      state.view === "timeseries"
+        ? timeseriesViews.find((v) => v.label === state.timeseriesType)
+            ?.mainFilterKey
+        : undefined;
+    return mainFilterKey;
+  });
+
+  const timeseriesMainConfig = allFilterSpecs.find(
+    (f) => f.label === mainFilterKey
   );
+
   const alwaysApplyChanges = useStore((state) => state.alwaysApplyFilters);
+
   const toggleAlwaysApplyFilters = useStore(
     (state) => state.toggleAlwaysApplyFilters
   );
+
   const [open, setOpen] = React.useState(true);
 
   return (
@@ -294,11 +295,19 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
               .toLowerCase()}`}
           >
             {" "}
-            <Typography component="h3" variant="h6" margin="0" paddingBottom={section.subtitle ? "1rem": "0"}>
+            <Typography
+              component="h3"
+              variant="h6"
+              margin="0"
+              paddingBottom={section.subtitle ? "1rem" : "0"}
+            >
               {section.title}
             </Typography>
             {section.subtitle && (
-              <Typography component="div" sx={{fontSize:"0.75rem", mt:0, pb:2}}>
+              <Typography
+                component="div"
+                sx={{ fontSize: "0.75rem", mt: 0, pb: 2 }}
+              >
                 {section.subtitle}
               </Typography>
             )}

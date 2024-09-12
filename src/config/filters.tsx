@@ -38,7 +38,7 @@ const dateSection: FilterSection = {
 
 export const applicationFilters: FilterSection = {
   title: "Pesticide Application",
-  subtitle: "Sublabels display average annual pounds of chemical used, where applicable",
+  subtitle: "Sublabels show average annual chemical usage. These averages reflect the total amount or data range, not filtered data.",
   defaultOpen: false,
   filters: [
     {
@@ -114,7 +114,7 @@ export const applicationFilters: FilterSection = {
 
 export const pesticideInfoFilters: FilterSection = {
   title: "Chemical and Product Information",
-  subtitle: "Sublabels display average annual pounds of chemical used, where applicable",
+  subtitle: "Sublabels show average annual chemical usage. These averages reflect the total amount or data range, not filtered data.",
   defaultOpen: false,
   filters: [
     {

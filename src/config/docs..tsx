@@ -1,7 +1,7 @@
 const dateAccessed = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 
 export const license = `
-This data is licensed under the Creative Commons Attribution License 4.0 (CC-BY) (https://creativecommons.org/licenses/by/4.0/)
+Data are licensed under the Creative Commons Attribution License 4.0 (CC-BY) (https://creativecommons.org/licenses/by/4.0/)
 
 An appropriate attribution must accompany this data wherever it is used or published. Attribution should look like the following information:\n
 

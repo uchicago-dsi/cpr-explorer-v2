@@ -1,4 +1,4 @@
-import { Box, styled } from "@mui/material";
+import { Box, styled, TableContainer } from "@mui/material";
 import Button from "@mui/material/Button";
 import { AboutWidget } from "./components/AboutWidget";
 import { Demography } from "./components/Demography";
@@ -64,6 +64,14 @@ const NavContainer = styled(Box)({
   },
 });
 
+const TabContainer = styled(Box)`
+  flex-direction: row;
+  display: flex;
+  gap: 2px;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+`;
 const TabButton = styled(Button)`
   padding: 1rem;
   border: none;
@@ -103,7 +111,7 @@ function App() {
         <Quickstart onClose={() => setShowQuickStart(false)} />
       )}
       <NavContainer id="nav-container">
-        <Box component={"div"} flexDirection={"row"} display="flex" gap="2px">
+        <TabContainer component={"div"}>
           <TabButton onClick={() => setShowQuickStart(true)} color="secondary">
             Quickstart
           </TabButton>
@@ -121,21 +129,21 @@ function App() {
               {config.label}
             </TabButton>
           ))}
-        </Box>
+        </TabContainer>
       </NavContainer>
       <span id="data-view">
         <View />
       </span>
       {!!dataViews.includes(currentView) && (
-        <Box
+        <TabContainer
           component={"div"}
           id="meta-data-stuff"
-          sx={{ display: "flex", justifyContent: "center", py: 2, gap: 2 }}
+          sx={{justifyContent: "center", alignItems: "center", gap: 2 }}
         >
           <DownloadButtons />
           <DataTableModal />
           <LoadSaveSelectionModal />
-        </Box>
+        </TabContainer>
       )}
     </>
   );

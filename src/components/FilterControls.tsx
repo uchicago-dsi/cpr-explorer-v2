@@ -14,6 +14,8 @@ import {
 } from "../config/filters";
 import { mapConfigFilterSpec } from "../config/map";
 import { useStore } from "../state/store";
+import { create } from "zustand"
+
 import { MultipleSelectCheckmarks } from "./Dropdown";
 import { FilterControl } from "./Interface";
 import { Modal, styled, useMediaQuery } from "@mui/material";
@@ -28,8 +30,18 @@ const SectionBreak = styled("hr")`
   width: 100%;
 `;
 
+export const useMobileFiltersState = create<{
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}>((set) => ({
+  open: false,
+  setOpen: (open) => set({ open }),
+}));
+
 export const FilterControls: React.FC<FilterProps> = ({ allowToggle }) => {
-  const [open, setOpen] = React.useState(false);
+  const open = useMobileFiltersState((state) => state.open);
+  const setOpen = useMobileFiltersState((state) => state.setOpen);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 

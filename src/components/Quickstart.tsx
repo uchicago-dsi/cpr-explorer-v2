@@ -11,7 +11,8 @@ import { Checkbox } from "@mui/material";
 import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 import { FilterState, State } from "../types/state";
 import { useStore } from "../state/store";
-import { styled } from "@mui/system";
+import { styled, useMediaQuery } from "@mui/system";
+import { useMobileFiltersState } from "./FilterControls";
 
 interface JoyrideState {
   run: boolean;
@@ -40,7 +41,7 @@ const QuickstartContainer = styled(Box)`
   position: absolute;
   border-radius: 0.25rem;
   background: white;
-  border: 2px solid ${theme => (theme as any)?.palette?.secondary?.main};
+  border: 2px solid ${(theme) => (theme as any)?.palette?.secondary?.main};
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   @media (max-width: 600px) {
     width: 95vw;
@@ -48,7 +49,7 @@ const QuickstartContainer = styled(Box)`
     height: 95vh;
     top: 2.5vh;
   }
-`
+`;
 
 const QuickstartCloseButton = styled(Button)`
   flex: 0;
@@ -60,7 +61,10 @@ const QuickstartCloseButton = styled(Button)`
     top: 1rem;
     right: 0;
   }
-`
+`;
+
+const filtersState = (open: boolean = true) =>
+  useMobileFiltersState.setState({ open });
 const getStepLogic: (
   state: State,
   setStepIndex: React.Dispatch<React.SetStateAction<number>>
@@ -70,9 +74,13 @@ const getStepLogic: (
       if (state.view !== "map") {
         state.setView("map");
       }
+      filtersState();
     },
-    1: () => {},
+    1: () => {
+      filtersState();
+    },
     2: () => {
+      filtersState();
       sub = useStore.subscribe((state) => {
         const geographyChanged = state.geography === "Counties";
         if (geographyChanged) {
@@ -82,6 +90,7 @@ const getStepLogic: (
       });
     },
     3: () => {
+      filtersState();
       if (state.geography !== "Counties") {
         sub();
         state.setGeography("Counties");
@@ -97,6 +106,7 @@ const getStepLogic: (
       });
     },
     4: () => {
+      filtersState();
       const dateRange = state.uiFilters.find((f) => f.label === "Date Range");
       // @ts-ignore
       const yearIs2021 = dateRange?.value?.[0]?.slice(0, 4) === "2021";
@@ -119,12 +129,14 @@ const getStepLogic: (
       });
     },
     5: () => {
+      filtersState(false);
       if (state.loadingState === "settings-changed") {
         sub();
         state.executeQuery();
       }
     },
     6: () => {
+      filtersState(false);
       sub = useStore.subscribe((state) => {
         const viewIsTimeseries = state.view === "timeseries";
         if (viewIsTimeseries) {
@@ -164,7 +176,10 @@ const defaultStepProps = {
   hideFooter: true,
 };
 
-const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
+const getSteps: (StepButtons: React.FC, isDesktop: boolean) => Step[] = (
+  StepButtons,
+  isDesktop
+) => [
   {
     // 0
     content: (
@@ -202,7 +217,7 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
         <StepButtons />
       </Box>
     ),
-    placement: "right",
+    placement: isDesktop ? "right" : "center",
     target: "#filter-controls",
     ...defaultStepProps,
   },
@@ -214,13 +229,15 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
           Selecting Data Filters
         </Typography>
         <Typography variant="body1">
-          To start, change the geography to "Counties"
+          {isDesktop
+            ? `To start, change the geography to "Counties"`
+            : `Click next to change the geography to "Counties"`}
         </Typography>
         <StepButtons />
       </Box>
     ),
     spotlightClicks: true,
-    placement: "right",
+    placement: isDesktop ? "right" : "center",
     spotlightPadding: 40,
     target: "#filter-controls",
     ...defaultStepProps,
@@ -233,13 +250,16 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
           Selecting Data Filters
         </Typography>
         <Typography variant="body1">
-          Next change the date range. Try changing the year to start in 2021.
+          Next change the date range.{" "}
+          {isDesktop
+            ? `Try changing the year to start in 2021.`
+            : `Click next to change the year to start in 2021.`}
         </Typography>
         <StepButtons />
       </Box>
     ),
     spotlightClicks: true,
-    placement: "right",
+    placement: isDesktop ? "right" : "auto",
     target: "#filter-controls",
     ...defaultStepProps,
   },
@@ -251,18 +271,32 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
           Selecting Data Filters
         </Typography>
         <Typography variant="body1">
-          To apply your selections, click "Apply Changes" at the top of the box,
-          or on the map/chart when you use the application later.
-          <br />
-          <br />
-          You can automatically apply changes in your selections by clicking the
-          checkbox labeled "automatically Apply Changes"
+          {isDesktop ? (
+            <>
+              To apply your selections, click "Apply Changes" at the top of the
+              box, or on the map/chart when you use the application later.
+              <br />
+              <br />
+              You can automatically apply changes in your selections by clicking
+              the checkbox labeled "automatically Apply Changes"
+            </>
+          ) : (
+            <>
+              To apply your selections, you can select "Apply Changes" at the
+              top of the box, or on the map/chart when you use the application
+              later. Select next to continue.
+              <br />
+              <br />
+              You can automatically apply changes in your selections by clicking
+              the checkbox labeled "automatically Apply Changes"
+            </>
+          )}
         </Typography>
         <StepButtons />
       </Box>
     ),
     spotlightClicks: true,
-    placement: "right",
+    placement: isDesktop ? "right" : "auto",
     target: "#filter-controls",
     ...defaultStepProps,
   },
@@ -282,6 +316,8 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
     ),
     target: "#data-view",
     ...defaultStepProps,
+
+    placement: isDesktop ? "right" : "auto",
   },
   {
     // 6
@@ -291,8 +327,11 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
           Changing the data view
         </Typography>
         <Typography variant="body1">
-          Next, let's look at a different data view. Click on "Use Over Time" on
-          the navigation bar above.
+          Next, let's look at a different data view.{" "}
+          {isDesktop
+            ? `Click on "Use Over Time" on
+          the navigation bar above.`
+            : `Click next to change the view to "Use Over Time"`}
         </Typography>
         <StepButtons />
       </Box>
@@ -319,7 +358,7 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
     ),
     spotlightClicks: true,
     target: "#data-view",
-    placement: "bottom",
+    placement: isDesktop ? "bottom" : "center",
     ...defaultStepProps,
   },
   {
@@ -342,7 +381,7 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
       </Box>
     ),
     target: "#data-view",
-    placement: "bottom",
+    placement: isDesktop ? "bottom" : "center",
     ...defaultStepProps,
   },
   {
@@ -364,7 +403,7 @@ const getSteps: (StepButtons: React.FC) => Step[] = (StepButtons) => [
         <StepButtons />
       </Box>
     ),
-    placement: "bottom",
+    placement: isDesktop ? "bottom" : "center",
     target: "#data-view",
     ...defaultStepProps,
   },
@@ -418,6 +457,7 @@ export const Quickstart: React.FC<{
 }> = ({ onClose }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [stepIndex, setStepIndex] = useState(0);
+  const isDesktop = useMediaQuery("(min-width:1024px)");
 
   const StepButtons = () => (
     <Box
@@ -447,7 +487,7 @@ export const Quickstart: React.FC<{
   const openOnLoadPreference = localStorage.getItem("showQuickStart");
   const [joyrideState, setJoyrideState] = useState<JoyrideState>({
     run: false,
-    steps: getSteps(() => <StepButtons />),
+    steps: getSteps(() => <StepButtons />, isDesktop),
   });
   const { run, steps } = joyrideState;
 
@@ -537,10 +577,7 @@ export const Quickstart: React.FC<{
                 }
                 label="Do not show this on load"
               />
-              <QuickstartCloseButton
-                onClick={onClose}
-                variant="contained"
-              >
+              <QuickstartCloseButton onClick={onClose} variant="contained">
                 &times;
               </QuickstartCloseButton>
             </QuickstartHeaderRow>

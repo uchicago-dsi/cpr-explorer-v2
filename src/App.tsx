@@ -135,7 +135,7 @@ function App() {
         <TabContainer
           component={"div"}
           id="meta-data-stuff"
-          sx={{justifyContent: "center", alignItems: "center", gap: 2 }}
+          sx={{justifyContent: "center", alignItems: "center", gap: 2, pt: 2 }}
         >
           <DownloadButtons />
           <DataTableModal />

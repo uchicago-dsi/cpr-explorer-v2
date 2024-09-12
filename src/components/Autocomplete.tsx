@@ -48,7 +48,6 @@ const getRenderRow = (spec: FilterSpec) => {
           style={inlineStyle}
         >
           <Typography sx={{ pb: 0, mb: 0 }}>{dataSet[1].label}</Typography>
-          <br />
           {spec.subcolumn && dataSet[1][spec.subcolumn] && (
             <Typography
               variant="caption"
@@ -56,7 +55,6 @@ const getRenderRow = (spec: FilterSpec) => {
                 color: "text.secondary",
                 p: 0,
                 m: 0,
-                transform: "translateY(-1rem)",
               }}
             >
               {Math.round(dataSet[1][spec.subcolumn])?.toLocaleString()} lbs

@@ -90,6 +90,7 @@ export const useStore = create<State>(
     setView: (view: string) => {
       let timeseriesConfig =
         view === "timeseries" ? timeseriesViews[0] : ({} as any);
+
       let uiFilters = get().uiFilters;
 
       const geography = get().geography;
@@ -110,10 +111,12 @@ export const useStore = create<State>(
               typeof f.value === "number")
         );
         const existingLabel = existingFilter?.label as string;
+        
         if (existingLabel) {
           timeseriesConfig = timeseriesViews.find((view) =>
             view.filterKeys.includes(existingLabel as any)
           );
+          filterKeys = timeseriesConfig.filterKeys || [];
         } else {
           const newFilters: FilterState[] =
             timeseriesConfig?.defaultFilterOptions || [];

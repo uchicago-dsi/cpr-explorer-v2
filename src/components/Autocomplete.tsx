@@ -141,7 +141,7 @@ const getListbox = (spec: FilterSpec) => {
       const itemCount = itemData.length;
       let itemSize = smUp ? 54 : 72;
       spec.subcolumn && (itemSize += 24);
-      const lineLength = 30;
+      const lineLength = 28;
       const lineHeight = 36;
 
       const getChildSize = (child: React.ReactElement) => {

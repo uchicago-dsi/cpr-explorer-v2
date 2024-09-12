@@ -1,4 +1,24 @@
-export const license = `MIT License...`
+const dateAccessed = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+
+export const license = `
+This data is licensed under the Creative Commons Attribution License 4.0 (CC-BY) (https://creativecommons.org/licenses/by/4.0/)
+
+An appropriate attribution must accompany this data wherever it is used or published. Attribution should look like the following information:\n
+
+Halpern, Dylan, Susan Paykin, PANNA, and CPR. PUR Data Explorer. Open Spatial Lab, Data Science Institute, 2023-2024. Accessed ${dateAccessed}. CPR Explorer, ${window.location.href}. Licensed under CC-BY.
+
+Bibtex for citation managers such as Zotero:
+
+@misc{halpern2024pur,
+  author       = {Dylan Halpern and Susan Paykin and Pesticide Action Network North America and Californians for Pesticide Reform},
+  title        = {PUR Data Explorer},
+  year         = {2023--2024},
+  note         = {Accessed: ${dateAccessed}},
+  url          = {${window.location.href}},
+  license      = {CC-BY},
+  organization = {Open Spatial Lab, Data Science Institute, University of Chicago}
+}
+`
 export const dataSources = `
 
 Data Sources

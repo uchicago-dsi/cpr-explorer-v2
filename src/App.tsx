@@ -10,7 +10,7 @@ import { DualMapWidget } from "./components/DualMapWidget";
 import { DataTableModal } from "./components/TableViewer";
 import { DownloadButtons } from "./components/DownloadButtons";
 import { LoadSaveSelectionModal } from "./components/LoadSaveSelectionModal";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Quickstart } from "./components/Quickstart";
 
 const componentMapping = {
@@ -94,14 +94,11 @@ function App() {
   const View = componentMapping[currentView];
   const loadQueries = useStore((state) => state.loadQueries);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const url = new URL(window.location.href);
     const query = url.searchParams.get("query");
     if (query) {
       loadQueries("", "url", {});
-      // clear query param
-      url.searchParams.delete("query");
-      window.history.pushState({}, "", url.toString());
     }
   }, []);
 

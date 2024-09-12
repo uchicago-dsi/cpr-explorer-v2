@@ -111,7 +111,7 @@ export const useStore = create<State>(
               typeof f.value === "number")
         );
         const existingLabel = existingFilter?.label as string;
-        
+
         if (existingLabel) {
           timeseriesConfig = timeseriesViews.find((view) =>
             view.filterKeys.includes(existingLabel as any)
@@ -202,7 +202,9 @@ export const useStore = create<State>(
           return {
             loadingState: "settings-changed",
             uiFilters: state.uiFilters.map((f) =>
-              f.queryParam === filterKey ? filter : f
+              JSON.stringify(f.queryParam) === JSON.stringify(filterKey)
+                ? filter
+                : f
             ),
           };
         } else {

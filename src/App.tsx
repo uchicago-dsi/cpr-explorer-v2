@@ -1,4 +1,4 @@
-import { Box, styled, TableContainer } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import Button from "@mui/material/Button";
 import { AboutWidget } from "./components/AboutWidget";
 import { Demography } from "./components/Demography";

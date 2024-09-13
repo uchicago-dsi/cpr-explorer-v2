@@ -34,7 +34,7 @@ import { isDisplay } from "../utils/queryParams";
 
 const MapContainer = styled(Box)({
   width: isDisplay ? "100vh": "100%",
-  height: "100%",
+  height: isDisplay ? "100vw": "100%",
   position: "relative",
   // vertical ipad and smaller
   "@media (max-width: 1024px)": {

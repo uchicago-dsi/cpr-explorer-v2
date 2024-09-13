@@ -38,7 +38,12 @@ export const useMobileFiltersState = create<{
   setOpen: (open) => set({ open }),
 }));
 
+// get display == true from URL
+const url = new URL(window.location.href);
+const isDisplay = url.searchParams.get("display") === "true";
+
 export const FilterControls: React.FC<FilterProps> = ({ allowToggle }) => {
+
   const open = useMobileFiltersState((state) => state.open);
   const setOpen = useMobileFiltersState((state) => state.setOpen);
 
@@ -46,6 +51,11 @@ export const FilterControls: React.FC<FilterProps> = ({ allowToggle }) => {
   const handleClose = () => setOpen(false);
 
   const isDesktop = useMediaQuery("(min-width:1024px)");
+  
+  if (isDisplay) {
+    return null
+  }
+
   if (isDesktop) {
     return <FilterControlsInner allowToggle={allowToggle} />;
   } else {

@@ -84,6 +84,7 @@ const TabButton = styled(Button)`
 `;
 
 function App() {
+  const [isDisplay, setIsDisplay] = useState(false);
   const [showQuickStart, setShowQuickStart] = useState(
     localStorage.getItem("showQuickStart") === null
   );
@@ -97,6 +98,13 @@ function App() {
   useLayoutEffect(() => {
     const url = new URL(window.location.href);
     const query = url.searchParams.get("query");
+    const isDisplay = url.searchParams.get("display") === "true";
+    if (isDisplay) {
+      setIsDisplay(true);
+      // remove from url
+      url.searchParams.delete("display");
+      window.history.replaceState({}, "", url.toString());
+    }
     if (query) {
       loadQueries("", "url", {});
     }
@@ -104,38 +112,43 @@ function App() {
 
   return (
     <>
-      {showQuickStart && (
+      {!isDisplay && showQuickStart && (
         <Quickstart onClose={() => setShowQuickStart(false)} />
       )}
-      <NavContainer id="nav-container">
-        <TabContainer component={"div"}>
-          <TabButton onClick={() => setShowQuickStart(true)} color="secondary">
-            Quickstart
-          </TabButton>
-          {selectConfig.map((config) => (
+      {!isDisplay && (
+        <NavContainer id="nav-container">
+          <TabContainer component={"div"}>
             <TabButton
-              key={config.value}
-              onClick={() => setCurrentView(config.value as any)}
-              sx={{
-                fontWeight: currentView === config.value ? "bold" : "normal",
-                color: currentView === config.value ? "#f5f5f5" : "#4d7996",
-                background:
-                  currentView === config.value ? "#4d7996" : "#f5f5f5",
-              }}
+              onClick={() => setShowQuickStart(true)}
+              color="secondary"
             >
-              {config.label}
+              Quickstart
             </TabButton>
-          ))}
-        </TabContainer>
-      </NavContainer>
+            {selectConfig.map((config) => (
+              <TabButton
+                key={config.value}
+                onClick={() => setCurrentView(config.value as any)}
+                sx={{
+                  fontWeight: currentView === config.value ? "bold" : "normal",
+                  color: currentView === config.value ? "#f5f5f5" : "#4d7996",
+                  background:
+                    currentView === config.value ? "#4d7996" : "#f5f5f5",
+                }}
+              >
+                {config.label}
+              </TabButton>
+            ))}
+          </TabContainer>
+        </NavContainer>
+      )}
       <span id="data-view">
         <View />
       </span>
-      {!!dataViews.includes(currentView) && (
+      {!!(dataViews.includes(currentView) && !isDisplay) && (
         <TabContainer
           component={"div"}
           id="meta-data-stuff"
-          sx={{justifyContent: "center", alignItems: "center", gap: 2, pt: 2 }}
+          sx={{ justifyContent: "center", alignItems: "center", gap: 2, pt: 2 }}
         >
           <DownloadButtons />
           <DataTableModal />

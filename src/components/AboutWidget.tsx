@@ -12,6 +12,22 @@ const InlineCode = styled("code")({
   fontFamily: "monospace",
 });
 
+const LogoContainer = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  flex-wrap: wrap;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+  img {
+    height: 4rem;
+    width: auto;
+    margin: 1rem 0;
+  }
+`;
+
 const references = {
   "areal-interpolation": [
     {
@@ -63,22 +79,22 @@ const Reference: React.FC<{ id: keyof typeof references }> = ({ id }) => {
 
 const arealSteps = [
   {
-    imagePath: "explainer-01.png",
+    imagePath: "/assets/explainer-01.png",
     title: "Areal Interpolation Problem",
     text: "The areal interpolation problem is a method to combine data from different spatial units. Imagine we want to assign the pesticide use in a section that overlaps two school districts.",
   },
   {
-    imagePath: "explainer-02.png",
+    imagePath: "/assets/explainer-02.png",
     title: "Calculate Original Area",
     text: "First we calculate the area of the section. In this case, the section is roughly 1 square mile.",
   },
   {
-    imagePath: "explainer-03.png",
+    imagePath: "/assets/explainer-03.png",
     title: "Overlay and Calculate Proportions",
     text: "Next, we calculate how much of the section is in the two (or more) school districts. In this case, the section is 70% in School District 1 and 30% in School District 2.",
   },
   {
-    imagePath: "explainer-04.png",
+    imagePath: "/assets/explainer-04.png",
     title: "Assign Values to Census Areas",
     text: "Last, we assign the value from the section to the two school districts as a proportion weighted by the overlap. Imagine that there are 210lbs used in the section. We assign 70% of that to School District 1 (147lb = 210lbs * 0.7) and 30% to School District 2 (63lbs = 210lbs * 0.3).",
   },
@@ -175,66 +191,82 @@ export const AboutWidget = () => {
           codes and counties.
           <br />
           <br />
-          This project was developed by
+          This project was developed by{" "}
           <a
             href="https://www.pesticidereform.org/"
             target="_blank"
             rel="noopener noreferrer"
           >
             Californians for Pesticide Reform
-          </a>
-          and
+          </a>{" "}
+          and{" "}
           <a
             href="https://www.panna.org/"
             target="_blank"
             rel="noopener noreferrer"
           >
             Pesticide Action &amp; Agroecology Network
-          </a>
-          North America, with the
+          </a>{" "}
+          North America, with the{" "}
           <a
             href="https://datascience.uchicago.edu/research/open-spatial-lab/"
             target="_blank"
             rel="noopener noreferrer"
           >
             Open Spatial Lab
-          </a>
-          at the
+          </a>{" "}
+          at the{" "}
           <a
             href="https://datascience.uchicago.edu/"
             target="_blank"
             rel="noopener noreferrer"
           >
             University of Chicago Data Science Institute
-          </a>
+          </a>{" "}
           . Support was provided by the Robert Wood Johnson Foundation and 11th
           Hour Foundation. The views expressed here do not necessarily reflect
           the views of the Foundations.
         </Typography>
+        <LogoContainer>
+            <a href="https://www.panna.org/" rel="noopener noreferrer" target="_blank">
+              <img src="/assets/pan-logo.png" alt="Logo for PANNA"/>
+            </a>
+            <a href="https://www.pesticidereform.org/" rel="noopener noreferrer" target="_blank">
+              <img src="/assets/CPR Logo.png" alt="Logo for CPR"/>
+            </a>
+            <a href="https://datascience.uchicago.edu/" rel="noopener noreferrer" target="_blank">
+              <img src="/assets/dsi-logo.png" alt="Logo for UChicago DSI"/>
+            </a>
+        </LogoContainer>
+
         <Typography component={"h4"} fontWeight={"bold"}>
           Data Description
         </Typography>
         <Typography component={"h5"} fontWeight={"bold"}>
-          Pesticide Data
+          Pesticide Use Data
         </Typography>
         <Typography variant="body1">
-          California&#x27;s
+          California&#x27;s{" "}
           <a href="https://www.cdpr.ca.gov/docs/pur/purmain.htm">
             Pesticide Use Report (PUR) program
-          </a>
+          </a>{" "}
           has collected data on California&#x27;s agriculture and many
           non-agriculture pesticide uses across the state since 1970 through
           present day. PUR data for this tool was accessed from the{" "}
           <strong>
+            {" "}
             <a href="https://calpip.cdpr.ca.gov/main.cfm">
               California Pesticide Information Portal (CalPIP).
-            </a>
+            </a>{" "}
           </strong>{" "}
           PUR data are managed and collected by California&#x27;s Department of
           Pesticide Regulation, and it is updated about once per year. More
           information is available from{" "}
           <strong>
-            <a href="https://www.cdpr.ca.gov/docs/pur/purmain.htm">CA DPR</a>
+            {" "}
+            <a href="https://www.cdpr.ca.gov/docs/pur/purmain.htm">
+              CA DPR
+            </a>{" "}
           </strong>
           .
           <br />
@@ -252,6 +284,7 @@ export const AboutWidget = () => {
             <li>Pesticide product</li>
             <li>Application method (aerial, ground, fumigation, or other)</li>
             <li>Agricultural or non-agricultural use</li>
+            <li>County</li>
           </ul>
           PUR data was accessed in July 2024. Pesticide product, active
           ingredients, and site lists for filtering were obtained from the PUR
@@ -261,6 +294,44 @@ export const AboutWidget = () => {
           Regulation.
           <br />
           <br />
+        </Typography>
+
+        <Typography component={"h5"} fontWeight={"bold"}>
+          Pesticide Category Data
+        </Typography>
+        <Typography variant="body1">
+          The pesticide category data includes the following categorizations:
+          {/* Major Category, Chemical Class, Use Type, Health/Environmental Impact, Risk Category */}
+          <ul>
+            <li>
+              <strong>Major Category</strong>: The major category of the active
+              ingredient, such as amide, inorganic, or oil
+            </li>
+            <li>
+              <strong>Chemical Class</strong>: The chemical class of the active
+              ingredient, a more specific list of major categories
+            </li>
+            <li>
+              <strong>Use Type</strong>: The use type of the active ingredient,
+              such as fungicide or insecticide
+            </li>
+            <li>
+              <strong>Health/Environmental Impact</strong>: The health and
+              environmental impact of the active ingredient, such as carcinogen
+              or reproductive health impact
+            </li>
+            <li>
+              <strong>Risk Category</strong>: The risk category of the active
+              ingredient, such as high, moderate, low, or other
+            </li>
+          </ul>
+          These categories help filter and summarize the data based on the
+          caracteristics of the active ingredients. The categories data was
+          provided courtesy of the California Department of Pesticide
+          Regulation.
+          <br />
+          <br /> For more information about the AI Categories data table, please
+          contact CDPR's inquiry email: PUR.Inquiry@cdpr.ca.gov.
         </Typography>
         <Typography component={"h5"} fontWeight={"bold"}>
           Spatial Data (GIS)
@@ -333,7 +404,7 @@ export const AboutWidget = () => {
           >
             Census website
           </a>{" "}
-          or tools like
+          or tools like{" "}
           <a
             href="https://www.census.gov/programs-surveys/acs/data/data-via-api.html"
             target="_blank"
@@ -450,7 +521,7 @@ export const AboutWidget = () => {
           falls within each census geography. This method is widely used in
           spatial data analysis to estimate the proportion of an area that falls
           within a specific area of interest; it has been formalized at least 50
-          years ago with numerous scholarly publications describing the approach
+          years ago with numerous scholarly publications describing the approach{" "}
           <Reference id="areal-interpolation" />.
           <br />
           <br />A simplified explanation of areal interpolation is described in

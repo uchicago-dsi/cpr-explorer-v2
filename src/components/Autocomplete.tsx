@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import { FilterValue } from "../config/filters";
 import { theme } from "../main";
 import { Slider } from "@mui/material";
+
 const LISTBOX_PADDING = 8; // px
 
 const getRenderRow = (spec: FilterSpec) => {
@@ -23,6 +24,7 @@ const getRenderRow = (spec: FilterSpec) => {
       ...style,
       top: (style.top as number) + LISTBOX_PADDING,
       background: isSelected ? theme.palette.secondary.main : "white",
+      borderBottom: isSelected ? "1px solid #fff" : "",
       display: "flex",
       flexDirection: "column",
       // align left
@@ -34,10 +36,12 @@ const getRenderRow = (spec: FilterSpec) => {
     const { key, ...optionProps } = dataSet[0];
 
     return (
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           pointerEvents: dataSet[1].disabled ? "none" : "auto",
           opacity: dataSet[1].disabled ? 0.5 : 1,
+          position: "relative",
         }}
       >
         <Typography
@@ -61,7 +65,18 @@ const getRenderRow = (spec: FilterSpec) => {
             </Typography>
           )}
           {isSelected && (
-            <span style={{ paddingLeft: "0.5rem" }}> &times;</span>
+            <span
+              style={{
+                paddingLeft: "0.5rem",
+                position: "absolute",
+                right: "1rem",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}
+            >
+              {" "}
+              &times;
+            </span>
           )}
         </Typography>
       </Box>
@@ -221,7 +236,7 @@ export const AutoComplete: React.FC<{
   state?: FilterState;
   focused?: boolean;
   showList?: boolean;
-}> = ({ spec, onChange, state, focused, showList=true }) => {
+}> = ({ spec, onChange, state, focused, showList = true }) => {
   const _options = useOptions(spec);
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
@@ -273,16 +288,17 @@ export const AutoComplete: React.FC<{
     });
   }
 
-  const availableOptions = (showList || textValue?.length) && open
-    ? filterOptions(_options, availableOptionsFilters, false)
-    : [
-      {
-        label: "Type to search for options",
-        value: undefined,
-        disabled: true,
-        current: false,
-      }
-    ];
+  const availableOptions =
+    (showList || textValue?.length) && open
+      ? filterOptions(_options, availableOptionsFilters, false)
+      : [
+          {
+            label: "Type to search for options",
+            value: undefined,
+            disabled: true,
+            current: false,
+          },
+        ];
 
   const allOptions = [...currentOptions, ...availableOptions];
 

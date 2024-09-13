@@ -16,6 +16,13 @@ VITE_MAPBOX_TOKEN = ... // mapbox API key
 ## Output
 In `dist` after running the build, you'll find a folder, `assets`, containing the relevant code chunks and graphics. Deploy this on your website and add the minimal HTML from `index.html` to your desired page. 
 
+## Github Actions to Build the application
+Alternatively to Docker, you can use github actions to build the application:
+1. From the repository, go to "Actions" on the repo menu
+2. Go to "Build Vite Application" on the left hand pane
+3. Click "Run Workflow" > "Run Workflow"
+4. After the build completes, looks for the section titled "Artifacts" at the bottom of the action run information. Download the artifact "dist" which contains the build output
+
 # Boilerplate: React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

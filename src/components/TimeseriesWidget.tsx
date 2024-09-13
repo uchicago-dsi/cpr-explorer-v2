@@ -7,6 +7,7 @@ import { useParentSize } from "@visx/responsive";
 import TimeseriesChart from "./TimeseriesChart";
 import { LoadingStateShade } from "./LoadingShade";
 import { FilterListBox } from "./FilterListBox";
+import { isDisplay } from "../utils/queryParams";
 
 export const TimeseriesWidget = () => {
   // const executeQuery = useStore((state) => state.executeQuery);
@@ -39,7 +40,7 @@ export const TimeseriesWidget = () => {
         style={{
           position: "relative",
           padding: "1rem",
-          height: "75vh",
+          height: isDisplay ? "100vh" : "75vh",
           flex: 1,
         }}
         ref={parentRef}

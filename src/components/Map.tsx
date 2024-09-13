@@ -30,17 +30,18 @@ import {
 } from "../utils/mapUtils";
 import { randomString } from "../utils/randomString";
 import { StyledOverlayBox } from "./StyledOverlayBox";
+import { isDisplay } from "../utils/queryParams";
 
 const MapContainer = styled(Box)({
-  width: "100%",
+  width: isDisplay ? "100vh": "100%",
   height: "100%",
   position: "relative",
   // vertical ipad and smaller
   "@media (max-width: 1024px)": {
-    height: "70vh",
+    height: isDisplay ? "100vh" : "70vh",
     //  .mapboxgl-map child div
     "& > div.mapboxgl-map": {
-      height: "70vh",
+      height: isDisplay ? "100vh" : "70vh",
     },
   },
 });

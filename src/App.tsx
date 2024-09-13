@@ -12,6 +12,7 @@ import { DownloadButtons } from "./components/DownloadButtons";
 import { LoadSaveSelectionModal } from "./components/LoadSaveSelectionModal";
 import { useLayoutEffect, useState } from "react";
 import { Quickstart } from "./components/Quickstart";
+import { isDisplay, query } from "./utils/queryParams";
 
 const componentMapping = {
   map: MapWidget,
@@ -84,7 +85,6 @@ const TabButton = styled(Button)`
 `;
 
 function App() {
-  const [isDisplay, setIsDisplay] = useState(false);
   const [showQuickStart, setShowQuickStart] = useState(
     localStorage.getItem("showQuickStart") === null
   );
@@ -96,15 +96,6 @@ function App() {
   const loadQueries = useStore((state) => state.loadQueries);
 
   useLayoutEffect(() => {
-    const url = new URL(window.location.href);
-    const query = url.searchParams.get("query");
-    const isDisplay = url.searchParams.get("display") === "true";
-    if (isDisplay) {
-      setIsDisplay(true);
-      // remove from url
-      url.searchParams.delete("display");
-      window.history.replaceState({}, "", url.toString());
-    }
     if (query) {
       loadQueries("", "url", {});
     }

@@ -20,6 +20,7 @@ import { MultipleSelectCheckmarks } from "./Dropdown";
 import { FilterControl } from "./Interface";
 import { Modal, styled, useMediaQuery } from "@mui/material";
 import { theme } from "../main";
+import { isDisplay } from "../utils/queryParams";
 
 type FilterProps = {
   allowToggle?: boolean;
@@ -37,10 +38,6 @@ export const useMobileFiltersState = create<{
   open: false,
   setOpen: (open) => set({ open }),
 }));
-
-// get display == true from URL
-const url = new URL(window.location.href);
-const isDisplay = url.searchParams.get("display") === "true";
 
 export const FilterControls: React.FC<FilterProps> = ({ allowToggle }) => {
 

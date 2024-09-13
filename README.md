@@ -1,4 +1,22 @@
-# React + TypeScript + Vite
+# Quickstart
+
+1. Install docker
+2. Obtain the propert env variables and create a .env file containing them
+3. run `docker build .`
+4. run `docker-compose up dev` to develop
+5. run `docker-compose up build` to build (outputs to `dist` folder)
+
+## env requirements
+```
+VITE_DATA_ENDPOINT = ... // Open Spatial Lab NECTR endpoint
+VITE_MAPBOX_TOKEN = ... // mapbox API key
+
+```
+
+## Output
+In `dist` after running the build, you'll find a folder, `assets`, containing the relevant code chunks and graphics. Deploy this on your website and add the minimal HTML from `index.html` to your desired page. 
+
+# Boilerplate: React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

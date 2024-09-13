@@ -1,0 +1,33 @@
+services:
+  dev:
+    image: pesticide-use-explorer
+    build: .
+    container_name: pesticide-use-explorer-dev
+    stdin_open: true
+    tty: true
+    ports:
+      - 5173:5173
+    volumes:
+      - .:/app
+      - ./node_modules:/app/node_modules
+    env_file:
+      - .env
+    command: >
+      sh -c "pnpm i && pnpm dev --host"
+
+  build:
+    image: pesticide-use-explorer
+    build: .
+    container_name: pesticide-use-explorer-build
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+      - ./dist:/app/dist  # Sync dist folder to host
+      - ./node_modules:/app/node_modules
+    env_file:
+      - .env
+    command: pnpm build
+
+volumes:
+  modules:

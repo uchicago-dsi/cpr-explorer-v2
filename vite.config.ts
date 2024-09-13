@@ -13,13 +13,13 @@ export default defineConfig({
       },
     }),
 
-    visualizer({
-      template: "treemap", // or sunburst
-      open: true,
-      gzipSize: true,
-      brotliSize: true,
-      filename: "analyze.html", // will be saved in project's root
-    })
+    // visualizer({
+    //   template: "treemap", // or sunburst
+    //   open: true,
+    //   gzipSize: true,
+    //   brotliSize: true,
+    //   filename: "analyze.html", // will be saved in project's root
+    // })
   ],
   define: {
     "procces.env": {

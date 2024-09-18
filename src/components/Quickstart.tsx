@@ -13,6 +13,7 @@ import { FilterState, State } from "../types/state";
 import { useStore } from "../state/store";
 import { styled, useMediaQuery } from "@mui/system";
 import { useMobileFiltersState } from "./FilterControls";
+import { TabButton } from "./TabButton";
 
 interface JoyrideState {
   run: boolean;
@@ -238,8 +239,8 @@ const getSteps: (StepButtons: React.FC, isDesktop: boolean) => Step[] = (
     ),
     spotlightClicks: true,
     placement: isDesktop ? "right" : "center",
-    spotlightPadding: 40,
-    target: "#filter-controls",
+    spotlightPadding: 60,
+    target: "#interface-dropdown-Geography",
     ...defaultStepProps,
   },
   {
@@ -260,7 +261,8 @@ const getSteps: (StepButtons: React.FC, isDesktop: boolean) => Step[] = (
     ),
     spotlightClicks: true,
     placement: isDesktop ? "right" : "auto",
-    target: "#filter-controls",
+    spotlightPadding: 60,
+    target: "#interface-date-range-date-range",
     ...defaultStepProps,
   },
   {
@@ -613,18 +615,19 @@ export const Quickstart: React.FC<{
                   </li>
                 </ul>
                 To get started, try out our{" "}
-                <a href="#" onClick={handleClickStart}>
+                <TabButton onClick={handleClickStart}
+                  sx={{
+                    color: "white",
+                    backgroundColor: theme.palette.primary.main,  
+                  }}
+                >
                   application tour
-                </a>{" "}
-                or start exploring filters on the left and views above.
+                </TabButton>
               </Typography>
               <Typography variant="body2" fontStyle={"italic"} mt={2}>
-                This tool by the Open Spatial Lab at the University of Chicago
-                Data Science Institute in collaboration with Californians for
-                Pesticide Reform (CPR) and Pesticide Action Network North
-                American (PANNA). Data are sourced from the California
-                Department of Pesticide Regulation (CDPR) California Pesticide
-                Information Portal project (CalPIP) and the US Census Bureau.
+              Presented by the Open Spatial Lab at the University of Chicago Data Science Institute in collaboration with Californians for Pesticide Reform (CPR) and Pesticide Action & Agroecology Network (PAN).
+              <br/>
+              Data are sourced from the California Department of Pesticide Regulation (CDPR) California Pesticide Information Portal project (CalPIP) and the US Census Bureau.
               </Typography>
             </Box>
           </Box>

@@ -1,5 +1,4 @@
 import { Box, styled } from "@mui/material";
-import Button from "@mui/material/Button";
 import { AboutWidget } from "./components/AboutWidget";
 import { Demography } from "./components/Demography";
 import { MapWidget } from "./components/MapWidget";
@@ -13,6 +12,7 @@ import { LoadSaveSelectionModal } from "./components/LoadSaveSelectionModal";
 import { useLayoutEffect, useState } from "react";
 import { Quickstart } from "./components/Quickstart";
 import { isDisplay, query } from "./utils/queryParams";
+import { TabButton } from "./components/TabButton";
 
 const componentMapping = {
   map: MapWidget,
@@ -71,16 +71,6 @@ const TabContainer = styled(Box)`
   gap: 2px;
   @media (max-width: 600px) {
     flex-direction: column;
-  }
-`;
-const TabButton = styled(Button)`
-  padding: 1rem;
-  border: none;
-  max-height: 1rem;
-  text-transform: uppercase;
-  &:hover {
-    background: rgb(59, 83, 103);
-    color: white;
   }
 `;
 

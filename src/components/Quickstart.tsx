@@ -239,8 +239,8 @@ const getSteps: (StepButtons: React.FC, isDesktop: boolean) => Step[] = (
     ),
     spotlightClicks: true,
     placement: isDesktop ? "right" : "center",
-    spotlightPadding: 60,
-    target: "#interface-dropdown-Geography",
+    spotlightPadding: 40,
+    target: "#filter-controls",
     ...defaultStepProps,
   },
   {
@@ -261,8 +261,8 @@ const getSteps: (StepButtons: React.FC, isDesktop: boolean) => Step[] = (
     ),
     spotlightClicks: true,
     placement: isDesktop ? "right" : "auto",
-    spotlightPadding: 60,
-    target: "#interface-date-range-date-range",
+    spotlightPadding: 40,
+    target: "#filter-controls",
     ...defaultStepProps,
   },
   {

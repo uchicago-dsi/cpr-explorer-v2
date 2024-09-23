@@ -322,7 +322,7 @@ export const AboutWidget = () => {
             </li>
             <li>
               <strong>Risk Category</strong>: The risk category of the active
-              ingredient, such as high, moderate, low, or other
+              ingredient: high, low, or other
             </li>
           </ul>
           These categories help filter and summarize the data based on the

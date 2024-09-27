@@ -268,7 +268,7 @@ export const AboutWidget = () => {
               CA DPR
             </a>{" "}
           </strong>
-          .
+          . Data on adjuvant use is not made publicly available.
           <br />
           <br />
           This interactive data tool enables users to filter or summarize

@@ -119,7 +119,7 @@ export const pesticideInfoFilters: FilterSection = {
   filters: [
     {
       queryParam: "category",
-      label: "Major Category",
+      label: "Chemical Class",
       options: {
         type: "dynamic",
         value: "id",
@@ -254,25 +254,25 @@ export const timeseriesViews = [
     ],
   },
 
-  {
-    label: "Chemical Class",
-    mainFilterKey: "Chemical Class",
-    filterKeys: [...timeseriesDefaultFilterKeys, "Chemical Class"],
-    endpoint: "66a3dcb42bbe320009739fb9",
-    dataCol: "lbs_chm_used",
-    keyCol: "ai_class",
-    dateCol: "monthyear",
-    sortKeys: ["monthyear","ai_class"],
-    labelMapping: "Chemical Class",
-    defaultFilterOptions: [
-      {
-        label: "Chemical Class",
-        queryParam: "ai_class",
-        value: [71, 53],
-        valueLabels: ["Microbial", "Inorganic"],
-      },
-    ],
-  },
+  // {
+  //   label: "Chemical Class",
+  //   mainFilterKey: "Chemical Class",
+  //   filterKeys: [...timeseriesDefaultFilterKeys, "Chemical Class"],
+  //   endpoint: "66a3dcb42bbe320009739fb9",
+  //   dataCol: "lbs_chm_used",
+  //   keyCol: "ai_class",
+  //   dateCol: "monthyear",
+  //   sortKeys: ["monthyear","ai_class"],
+  //   labelMapping: "Chemical Class",
+  //   defaultFilterOptions: [
+  //     {
+  //       label: "Chemical Class",
+  //       queryParam: "ai_class",
+  //       value: [71, 53],
+  //       valueLabels: ["Microbial", "Inorganic"],
+  //     },
+  //   ],
+  // },
   {
     label: "Active Ingredient",
     mainFilterKey: "Active Ingredient (AI)",

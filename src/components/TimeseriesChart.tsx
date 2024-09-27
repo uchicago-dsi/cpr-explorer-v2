@@ -29,7 +29,7 @@ type LineChartProps = {
   minDate: string;
   maxDate: string;
   keyCol: string;
-  dataCol: string;
+  dataCol: string[];
   dateCol: string;
   width: number;
   height: number;
@@ -63,7 +63,7 @@ export default withTooltip<LineChartProps>(
     labelMapping,
     loadingState
   }: LineChartProps & WithTooltipProvidedProps<any>) => {
-    const [currentDataCol, setCurrentDataCol] = React.useState(dataCol);
+    const [currentDataCol, setCurrentDataCol] = React.useState(dataCol[0]);
     const yAxisLabel = axisLabels[currentDataCol as keyof typeof axisLabels];
     const svgRef = React.useRef<SVGSVGElement>(null);
     const margin = { top: 20, right: 20, bottom: 50, left: 60 };

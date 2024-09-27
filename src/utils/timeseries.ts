@@ -89,18 +89,17 @@ export const infillTimeseries = (
 
   const columns = data?.length
     ? Object.keys(data[0])
-    : [keyCol, dataCol, dateCol];
-
+    : [keyCol, dataCol[0], dateCol];
   const cleanedData = isMultipleCategory
     ? cleanMultiCategoryData(
-      data,
-      dates,
-      dataCol,
-      keyCol,
-      dateCol,
-      columns,
-      labelDict
-    )
+        data,
+        dates,
+        dataCol,
+        keyCol,
+        dateCol,
+        columns,
+        labelDict
+      )
     : cleanSingleCategoryData(
         data,
         dates,
@@ -193,67 +192,86 @@ const cleanSingleCategoryData = (
 const cleanMultiCategoryData = (
   _data: Record<string, any>[],
   dates: string[],
-  dataCol: string,
+  dataCols: string[],
   keyCol: string,
   dateCol: string,
   columns: string[],
   labelDict: Record<string, any>
 ) => {
-  const data = _data.filter(f => f[keyCol]?.length)
-  window.raw_data = data
+  const data = _data.filter((f) => f[keyCol]?.length);
   const labelKeys = Object.keys(labelDict);
   const singleCategory = labelKeys.length === 1;
   const cleanedData: Record<string, any>[] = [];
   const categoryTotals: Record<string, number> = {};
-
   // Initialize category totals
-  Object.keys(labelDict).forEach(key => {
+  Object.keys(labelDict).forEach((key) => {
     categoryTotals[key] = 0;
   });
 
   // Process existing data
-  const dataByDate: Record<string, Record<string, number>> = {};
-  data.forEach(record => {
+  const dataByDate: Record<string, Record<string, Record<string, number>>> = {};
+  data.forEach((record) => {
     const date = record[dateCol];
     if (!dataByDate[date]) {
       dataByDate[date] = {};
     }
 
     if (singleCategory) {
-      dataByDate[date][labelKeys[0]] = (dataByDate[date][labelKeys[0]] || 0) + Number(record[dataCol]);
+      if (!dataByDate[date][labelKeys[0]]) {
+        dataByDate[date][labelKeys[0]] = {}
+      }
+      
+      dataCols.forEach((dataCol) => {
+        const value = Number(record[dataCol]);
+        const prevValue = (dataByDate[date][labelKeys[0]][dataCol] || 0)
+        dataByDate[date][labelKeys[0]][dataCol] = prevValue + value;
+      });
     } else {
-      const recordKeys = record[keyCol].split('|');
-      const relevantKeys = recordKeys.filter(key => labelKeys.includes(key));
+      const recordKeys = record[keyCol].split("|");
+      const relevantKeys = recordKeys.filter((key) => labelKeys.includes(key));
       if (relevantKeys.length > 0) {
-        const categoryKey = relevantKeys.sort().join('|');
-        dataByDate[date][categoryKey] = (dataByDate[date][categoryKey] || 0) + Number(record[dataCol]);
+        const categoryKey = relevantKeys.sort().join("|");
+
+        if (!dataByDate[date][categoryKey]) {
+          dataByDate[date][categoryKey] = {}
+        }
+        dataCols.forEach((dataCol) => {
+          const value = Number(record[dataCol]);
+          const prevValue =  dataByDate[date][categoryKey][dataCol] || 0
+          dataByDate[date][categoryKey][dataCol] = prevValue + value;
+        });
       }
     }
   });
-
   // Infill missing dates and categories
-  dates.forEach(date => {
+  dates.forEach((date) => {
     const dateData = dataByDate[date] || {};
-    Object.keys(labelDict).forEach(category => {
-      const value = dateData[category] || 0;
-      categoryTotals[category] += value;
+    Object.keys(labelDict).forEach((category) => {
+      const entry = dateData[category] || {};
+      categoryTotals[category] += entry[dataCols[0]];
       const newRecord: Record<string, any> = {
         [dateCol]: date,
         [keyCol]: labelDict[category],
-        [dataCol]: value
       };
-      columns.forEach(col => {
-        if (![dateCol, keyCol, dataCol].includes(col)) {
-          newRecord[col] = null;
-        }
-      });
+      dataCols.forEach(dataCol => {
+        const value = entry[dataCol]
+        newRecord[dataCol] = value;
+      })
+
       cleanedData.push(newRecord);
     });
   });
 
   // Filter out categories with zero total
-  const activeCategories = Object.keys(categoryTotals).filter(category => categoryTotals[category] > 0);
-  const filteredData = cleanedData.filter(record => activeCategories.includes(Object.keys(labelDict).find(key => labelDict[key] === record[keyCol]) || ''));
+  const activeCategories = Object.keys(categoryTotals).filter(
+    (category) => categoryTotals[category] > 0
+  );
+  const filteredData = cleanedData.filter((record) =>
+    activeCategories.includes(
+      Object.keys(labelDict).find((key) => labelDict[key] === record[keyCol]) ||
+        ""
+    )
+  );
 
   return filteredData;
 };

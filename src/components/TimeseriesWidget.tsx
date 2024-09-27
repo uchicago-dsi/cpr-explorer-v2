@@ -27,7 +27,7 @@ export const TimeseriesWidget = () => {
   useEffect(() => {
     if (loadingState === "loaded" && staticData.length > 0) {
       const dateInData = staticData[0].hasOwnProperty(currentConfig?.dateCol);
-      const dataInData = staticData[0].hasOwnProperty(currentConfig?.dataCol);
+      const dataInData = currentConfig?.dataCol.every(dataCol => staticData[0].hasOwnProperty(dataCol))
       if (!dateInData || !dataInData) {
         setLoadingState("error");
       }
@@ -56,7 +56,8 @@ export const TimeseriesWidget = () => {
           maxDate={dateFilter?.value[1] || "2022-12"}
           keyCol={currentConfig?.keyCol || "ai_class"}
           dateCol={currentConfig?.dateCol || "monthyear"}
-          dataCol={currentConfig?.dataCol || "lbs_chm_used"}
+          // @ts-ignore
+          dataCol={currentConfig?.dataCol || ["lbs_chm_used"]}
           loadingState={loadingState}
         />
         <FilterListBox />

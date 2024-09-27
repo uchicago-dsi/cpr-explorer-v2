@@ -72,8 +72,11 @@ export const infillTimeseries = (
         for (let indices of combinations(n, r)) {
           // @ts-ignore 9/27 no time available for correct typing
           const keys = indices.map((i) =>
-            isNaN(+labelList.value[i])
-              ? labelList.value[i]
+            // @ts-ignore
+          isNaN(+labelList.value[i])
+          // @ts-ignore
+          ? labelList.value[i]
+          // @ts-ignore
               : +labelList.value[i]
           );
           // @ts-ignore 9/27 no time available for correct typing
@@ -195,7 +198,7 @@ const cleanMultiCategoryData = (
   dataCols: string[],
   keyCol: string,
   dateCol: string,
-  columns: string[],
+  _columns: string[],
   labelDict: Record<string, any>
 ) => {
   const data = _data.filter((f) => f[keyCol]?.length);
@@ -228,7 +231,7 @@ const cleanMultiCategoryData = (
       });
     } else {
       const recordKeys = record[keyCol].split("|");
-      const relevantKeys = recordKeys.filter((key) => labelKeys.includes(key));
+      const relevantKeys = recordKeys.filter((key: string) => labelKeys.includes(key));
       if (relevantKeys.length > 0) {
         const categoryKey = relevantKeys.sort().join("|");
 

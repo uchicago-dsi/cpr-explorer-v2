@@ -12,15 +12,22 @@ import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
 import { LoadingStateContainer } from "./LoadingStateContainer";
 
-export const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }> = ({
-  loadingState,
-}) => {
+export const LoadingStateShade: React.FC<{
+  loadingState: State["loadingState"];
+}> = ({ loadingState }) => {
   const executeQuery = useStore((state) => state.executeQuery);
   const toggleAlwaysApplyFilters = useStore(
     (state) => state.toggleAlwaysApplyFilters
   );
   const alwaysApplyFilters = useStore((state) => state.alwaysApplyFilters);
-  switch (loadingState) {
+  const timeseriesType = useStore((state) => state.timeseriesType);
+  const view = useStore((state) => state.view);
+  const _loadingState =
+    !timeseriesType && view === "timeseries"
+      ? "timeseries-intro"
+      : loadingState;
+
+  switch (_loadingState) {
     // ag-on-not-counties
     case "loading":
       return (
@@ -39,12 +46,22 @@ export const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }
           </Alert>
         </LoadingStateContainer>
       );
+    case "timeseries-intro":
+      return (
+        <LoadingStateContainer>
+          <Alert variant="outlined" severity="error">
+            Please select a filter type to view over time. Data will be
+            aggregated to this type.
+          </Alert>
+        </LoadingStateContainer>
+      );
     case "timeseries-none":
       return (
         <LoadingStateContainer>
           <Alert variant="outlined" severity="error">
-            Please select at least one chemical class, use type, active ingredient, or product in the data
-            filters menu to view timeseries data
+            Please select at least one chemical class, use type, active
+            ingredient, or product in the data filters menu to view timeseries
+            data
           </Alert>
         </LoadingStateContainer>
       );
@@ -133,15 +150,15 @@ export const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }
           </LoadingStateContainer>
         );
       }
-      case "ag-on-not-counties":
-        return (
-          <LoadingStateContainer>
-            <Alert variant="outlined" severity="error">
-              Non-agricultural data are only available for counties
-            </Alert>
-          </LoadingStateContainer>
-        );
-      default:
-        return null;
+    case "ag-on-not-counties":
+      return (
+        <LoadingStateContainer>
+          <Alert variant="outlined" severity="error">
+            Non-agricultural data are only available for counties
+          </Alert>
+        </LoadingStateContainer>
+      );
+    default:
+      return null;
   }
 };

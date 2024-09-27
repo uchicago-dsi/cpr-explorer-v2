@@ -98,8 +98,7 @@ export const useStore = create<State>(
     view: defaultViewConfig.view,
     setView: (view: string) => {
       let loadingState: any = 'settings-changed'
-      let timeseriesConfig =
-        view === "timeseries" ? timeseriesViews[0] : ({} as any);
+      let timeseriesConfig: any = {}
 
       let uiFilters = get().uiFilters;
 
@@ -110,7 +109,7 @@ export const useStore = create<State>(
             defaultMapConfig[0]
           : ({} as any);
 
-      let filterKeys = timeseriesConfig.filterKeys || [];
+      let filterKeys = timeseriesConfig?.filterKeys || [];
       if (view === "timeseries") {
         const existingFilter = uiFilters.find(
           (f) =>
@@ -129,20 +128,20 @@ export const useStore = create<State>(
           );
           filterKeys = timeseriesConfig.filterKeys || [];
         } else {
-          const newFilters: FilterState[] =
-            timeseriesConfig?.defaultFilterOptions || [];
-          uiFilters = uiFilters.filter((f) =>
-            newFilters.every((nf) => nf.queryParam !== f.queryParam)
-          );
+          // const newFilters: FilterState[] =
+          //   timeseriesConfig?.defaultFilterOptions || [];
+          // uiFilters = uiFilters.filter((f) =>
+          //   newFilters.every((nf) => nf.queryParam !== f.queryParam)
+          // );
 
-          uiFilters = [...uiFilters, ...newFilters];
+          // uiFilters = [...uiFilters, ...newFilters];
           loadingState = 'timeseries-none'
         }
       } else if (view.toLowerCase().includes("map")) {
         filterKeys = mapViewConfig.filterKeys || [];
       }
 
-      const timeseriesType = timeseriesConfig.label || get().timeseriesType;
+      const timeseriesType = timeseriesConfig?.label || get()?.timeseriesType;
       const queryEndpoint =
         timeseriesConfig.endpoint ||
         mapViewConfig.endpoint ||
@@ -161,7 +160,7 @@ export const useStore = create<State>(
 
       get().executeQuery();
     },
-    timeseriesType: timeseriesViews[0].label,
+    timeseriesType: undefined,//timeseriesViews[0].label,
     setTimeseriesType: (type: string) => {
       const timeseriesConfig = timeseriesViews.find(
         (view) => view.label === type
@@ -187,7 +186,7 @@ export const useStore = create<State>(
             ...previousFilters,
             //  ...defaultFilter
           ],
-          loadingState: "settings-changed",
+          loadingState: "timeseries-none",
         });
       }
     },

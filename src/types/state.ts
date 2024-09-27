@@ -56,7 +56,7 @@ export type State = {
   setMapLayer: (mapLayer: string) => void;
   setLoadingState: (loadingState: LoadingStates) => void;
 
-  timeseriesType: string;
+  timeseriesType?: string;
   setTimeseriesType: (type: string) => void;
   
   queriedFilters: FilterState[];

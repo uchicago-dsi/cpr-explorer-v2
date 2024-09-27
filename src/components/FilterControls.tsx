@@ -173,6 +173,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
   const geography = useStore((state) => state.geography);
   const setGeography = useStore((state) => state.setGeography);
   const timeseriesType = useStore((state) => state.timeseriesType);
+
   const setTimeseriesType = useStore((state) => state.setTimeseriesType);
   const view = useStore((state) => state.view);
 
@@ -287,6 +288,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
             spec={timeseriesFilterSpec}
             onChange={(value) => setTimeseriesType(value as string)}
             state={{ value: timeseriesType, label: timeseriesType } as any}
+            focused={!timeseriesType}
           />
           {!!timeseriesMainConfig && (
             <FilterControl

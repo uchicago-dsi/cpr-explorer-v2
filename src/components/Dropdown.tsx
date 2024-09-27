@@ -22,8 +22,14 @@ const MenuProps = {
 };
 
 const recursivelyFlattenArray = (arr: any[]): any[] => {
-  return arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(recursivelyFlattenArray(val)) : acc.concat(val), []);
-}
+  return arr.reduce(
+    (acc, val) =>
+      Array.isArray(val)
+        ? acc.concat(recursivelyFlattenArray(val))
+        : acc.concat(val),
+    []
+  );
+};
 // const filterUnique = (arr: any[]) => {
 //   return arr.filter((value, index) => arr.indexOf(value) === index);
 // }
@@ -33,24 +39,32 @@ export const MultipleSelectCheckmarks: React.FC<{
   state?: FilterState;
   onChange: (value: FilterValue, valueLabels: FilterValue) => void;
   multiple?: boolean;
-}> = ({ spec, state, onChange, multiple=false }) => {
+  focused?: boolean;
+}> = ({ spec, state, onChange, focused, multiple = false }) => {
   const options = useOptions(spec);
   const value = (state?.value || []) as any[];
   const valueLabels = (state?.valueLabels || []) as any[];
 
   const handleChange = (_event: SelectChangeEvent<any>, _e: any) => {
-    const newValue = _e.props.value
-    const newLabel = _e.props.label || options.find((o) => o.value === newValue)?.label || newValue
+    const newValue = _e.props.value;
+    const newLabel =
+      _e.props.label ||
+      options.find((o) => o.value === newValue)?.label ||
+      newValue;
     if (!multiple) {
       onChange(newValue, newLabel);
-      return
+      return;
     }
     const valueInSelection = value.includes(newValue);
     if (valueInSelection) {
       // @ts-ignore
       const indexOfValue = value.indexOf(newValue);
-      const newValueList = value.slice(0, indexOfValue).concat(value.slice(indexOfValue + 1));
-      const newLabelList = valueLabels.slice(0, indexOfValue).concat(valueLabels.slice(indexOfValue + 1));
+      const newValueList = value
+        .slice(0, indexOfValue)
+        .concat(value.slice(indexOfValue + 1));
+      const newLabelList = valueLabels
+        .slice(0, indexOfValue)
+        .concat(valueLabels.slice(indexOfValue + 1));
       // @ts-ignore
       onChange(newValueList, newLabelList);
     } else {
@@ -63,7 +77,13 @@ export const MultipleSelectCheckmarks: React.FC<{
 
   return (
     <div>
-      <FormControl sx={{ my: 1, width: '100%' }}>
+      <FormControl
+        sx={{
+          my: 1,
+          width: "100%",
+          animation: focused ? "pulsate 1.5s infinite;" : "none",
+        }}
+      >
         <InputLabel id="demo-multiple-checkbox-label">{spec.label}</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
@@ -72,12 +92,16 @@ export const MultipleSelectCheckmarks: React.FC<{
           value={valueLabels?.length ? valueLabels : value}
           onChange={handleChange}
           input={<OutlinedInput label={spec.label} />}
-          renderValue={(selected) => multiple ? selected.join(", ") : selected}
+          renderValue={(selected) =>
+            multiple ? selected.join(", ") : selected
+          }
           MenuProps={MenuProps}
         >
           {options.map((option, i) => (
             <MenuItem key={i} value={option.value}>
-              {multiple && <Checkbox checked={value.indexOf(option.value) > -1} />}
+              {multiple && (
+                <Checkbox checked={value.indexOf(option.value) > -1} />
+              )}
               <ListItemText primary={option.label} />
             </MenuItem>
           ))}

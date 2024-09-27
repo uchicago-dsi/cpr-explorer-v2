@@ -95,6 +95,7 @@ export const useStore = create<State>(
     mapLayer: "pesticide-use",
     view: defaultViewConfig.view,
     setView: (view: string) => {
+      let loadingState: any = 'settings-changed'
       let timeseriesConfig =
         view === "timeseries" ? timeseriesViews[0] : ({} as any);
 
@@ -133,6 +134,7 @@ export const useStore = create<State>(
           );
 
           uiFilters = [...uiFilters, ...newFilters];
+          loadingState = 'timeseries-none'
         }
       } else if (view.toLowerCase().includes("map")) {
         filterKeys = mapViewConfig.filterKeys || [];
@@ -146,7 +148,7 @@ export const useStore = create<State>(
 
       set({
         view,
-        loadingState: "settings-changed",
+        loadingState,
         queryEndpoint,
         geography,
         uiFilters,

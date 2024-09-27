@@ -257,7 +257,7 @@ export const useStore = create<State>(
 
       const timestamp = performance.now();
       const agFilter =
-        uiFilters.find((f) => f.queryParam === "usetype")?.value === "NON-AG";
+        uiFilters.find((f) => f.queryParam === "usetype")?.value !== "AG";
 
       if (
         get().view.toLowerCase().includes("map") &&

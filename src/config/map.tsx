@@ -112,32 +112,32 @@ export const mapLayers: {
     tooltipFormatter: percentFormatter
   },
   {
-    label: "Percent Asian",
-    dataColumn: "Pct Asian",
+    label: "Percent Non-Hispanic Asian",
+    dataColumn: "Pct NH Asian",
     attribution: ACS_ATTRIBTUION,
     colorScheme: d3.schemeGreens[5],
     tooltipKeys: {
-      "Pct Asian": "Percent Asian",
+      "Pct NH Asian": "Percent Asian",
     },
     tooltipFormatter: percentFormatter
   },
   {
-    label: "Percent Native American",
-    dataColumn: "Pct NH American Indian",
+    label: "Percent Non-Hispanic American Indian and Alaska Native",
+    dataColumn: "Pct NH AIAN",
     attribution: ACS_ATTRIBTUION,
     colorScheme: d3.schemeReds[5],
     tooltipKeys: {
-      "Pct NH American Indian": "Percent Native American",
+      "Pct NH AIAN": "Percent American Indian and Alaska Native",
     },
     tooltipFormatter: percentFormatter
   },
   {
-    label: "Percent Native Hawaiian or Pacific Islander",
-    dataColumn: "Pct NH Hawaiian",
+    label: "Percent Non-Hispanic Native Hawaiian and Pacific Islander",
+    dataColumn: "Pct NH NHPI",
     attribution: ACS_ATTRIBTUION,
     colorScheme: d3.schemeOranges[5],
     tooltipKeys: {
-      "Pct NH Hawaiian": "Percent Native Hawaiian or Pacific Islander",
+      "Pct NH NHPI": "Percent Native Hawaiian and Pacific Islander",
     },
     tooltipFormatter: percentFormatter
   },

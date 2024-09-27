@@ -12,7 +12,7 @@ import {
   timeseriesFilterSpec,
   timeseriesViews,
 } from "../config/filters";
-import { mapConfigFilterSpec } from "../config/map";
+import { getMapConfigFilterSpec } from "../config/map";
 import { useStore } from "../state/store";
 import { create } from "zustand"
 
@@ -177,6 +177,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
   const view = useStore((state) => state.view);
 
   const filterKeys = useStore((state) => state.filterKeys);
+  const filterConfig = getMapConfigFilterSpec(view);
 
   const mainFilterKey = useStore((state) => {
     const mainFilterKey =
@@ -267,7 +268,7 @@ const FilterControlsInner: React.FC<FilterProps> = ({ allowToggle }) => {
 
             <MultipleSelectCheckmarks
               multiple={false}
-              spec={mapConfigFilterSpec}
+              spec={filterConfig as any}
               onChange={(value) => setGeography(value as string)}
               state={{ value: geography, label: geography } as any}
             />

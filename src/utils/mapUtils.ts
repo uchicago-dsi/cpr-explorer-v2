@@ -1,6 +1,6 @@
 import { MVTLayer } from "@deck.gl/geo-layers";
 import * as d3 from "d3";
-import { mapConfig } from "../config/map";
+import { getMapConfig } from "../config/map";
 
 export const DEFAULT_MVT_LAYER_SETTINGS = {
   pickable: true,
@@ -47,7 +47,7 @@ export const INITIAL_VIEW_STATE = {
 };
 
 export const getMapboxApi = (layer: string) => {
-  const config = mapConfig.find((c) => c.layer === layer);
+  const config = getMapConfig("map").find((c) => c.layer === layer);
   if (!config) {
     throw new Error(`No config found for layer: ${layer}`);
   }

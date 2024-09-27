@@ -15,7 +15,7 @@ import GlMap, {
   // @ts-ignore
   AttributionControl,
 } from "react-map-gl";
-import { mapConfig, MapLayerOptions, mapLayers } from "../config/map";
+import { getMapConfig, MapLayerOptions, mapLayers } from "../config/map";
 import Alert from "@mui/material/Alert";
 import { LoadingStateShade } from "./LoadingShade";
 import { MapTooltip } from "./MapTooltip";
@@ -53,6 +53,8 @@ export const MainMapView: React.FC<{
 }> = ({ defaultMapLayer, containerId, onLoad }) => {
   // globals
   const geography = useStore((state) => state.geography);
+  const view = useStore((state) => state.view);
+  const mapConfig = getMapConfig(view);
   const geographyConfig = mapConfig.find((c) => c.layer === geography)!;
   const loadingState = useStore((state) => state.loadingState);
   const timestamp = useStore((state) => state.timestamp);

@@ -5,10 +5,10 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import { mapConfig, mapLayers } from "../config/map";
+import { getMapConfig, mapLayers } from "../config/map";
 
 export const MapTooltip: React.FC<{
-  geographyTooltips: typeof mapConfig[number]['tooltipKeys'];
+  geographyTooltips: ReturnType<typeof getMapConfig>[number]['tooltipKeys'];
   mapLayerTooltips: typeof mapLayers[number]['tooltipKeys'];
 }> = ({
   mapLayerTooltips,

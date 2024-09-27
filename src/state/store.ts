@@ -6,7 +6,7 @@ import {
   timeseriesFiltersNotDateRange,
   timeseriesViews,
 } from "../config/filters";
-import { mapConfig } from "../config/map";
+import { getMapConfig } from "../config/map";
 import { unpack } from "msgpackr/unpack";
 import { exportData } from "../utils/packageAndZipData";
 import { infillTimeseries } from "../utils/timeseries";
@@ -22,6 +22,8 @@ import {
 export let staticData: any = [];
 const timeoutDuration = 500;
 let timeoutFn: any = null;
+
+const defaultMapConfig =  getMapConfig("map")
 
 export const useStore = create<State>(
   wrapper((set, get) => ({
@@ -83,8 +85,8 @@ export const useStore = create<State>(
       });
     },
     loadingState: "unloaded" as State["loadingState"],
-    geography: mapConfig[0].layer!,
-    queryEndpoint: mapConfig[0].endpoint,
+    geography: defaultMapConfig[0].layer!,
+    queryEndpoint: defaultMapConfig[0].endpoint,
     mapLayer: "pesticide-use",
     view: "map",
     setView: (view: string) => {
@@ -96,7 +98,7 @@ export const useStore = create<State>(
       const geography = get().geography;
       const mapViewConfig =
         view === "map" || view === "mapDualView"
-          ? mapConfig.find((f) => f.layer == geography) || mapConfig[0]
+          ? defaultMapConfig.find((f) => f.layer == geography) || defaultMapConfig[0]
           : ({} as any);
 
       let filterKeys = timeseriesConfig.filterKeys || [];
@@ -160,18 +162,21 @@ export const useStore = create<State>(
         const previousFilters = get().uiFilters.filter((f) =>
           filterKeys.includes(f.label)
         );
-        const defaultFilter =
-          timeseriesConfig?.defaultFilterOptions &&
-          !previousFilters.find(
-            (f) => f.label === timeseriesConfig?.defaultFilterOptions?.[0].label
-          )
-            ? (timeseriesConfig?.defaultFilterOptions as unknown as FilterState[])
-            : ([] as FilterState[]);
+        // const defaultFilter =
+        //   timeseriesConfig?.defaultFilterOptions &&
+        //   !previousFilters.find(
+        //     (f) => f.label === timeseriesConfig?.defaultFilterOptions?.[0].label
+        //   )
+        //     ? (timeseriesConfig?.defaultFilterOptions as unknown as FilterState[])
+        //     : ([] as FilterState[]);
         set({
           timeseriesType: type,
           filterKeys,
           queryEndpoint: timeseriesConfig?.endpoint || "",
-          uiFilters: [...previousFilters, ...defaultFilter],
+          uiFilters: [
+            ...previousFilters,
+            //  ...defaultFilter
+            ],
           loadingState: "settings-changed",
         });
       }
@@ -187,7 +192,7 @@ export const useStore = create<State>(
           valueLabels: filter.defaultLabel || filter.default || null,
         }))
     ),
-    filterKeys: mapConfig[0].filterKeys || [],
+    filterKeys: defaultMapConfig[0].filterKeys || [],
     setFilterKeys: (keys) => set({ filterKeys: keys }),
     tooltip: undefined,
     setTooltip: (tooltip) => set({ tooltip }),
@@ -312,7 +317,8 @@ export const useStore = create<State>(
       }
     },
     setGeography: (geography) => {
-      const geoData = mapConfig.find((config) => config.layer === geography);
+      const view = get().view;
+      const geoData = getMapConfig(view).find((config) => config.layer === geography);
       if (geoData) {
         set({
           geography,
@@ -422,7 +428,8 @@ export const useStore = create<State>(
           break;
         case "mapDualView":
         case "map":
-          const geoData = mapConfig.find(
+          const view = args.view || "map";
+          const geoData = getMapConfig(view).find(
             (config) => config.layer === args.geography
           );
           if (geoData) {

@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { useStore } from "../state/store";
 import { timeseriesViews } from "../config/filters";
-import { mapConfig } from "../config/map";
+import { getMapConfig } from "../config/map";
 
 export const DownloadButtons: React.FC<{ selectedIndices?: number[], compact?: Boolean }> = ({
   selectedIndices,
@@ -11,7 +11,8 @@ export const DownloadButtons: React.FC<{ selectedIndices?: number[], compact?: B
   const isLoaded = useStore((state) => state.loadingState === "loaded");
   const sortKeys = useStore((state) => {
     if (state.view === "map" || state.view === "mapDualView") {
-      const config = mapConfig.find((l) => l.layer === state.geography);
+
+      const config = getMapConfig(state.view).find((l) => l.layer === state.geography);
       return config?.sortKeys;
     }
     if (state.view === "timeseries") {

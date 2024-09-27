@@ -1,26 +1,27 @@
-import { FilterSpec } from "../types/state"
-import { applicationFilters, geographyFilters, impactFilters, pesticideInfoFilters } from "./filters"
-import * as d3 from "d3"
+import { FilterSpec } from "../types/state";
+import {
+  applicationFilters,
+  geographyFilters,
+  impactFilters,
+  pesticideInfoFilters,
+} from "./filters";
+import * as d3 from "d3";
 
-const demographiFilterKeys = [
+const demographicFilterKeys = [
   "Median Household Income",
   "Percent Black or African American",
   "Percent Hispanic or Latino",
-]
+];
 
-const defaultKeys = [ 
+const mapKeys = [
   "Date Range",
-  ...demographiFilterKeys,
-  ...applicationFilters.filters.map(filter => filter.label),
-  ...pesticideInfoFilters.filters.map(filter => filter.label),
-  ...impactFilters.filters.map(filter => filter.label),
-  ...geographyFilters.filters.map(filter => filter.label)
-]
-// const sectionTownshipKeys = [ 
-//   "Date Range",
-//   ...ingredientKeys
-// ]
-const ACS_ATTRIBTUION = "ACS 2021 5-year estiamtes, 2020 Census Geos"
+  ...applicationFilters.filters.map((filter) => filter.label),
+  ...pesticideInfoFilters.filters.map((filter) => filter.label),
+  ...impactFilters.filters.map((filter) => filter.label),
+  ...geographyFilters.filters.map((filter) => filter.label),
+];
+const demogViewKeys = [...demographicFilterKeys, ...mapKeys];
+const ACS_ATTRIBTUION = "ACS 2021 5-year estiamtes, 2020 Census Geos";
 
 export const mapLayers: {
   label: string;
@@ -35,7 +36,7 @@ export const mapLayers: {
     attribution: "CDPR PUR 2017-2022; 2020 Census Geos",
     tooltipKeys: {
       lbs_chm_used: "Pounds of Chemicals Applied",
-    }
+    },
   },
   {
     label: "Pounds of Product Applied",
@@ -43,7 +44,7 @@ export const mapLayers: {
     attribution: "CDPR PUR 2017-2022; 2020 Census Geos",
     tooltipKeys: {
       lbs_prd_used: "Pounds of Product Applied",
-    }
+    },
   },
   {
     label: "AI Intensity (lbs/sq mi)",
@@ -51,7 +52,7 @@ export const mapLayers: {
     attribution: "CDPR PUR 2017-2022; 2020 Census Geos",
     tooltipKeys: {
       ai_intensity: "AI Intensity (lbs/sq mi)",
-    }
+    },
   },
   {
     label: "Product Intensity (lbs/sq mi)",
@@ -59,7 +60,7 @@ export const mapLayers: {
     attribution: "CDPR PUR 2017-2022; 2020 Census Geos",
     tooltipKeys: {
       prd_intensity: "Product Intensity (lbs/sq mi)",
-    }
+    },
   },
   {
     label: "Total Population",
@@ -68,7 +69,7 @@ export const mapLayers: {
     colorScheme: d3.schemeYlGnBu[5],
     tooltipKeys: {
       "Pax Total": "Total Population",
-    }
+    },
   },
   {
     label: "Percent Black or African American",
@@ -77,7 +78,7 @@ export const mapLayers: {
     colorScheme: d3.schemePurples[5],
     tooltipKeys: {
       "Pct NH Black": "Percent Black or African American",
-    }
+    },
   },
   {
     label: "Percent Hispanic or Latino",
@@ -86,7 +87,7 @@ export const mapLayers: {
     colorScheme: d3.schemeOranges[5],
     tooltipKeys: {
       "Pct Hispanic": "Percent Hispanic or Latino",
-    }
+    },
   },
   {
     label: "Percent With Less Than High School",
@@ -95,7 +96,7 @@ export const mapLayers: {
     colorScheme: d3.schemeReds[5],
     tooltipKeys: {
       "Pct No High School": "Percent With Less Than High School",
-    }
+    },
   },
   {
     label: "Percent Working in Agriculture",
@@ -104,12 +105,12 @@ export const mapLayers: {
     colorScheme: d3.schemeGreens[5],
     tooltipKeys: {
       "Pct Agriculture": "Percent Working in Agriculture",
-    }
-  }
-]
-export const MapLayerOptions = mapLayers.map((layer) => layer.label)
+    },
+  },
+];
+export const MapLayerOptions = mapLayers.map((layer) => layer.label);
 
-export const mapConfig: {
+export const getMapConfig = (view: string): {
   layer: string;
   tileset: string;
   endpoint: string;
@@ -118,7 +119,7 @@ export const mapConfig: {
   filterKeys?: string[];
   tooltipKeys?: Record<string, string>;
   sortKeys?: string | string[];
-}[] = [
+}[] => [
   {
     layer: "Townships",
     tileset: "cpr2024.62lnnt0z",
@@ -126,7 +127,7 @@ export const mapConfig: {
     tileId: "MeridianTownshipRange",
     dataId: "MeridianTownshipRange",
     sortKeys: "MeridianTownshipRange",
-    filterKeys: defaultKeys,
+    filterKeys: view === 'map' ? mapKeys : demogViewKeys,
     tooltipKeys: {
       MeridianTownshipRange: "MeridianTownshipRange",
     },
@@ -138,10 +139,7 @@ export const mapConfig: {
     tileId: "GEOID",
     dataId: "FIPS",
     sortKeys: "Area Name",
-    filterKeys: [
-      ...defaultKeys,
-      "Agricultural Use"
-    ],
+    filterKeys: [...view === 'map' ? mapKeys : demogViewKeys, "Agricultural Use"],
     tooltipKeys: {
       "Area Name": "Name",
       GEOID: "GEOID",
@@ -153,7 +151,7 @@ export const mapConfig: {
     endpoint: "66c3a4e0698c0f0008ae926c",
     tileId: "FIPS",
     dataId: "FIPS",
-    filterKeys: defaultKeys,
+    filterKeys: view === 'map' ? mapKeys : demogViewKeys,
     sortKeys: "Area Name",
     tooltipKeys: {
       "Area Name": "Name",
@@ -166,7 +164,7 @@ export const mapConfig: {
     endpoint: "66c3a573698c0f0008ae926d",
     tileId: "GEOID",
     dataId: "GEOID",
-    filterKeys: defaultKeys,
+    filterKeys: view === 'map' ? mapKeys : demogViewKeys,
     sortKeys: ["NAMELSADCO", "NAMELSAD"],
     tooltipKeys: {
       NAMELSADCO: "County",
@@ -181,7 +179,7 @@ export const mapConfig: {
     tileId: "CO_MTRS",
     dataId: "comtrs",
     sortKeys: "comtrs",
-    filterKeys: defaultKeys,
+    filterKeys: view === 'map' ? mapKeys : demogViewKeys,
     tooltipKeys: { NAMELSAD: "Name", REGIONNAME: "Region", comtrs: "CO_MTRS" },
   },
   {
@@ -191,20 +189,20 @@ export const mapConfig: {
     tileId: "ZCTA5CE20",
     dataId: "ZCTA5CE20",
     sortKeys: "ZCTA5CE20",
-    filterKeys: defaultKeys,
+    filterKeys: view === 'map' ? mapKeys : demogViewKeys,
     tooltipKeys: { ZCTA5CE20: "Zip Code", USPS_ZIP_PREF_CITY: "City" },
   },
 ];
 
-export const mapConfigFilterSpec: FilterSpec = {
+export const getMapConfigFilterSpec: (view:string) => FilterSpec = (view) => ({
   queryParam: "na",
   label: "Geography",
   component: "dropdown",
   options: {
-    type: 'static',
-    values: mapConfig.map((config) => ({
+    type: "static",
+    values: getMapConfig(view).map((config) => ({
       value: config.layer!,
-      label: config.layer!
-    }))
-  }
-}
+      label: config.layer!,
+    })),
+  },
+})

@@ -12,6 +12,10 @@ const demographicFilterKeys = [
   "Median Household Income",
   "Percent Black or African American",
   "Percent Hispanic or Latino",
+  "Percent Non-Hispanic White",
+  "Percent Asian",
+  "Percent Native American",
+  "Percent Native Hawaiian or Pacific Islander",
 ];
 
 const mapKeys = [
@@ -90,6 +94,50 @@ export const mapLayers: {
     colorScheme: d3.schemeOranges[5],
     tooltipKeys: {
       "Pct Hispanic": "Percent Hispanic or Latino",
+    },
+    tooltipFormatter: percentFormatter
+  },
+  // "Percent Non-Hispanic White",
+  // "Percent Asian",
+  // "Percent Native American",
+  // "Percent Native Hawaiian or Pacific Islander",
+  {
+    label: "Percent Non-Hispanic White",
+    dataColumn: "Pct NH White",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemeBlues[5],
+    tooltipKeys: {
+      "Pct NH White": "Percent Non-Hispanic White",
+    },
+    tooltipFormatter: percentFormatter
+  },
+  {
+    label: "Percent Asian",
+    dataColumn: "Pct Asian",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemeGreens[5],
+    tooltipKeys: {
+      "Pct Asian": "Percent Asian",
+    },
+    tooltipFormatter: percentFormatter
+  },
+  {
+    label: "Percent Native American",
+    dataColumn: "Pct NH American Indian",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemeReds[5],
+    tooltipKeys: {
+      "Pct NH American Indian": "Percent Native American",
+    },
+    tooltipFormatter: percentFormatter
+  },
+  {
+    label: "Percent Native Hawaiian or Pacific Islander",
+    dataColumn: "Pct NH Hawaiian",
+    attribution: ACS_ATTRIBTUION,
+    colorScheme: d3.schemeOranges[5],
+    tooltipKeys: {
+      "Pct NH Hawaiian": "Percent Native Hawaiian or Pacific Islander",
     },
     tooltipFormatter: percentFormatter
   },

@@ -98,7 +98,7 @@ export const useStore = create<State>(
       const geography = get().geography;
       const mapViewConfig =
         view === "map" || view === "mapDualView"
-          ? defaultMapConfig.find((f) => f.layer == geography) || defaultMapConfig[0]
+          ? getMapConfig(view)?.find((f) => f.layer == geography) || defaultMapConfig[0]
           : ({} as any);
 
       let filterKeys = timeseriesConfig.filterKeys || [];

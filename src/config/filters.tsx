@@ -445,6 +445,84 @@ const demographyFilters: FilterSection = {
       },
       component: "range",
     },
+
+    {
+      queryParam: "pctwhite",
+      label: "Percent Non-Hispanic White",
+      subLabel: "(minimum percent of population)",
+      options: {
+        type: "static",
+        values: [
+          {
+            value: 0,
+            label: "0%",
+          },
+          {
+            value: 1,
+            label: "100%",
+          },
+        ],
+      },
+      component: "range",
+    },
+    {
+      queryParam: "pctasian",
+      label: "Percent Asian",
+      subLabel: "(minimum percent of population)",
+      options: {
+        type: "static",
+        values: [
+          {
+            value: 0,
+            label: "0%",
+          },
+          {
+            value: 1,
+            label: "100%",
+          },
+        ],
+      },
+      component: "range",
+    },
+
+    {
+      queryParam: "pctnativeamerican",
+      label: "Percent Native American",
+      subLabel: "(minimum percent of population)",
+      options: {
+        type: "static",
+        values: [
+          {
+            value: 0,
+            label: "0%",
+          },
+          {
+            value: 1,
+            label: "100%",
+          },
+        ],
+      },
+      component: "range",
+    },
+    {
+      queryParam: "pctnativehawaiian",
+      label: "Percent Native Hawaiian or Pacific Islander",
+      subLabel: "(minimum percent of population)",
+      options: {
+        type: "static",
+        values: [
+          {
+            value: 0,
+            label: "0%",
+          },
+          {
+            value: 1,
+            label: "100%",
+          },
+        ],
+      },
+      component: "range",
+    },
     {
       queryParam: "income",
       label: "Median Household Income",

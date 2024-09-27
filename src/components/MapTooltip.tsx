@@ -14,6 +14,8 @@ export const MapTooltip: React.FC<{
   mapLayerTooltips,
   geographyTooltips
 }) => {
+  const config = mapLayers.find(f => f.tooltipKeys === mapLayerTooltips)
+
   const tooltip = useStore((state) => state.tooltip);
   if (!tooltip) return null;
   return (
@@ -40,7 +42,7 @@ export const MapTooltip: React.FC<{
               <Typography component="p">
                 <b>{value || "Data"}:</b>{" "}
                 {!isNaN(tooltip?.data?.[key] as any)
-                  ? tooltip?.data?.[key]?.toLocaleString()
+                  ? config?.tooltipFormatter?.(tooltip?.data?.[key])  || tooltip?.data?.[key]?.toLocaleString()
                   : "N/A"}
               </Typography>
             </ListItem>

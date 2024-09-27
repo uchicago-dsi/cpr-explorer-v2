@@ -1,3 +1,4 @@
+import { percentFormatter } from "../components/MapLegend";
 import { FilterSpec } from "../types/state";
 import {
   applicationFilters,
@@ -29,6 +30,7 @@ export const mapLayers: {
   attribution: string;
   colorScheme?: readonly string[] | string[];
   tooltipKeys?: Record<string, string>;
+  tooltipFormatter?: (value: any) => string;
 }[] = [
   {
     label: "Pounds of Chemicals Applied",
@@ -79,6 +81,7 @@ export const mapLayers: {
     tooltipKeys: {
       "Pct NH Black": "Percent Black or African American",
     },
+    tooltipFormatter: percentFormatter
   },
   {
     label: "Percent Hispanic or Latino",
@@ -88,6 +91,7 @@ export const mapLayers: {
     tooltipKeys: {
       "Pct Hispanic": "Percent Hispanic or Latino",
     },
+    tooltipFormatter: percentFormatter
   },
   {
     label: "Percent With Less Than High School",
@@ -97,6 +101,7 @@ export const mapLayers: {
     tooltipKeys: {
       "Pct No High School": "Percent With Less Than High School",
     },
+    tooltipFormatter: percentFormatter
   },
   {
     label: "Percent Working in Agriculture",
@@ -106,6 +111,7 @@ export const mapLayers: {
     tooltipKeys: {
       "Pct Agriculture": "Percent Working in Agriculture",
     },
+    tooltipFormatter: percentFormatter
   },
 ];
 export const MapLayerOptions = mapLayers.map((layer) => layer.label);

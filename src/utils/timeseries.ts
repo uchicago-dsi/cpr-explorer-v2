@@ -48,11 +48,14 @@ export const infillTimeseries = (
   dateRange: string[],
   filters: FilterState[]
 ) => {
-  const { keyCol, dataCol, dateCol, labelMapping } = config;
-  const labelList = labelMapping
+  const { keyCol, dataCol, dateCol, labelMapping, isMultipleCategory } = config;
+
+  let labelList = labelMapping
     ? filters.find((f) => f.label === labelMapping)
     : null;
+
   const labelDict = {};
+
   if (
     labelList?.value &&
     labelList?.valueLabels &&
@@ -63,19 +66,89 @@ export const infillTimeseries = (
       // @ts-ignore
       labelDict[isNaN(+value) ? value : +value] = labelList.valueLabels[index];
     });
+    if (isMultipleCategory) {
+      const n = labelList.value.length;
+      for (let r = 2; r <= n; r++) {
+        for (let indices of combinations(n, r)) {
+          // @ts-ignore 9/27 no time available for correct typing
+          const keys = indices.map((i) =>
+            isNaN(+labelList.value[i])
+              ? labelList.value[i]
+              : +labelList.value[i]
+          );
+          // @ts-ignore 9/27 no time available for correct typing
+          const labels = indices.map((i) => labelList.valueLabels[i]);
+          // @ts-ignore 9/27 no time available for correct typing
+          labelDict[keys.join("|")] = labels.join(", ");
+        }
+      }
+    }
   }
 
-  const labelDictKeys = Object.keys(labelDict).map(key => isNaN(+key) ? key : +key);
-  
   const dates = getDateRangeStrings(dateRange);
-  let dateIndex = 0;
-  let entriesInYear: string[] = [];
 
-  const cleanedData = [];
   const columns = data?.length
     ? Object.keys(data[0])
     : [keyCol, dataCol, dateCol];
 
+  const cleanedData = isMultipleCategory
+    ? cleanMultiCategoryData(
+      data,
+      dates,
+      dataCol,
+      keyCol,
+      dateCol,
+      columns,
+      labelDict
+    )
+    : cleanSingleCategoryData(
+        data,
+        dates,
+        dataCol,
+        keyCol,
+        dateCol,
+        columns,
+        labelDict
+      );
+
+  return cleanedData;
+};
+
+function combinations(n: number, r: number): number[][] {
+  const result: number[][] = [];
+
+  function backtrack(start: number, current: number[]) {
+    if (current.length === r) {
+      result.push([...current]);
+      return;
+    }
+    for (let i = start; i < n; i++) {
+      current.push(i);
+      backtrack(i + 1, current);
+      current.pop();
+    }
+  }
+
+  backtrack(0, []);
+  return result;
+}
+
+const cleanSingleCategoryData = (
+  data: Record<string, any>[],
+  dates: string[],
+  dataCol: string,
+  keyCol: string,
+  dateCol: string,
+  columns: string[],
+  labelDict: Record<string, any>
+) => {
+  const labelDictKeys = Object.keys(labelDict).map((key) =>
+    isNaN(+key) ? key : +key
+  );
+
+  let dateIndex = 0;
+  let entriesInYear: string[] = [];
+  const cleanedData = [];
   for (let i = 0; i < data.length; i++) {
     let record = data[i];
     const key = isNaN(+record[keyCol]) ? record[keyCol] : +record[keyCol];
@@ -114,6 +187,73 @@ export const infillTimeseries = (
     entriesInYear.push(key);
     cleanedData.push(record);
   }
-
   return cleanedData;
+};
+
+const cleanMultiCategoryData = (
+  _data: Record<string, any>[],
+  dates: string[],
+  dataCol: string,
+  keyCol: string,
+  dateCol: string,
+  columns: string[],
+  labelDict: Record<string, any>
+) => {
+  const data = _data.filter(f => f[keyCol]?.length)
+  window.raw_data = data
+  const labelKeys = Object.keys(labelDict);
+  const singleCategory = labelKeys.length === 1;
+  const cleanedData: Record<string, any>[] = [];
+  const categoryTotals: Record<string, number> = {};
+
+  // Initialize category totals
+  Object.keys(labelDict).forEach(key => {
+    categoryTotals[key] = 0;
+  });
+
+  // Process existing data
+  const dataByDate: Record<string, Record<string, number>> = {};
+  data.forEach(record => {
+    const date = record[dateCol];
+    if (!dataByDate[date]) {
+      dataByDate[date] = {};
+    }
+
+    if (singleCategory) {
+      dataByDate[date][labelKeys[0]] = (dataByDate[date][labelKeys[0]] || 0) + Number(record[dataCol]);
+    } else {
+      const recordKeys = record[keyCol].split('|');
+      const relevantKeys = recordKeys.filter(key => labelKeys.includes(key));
+      if (relevantKeys.length > 0) {
+        const categoryKey = relevantKeys.sort().join('|');
+        dataByDate[date][categoryKey] = (dataByDate[date][categoryKey] || 0) + Number(record[dataCol]);
+      }
+    }
+  });
+
+  // Infill missing dates and categories
+  dates.forEach(date => {
+    const dateData = dataByDate[date] || {};
+    Object.keys(labelDict).forEach(category => {
+      const value = dateData[category] || 0;
+      categoryTotals[category] += value;
+      const newRecord: Record<string, any> = {
+        [dateCol]: date,
+        [keyCol]: labelDict[category],
+        [dataCol]: value
+      };
+      columns.forEach(col => {
+        if (![dateCol, keyCol, dataCol].includes(col)) {
+          newRecord[col] = null;
+        }
+      });
+      cleanedData.push(newRecord);
+    });
+  });
+
+  // Filter out categories with zero total
+  const activeCategories = Object.keys(categoryTotals).filter(category => categoryTotals[category] > 0);
+  const filteredData = cleanedData.filter(record => activeCategories.includes(Object.keys(labelDict).find(key => labelDict[key] === record[keyCol]) || ''));
+
+  return filteredData;
 };

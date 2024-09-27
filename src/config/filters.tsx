@@ -235,6 +235,26 @@ export const impactFilters: FilterSection = {
 const timeseriesDefaultFilterKeys = ["Date Range", "Agricultural Use", "Crop or Site", "County"]
 export const timeseriesViews = [
   {
+    label: "Chemical Class",
+    mainFilterKey: "Chemical Class",
+    filterKeys: [...timeseriesDefaultFilterKeys, "Chemical Class"],
+    endpoint: "66f6ce375881310008657440",
+    dataCol: "lbs_chm_used",
+    keyCol: "major_category",
+    dateCol: "monthyear",
+    sortKeys: ["monthyear","major_category"],
+    labelMapping: "Chemical Class",
+    isMultipleCategory: true
+    // defaultFilterOptions: [
+    //   {
+    //     label: "Use Type",
+    //     queryParam: "ai_type",
+    //     value: [4, 0, 5, 2],
+    //     valueLabels: ["Adjuvant", "Fungicide", "Herbicide", "Inseticide"],
+    //   },
+    // ],
+  },
+  {
     label: "Use Type",
     mainFilterKey: "Use Type",
     filterKeys: [...timeseriesDefaultFilterKeys, "Use Type"],

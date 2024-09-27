@@ -25,6 +25,11 @@ let timeoutFn: any = null;
 
 const defaultMapConfig =  getMapConfig("map")
 
+const defaultViewConfig = {
+  view: "timeseries",
+  config: timeseriesViews[0] as any
+}
+
 export const useStore = create<State>(
   wrapper((set, get) => ({
     download: (format, indices, sortKeys) => {
@@ -86,9 +91,9 @@ export const useStore = create<State>(
     },
     loadingState: "unloaded" as State["loadingState"],
     geography: defaultMapConfig[0].layer!,
-    queryEndpoint: defaultMapConfig[0].endpoint,
+    queryEndpoint: defaultViewConfig.config.endpoint,
     mapLayer: "pesticide-use",
-    view: "map",
+    view: defaultViewConfig.view,
     setView: (view: string) => {
       let timeseriesConfig =
         view === "timeseries" ? timeseriesViews[0] : ({} as any);
@@ -192,7 +197,7 @@ export const useStore = create<State>(
           valueLabels: filter.defaultLabel || filter.default || null,
         }))
     ),
-    filterKeys: defaultMapConfig[0].filterKeys || [],
+    filterKeys: defaultViewConfig.config.filterKeys || [],
     setFilterKeys: (keys) => set({ filterKeys: keys }),
     tooltip: undefined,
     setTooltip: (tooltip) => set({ tooltip }),
@@ -231,6 +236,7 @@ export const useStore = create<State>(
       // error
       if (view === "timeseries") {
         const nonDateKey = filterKeys.filter((f) => !excludeKeys.includes(f));
+        console.log("!!!nonDateKey", nonDateKey)
         for (const key of nonDateKey) {
           const filterState = uiFilters.find((filter) => filter.label === key);
           const filterExists = Array.isArray(filterState?.value)

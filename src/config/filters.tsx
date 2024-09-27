@@ -162,17 +162,17 @@ export const pesticideInfoFilters: FilterSection = {
       subcolumn: "yearly_average",
       component: "autocomplete-no-list",
     },
-    {
-      queryParam: "ai_class",
-      label: "Chemical Class",
-      options: {
-        type: "dynamic",
-        value: "ai_class_ID",
-        label: "ai_class",
-        endpoint: `66d88473ae7ce10008a94740`,
-      },
-      component: "autocomplete",
-    },
+    // {
+    //   queryParam: "ai_class",
+    //   label: "Chemical Class",
+    //   options: {
+    //     type: "dynamic",
+    //     value: "ai_class_ID",
+    //     label: "ai_class",
+    //     endpoint: `66d88473ae7ce10008a94740`,
+    //   },
+    //   component: "autocomplete",
+    // },
     {
       queryParam: "ai_type",
       label: "Use Type",
@@ -203,32 +203,32 @@ export const impactFilters: FilterSection = {
       },
       component: "autocomplete",
     },
-    {
-      queryParam: "risk",
-      label: "Risk Category",
-      options: {
-        type: "static",
-        values: [
-          {
-            label: "All",
-            value: "*",
-          },
-          {
-            value: "HIGH",
-            label: "High",
-          },
-          {
-            value: "LOW",
-            label: "Low",
-          },
-          {
-            value: "OTHER",
-            label: "Other",
-          },
-        ],
-      },
-      component: "dropdown",
-    },
+    // {
+    //   queryParam: "risk",
+    //   label: "Risk Category",
+    //   options: {
+    //     type: "static",
+    //     values: [
+    //       {
+    //         label: "All",
+    //         value: "*",
+    //       },
+    //       {
+    //         value: "HIGH",
+    //         label: "High",
+    //       },
+    //       {
+    //         value: "LOW",
+    //         label: "Low",
+    //       },
+    //       {
+    //         value: "OTHER",
+    //         label: "Other",
+    //       },
+    //     ],
+    //   },
+    //   component: "dropdown",
+    // },
   ]
 }
 

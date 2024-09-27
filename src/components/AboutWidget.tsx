@@ -304,13 +304,13 @@ export const AboutWidget = () => {
           {/* Major Category, Chemical Class, Use Type, Health/Environmental Impact, Risk Category */}
           <ul>
             <li>
-              <strong>Major Category</strong>: The major category of the active
+              <strong>Chemical Class</strong>: The major category of the active
               ingredient, such as amide, inorganic, or oil
             </li>
-            <li>
+            {/* <li>
               <strong>Chemical Class</strong>: The chemical class of the active
               ingredient, a more specific list of major categories
-            </li>
+            </li> */}
             <li>
               <strong>Use Type</strong>: The use type of the active ingredient,
               such as fungicide or insecticide
@@ -320,10 +320,10 @@ export const AboutWidget = () => {
               environmental impact of the active ingredient, such as carcinogen
               or reproductive health impact
             </li>
-            <li>
+            {/* <li>
               <strong>Risk Category</strong>: The risk category of the active
               ingredient: high, low, or other
-            </li>
+            </li> */}
           </ul>
           These categories help filter and summarize the data based on the
           caracteristics of the active ingredients. The categories data was

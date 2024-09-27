@@ -240,9 +240,9 @@ export const timeseriesViews = [
     filterKeys: [...timeseriesDefaultFilterKeys, "Chemical Class"],
     endpoint: "66f6ce375881310008657440",
     dataCol: ["lbs_chm_used", "lbs_prd_used"],
-    keyCol: "major_category",
+    keyCol: "ai_class",
     dateCol: "monthyear",
-    sortKeys: ["monthyear","major_category"],
+    sortKeys: ["monthyear","ai_class"],
     labelMapping: "Chemical Class",
     isMultipleCategory: true
     // defaultFilterOptions: [

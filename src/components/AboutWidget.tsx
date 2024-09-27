@@ -277,21 +277,19 @@ export const AboutWidget = () => {
           <ul>
             <li>Start and end month</li>
             <li>
-              Active ingredients, active ingredient classes, types, and specific
-              types
+              Active ingredients, chemical class, and use type
             </li>
             <li>Site / crop produced</li>
             <li>Pesticide product</li>
             <li>Application method (aerial, ground, fumigation, or other)</li>
             <li>Agricultural or non-agricultural use</li>
             <li>County</li>
+            {/* TODO Demography */}
           </ul>
           PUR data was accessed in July 2024. Pesticide product, active
           ingredients, and site lists for filtering were obtained from the PUR
-          2022 data release files. The chemical class, use type,
-          health/environment impact, and risk category were assigned from a
-          category spreadsheet provided by of the Department of Pesticide
-          Regulation.
+          2022 data release files. 
+          {/* TODO Describe source for classifications */}
           <br />
           <br />
         </Typography>
@@ -326,12 +324,7 @@ export const AboutWidget = () => {
             </li> */}
           </ul>
           These categories help filter and summarize the data based on the
-          caracteristics of the active ingredients. The categories data was
-          provided courtesy of the California Department of Pesticide
-          Regulation.
-          <br />
-          <br /> For more information about the AI Categories data table, please
-          contact CDPR's inquiry email: PUR.Inquiry@cdpr.ca.gov.
+          caracteristics of the active ingredients.
         </Typography>
         <Typography component={"h5"} fontWeight={"bold"}>
           Spatial Data (GIS)
@@ -370,6 +363,26 @@ export const AboutWidget = () => {
             <li>
               <strong>Percent Hispanic or Latino</strong>: American Community
               Survey (ACS) 2021 5-Year Average, Hispanic or Latino Population
+              divided by Total Population
+            </li>
+            <li>
+              <strong>Percent White (non-Hispanic)</strong>: American Community
+              Survey (ACS) 2021 5-Year Average, non-Hispanic White Population
+              divided by Total Population
+            </li>
+            <li>
+              <strong>Percent Asian (non-Hispanic)</strong>: American Community
+              Survey (ACS) 2021 5-Year Average, non-Hispanic Asian Population
+              divided by Total Population
+            </li>
+            <li>
+              <strong>Percent American Indian and Alaska Native (non-Hispanic)</strong>: American Community
+              Survey (ACS) 2021 5-Year Average, non-Hispanic American Indian and Alaska Native Population
+              divided by Total Population
+            </li>
+            <li>
+              <strong>Percent Native Hawaiian and Other Pacific Islander (non-Hispanic)</strong>: American Community
+              Survey (ACS) 2021 5-Year Average, non-Hispanic Native Hawaiian and Other Pacific Islander Population
               divided by Total Population
             </li>
             <li>
@@ -428,10 +441,6 @@ export const AboutWidget = () => {
         </Typography>
         <Typography variant="body1" className="bib">
           <ul>
-            <li>
-              California Department of Pesticide Regulation, 2022. AI Categories
-              Table.
-            </li>
             <li>
               CalPIP Home - California Pesticide Information Portal [WWW
               Document], 2024. URL{" "}

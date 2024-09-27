@@ -48,6 +48,14 @@ Data columns
 - Pct NH Black: Percent Black or African American
 - Pax Hispanic: Total Hispanic or Latino Population
 - Pct Hispanic: Percent Hispanic or Latino
+- Pax NH White: Total White Population (non-Hispanic)
+- Pct NH White: Percent White (non-Hispanic)
+- Pax NH Asian: Total Asian Population (non-Hispanic)
+- Pct NH Asian: Percent Asian (non-Hispanic)
+- Pax NH American Indian: Total American Indian Population (non-Hispanic)
+- Pct NH American Indian: Percent American Indian (non-Hispanic)
+- Pax NH Pacific Islander: Total Pacific Islander Population (non-Hispanic)
+- Pct NH Pacific Islander: Percent Pacific Islander (non-Hispanic)
 - Pct No High School: Percent of people over 25 with Less Than High School degree as their highest level of education
 - Pct Agriculture: Percent of people working in Agriculture
 ${dataSources}
@@ -58,7 +66,7 @@ Data columns
 - monthyear: Month and Year as YYYY-MM
 - lbs_chm_used: Pounds of active ingredient chemcial used
 - lbs_prd_used: Pounds of product used
-- chem_code / ai_class / ai_type / ai_type_specific / prodno: Chemical codes and types
+- chem_code / use_type / ai_class / prodno: Chemical codes and types
 ${dataSources}
 `
 }

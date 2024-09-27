@@ -23,12 +23,12 @@ export let staticData: any = [];
 const timeoutDuration = 500;
 let timeoutFn: any = null;
 
-const defaultMapConfig =  getMapConfig("map")
+const defaultMapConfig = getMapConfig("map");
 
 const defaultViewConfig = {
   view: "timeseries",
-  config: timeseriesViews[0] as any
-}
+  config: timeseriesViews[0] as any,
+};
 
 export const useStore = create<State>(
   wrapper((set, get) => ({
@@ -103,7 +103,8 @@ export const useStore = create<State>(
       const geography = get().geography;
       const mapViewConfig =
         view === "map" || view === "mapDualView"
-          ? getMapConfig(view)?.find((f) => f.layer == geography) || defaultMapConfig[0]
+          ? getMapConfig(view)?.find((f) => f.layer == geography) ||
+            defaultMapConfig[0]
           : ({} as any);
 
       let filterKeys = timeseriesConfig.filterKeys || [];
@@ -181,7 +182,7 @@ export const useStore = create<State>(
           uiFilters: [
             ...previousFilters,
             //  ...defaultFilter
-            ],
+          ],
           loadingState: "settings-changed",
         });
       }
@@ -229,35 +230,35 @@ export const useStore = create<State>(
     executeQuery: async () => {
       set({ loadingState: "loading" });
       const queryEndpoint = get().queryEndpoint;
-      const uiFilters = get().uiFilters;
-      const filterKeys = get().filterKeys;
-      const view = get().view;
+      const { uiFilters, filterKeys, timeseriesType, view } = get();
       // if is timeseries and filters that are not date ragen is empty or greater than 10
       // error
       if (view === "timeseries") {
-        const nonDateKey = filterKeys.filter((f) => !excludeKeys.includes(f));
-        console.log("!!!nonDateKey", nonDateKey)
-        for (const key of nonDateKey) {
-          const filterState = uiFilters.find((filter) => filter.label === key);
-          const filterExists = Array.isArray(filterState?.value)
-            ? filterState?.value.length > 0
-            : filterState?.value !== null;
+        const timeseriesConfig = timeseriesViews.find(
+          (view) => view.label === timeseriesType
+        );
+        if (!timeseriesConfig) return;
+        const filterState = uiFilters.find(
+          (filter) => filter.label === timeseriesConfig.mainFilterKey
+        );
+        const filterExists = Array.isArray(filterState?.value)
+          ? filterState?.value.length > 0
+          : filterState?.value !== null;
 
-          if (!filterExists || !filterState) {
-            set({
-              loadingState: "timeseries-none",
-            });
-            return;
-          }
-          const filterGoodLength = Array.isArray(filterState?.value)
-            ? filterState?.value.length <= 10
-            : true;
-          if (!filterGoodLength) {
-            set({
-              loadingState: "timeseries-too-many",
-            });
-            return;
-          }
+        if (!filterExists || !filterState) {
+          set({
+            loadingState: "timeseries-none",
+          });
+          return;
+        }
+        const filterGoodLength = Array.isArray(filterState?.value)
+          ? filterState?.value.length <= 10
+          : true;
+        if (!filterGoodLength) {
+          set({
+            loadingState: "timeseries-too-many",
+          });
+          return;
         }
       }
       const url = constructQuery(
@@ -324,7 +325,9 @@ export const useStore = create<State>(
     },
     setGeography: (geography) => {
       const view = get().view;
-      const geoData = getMapConfig(view).find((config) => config.layer === geography);
+      const geoData = getMapConfig(view).find(
+        (config) => config.layer === geography
+      );
       if (geoData) {
         set({
           geography,

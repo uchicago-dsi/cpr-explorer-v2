@@ -6,6 +6,7 @@ import { useStore } from "../state/store";
 import { MultipleSelectCheckmarks } from "./Dropdown";
 import { RangeSlider } from "./Range";
 import { MonthPicker } from "./MonthRange";
+import { timeseriesViews } from "../config/filters";
 
 export const FilterControl: React.FC<{spec: FilterSpec}> = ({
   spec
@@ -20,7 +21,10 @@ export const FilterControl: React.FC<{spec: FilterSpec}> = ({
     : (f: any) => f.queryParam === spec.queryParam;
   const filterState = useStore((state) => state.uiFilters.find(filterFn));
   const loadingState = useStore((state) => state.loadingState);
-  const stateIsTimeseriesError = loadingState.includes('timeseries')
+  const timeseriesType = useStore(state => state.timeseriesType)
+  const config = timeseriesViews.find(f => f.label === timeseriesType)
+  const isMainTimeseries = config?.mainFilterKey === spec.label
+  const stateIsTimeseriesError = loadingState.includes('timeseries') && isMainTimeseries
 
   const handleChange = (value: string | string[] | number | number[] | null,
     valueLabels: string | string[] | number | number[] | null

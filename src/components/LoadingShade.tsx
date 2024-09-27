@@ -43,7 +43,7 @@ export const LoadingStateShade: React.FC<{ loadingState: State["loadingState"] }
       return (
         <LoadingStateContainer>
           <Alert variant="outlined" severity="error">
-            Please select at least one AI, class, type, or product in the data
+            Please select at least one chemical class, use type, active ingredient, or product in the data
             filters menu to view timeseries data
           </Alert>
         </LoadingStateContainer>

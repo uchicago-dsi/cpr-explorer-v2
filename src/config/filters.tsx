@@ -232,7 +232,7 @@ export const impactFilters: FilterSection = {
   ]
 }
 
-const timeseriesDefaultFilterKeys = ["Date Range", "Agricultural Use", "Crop or Site", "County"]
+const timeseriesDefaultFilterKeys = ["Date Range", "Agricultural Use", "Crop or Site", "County", "Health/Environmental Impact"]
 export const timeseriesViews = [
   {
     label: "Chemical Class",

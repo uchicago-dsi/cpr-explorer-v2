@@ -25,8 +25,11 @@ let timeoutFn: any = null;
 const defaultMapConfig = getMapConfig("map");
 
 const defaultViewConfig = {
-  view: "timeseries",
-  config: timeseriesViews[0] as any,
+  view: "map",
+  config: {
+    endpoint: defaultMapConfig[0].endpoint,
+    filterKeys: defaultMapConfig[0].filterKeys
+  } as any
 };
 
 export const useStore = create<State>(

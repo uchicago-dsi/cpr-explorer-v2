@@ -244,14 +244,14 @@ export const timeseriesViews = [
     dateCol: "monthyear",
     sortKeys: ["monthyear","ai_type"],
     labelMapping: "Use Type",
-    defaultFilterOptions: [
-      {
-        label: "Use Type",
-        queryParam: "ai_type",
-        value: [4, 0, 5, 2],
-        valueLabels: ["Adjuvant", "Fungicide", "Herbicide", "Inseticide"],
-      },
-    ],
+    // defaultFilterOptions: [
+    //   {
+    //     label: "Use Type",
+    //     queryParam: "ai_type",
+    //     value: [4, 0, 5, 2],
+    //     valueLabels: ["Adjuvant", "Fungicide", "Herbicide", "Inseticide"],
+    //   },
+    // ],
   },
 
   // {
@@ -283,14 +283,14 @@ export const timeseriesViews = [
     dateCol: "monthyear",
     sortKeys: ["monthyear","chem_code"],
     labelMapping: "Active Ingredient (AI)",
-    defaultFilterOptions: [
-      {
-        label: "Active Ingredient (AI)",
-        queryParam: "chemical",
-        value: ["560", "136"],
-        valueLabels: ["Sulfur", "Chloropicrin"]
-      },
-    ],
+    // defaultFilterOptions: [
+    //   {
+    //     label: "Active Ingredient (AI)",
+    //     queryParam: "chemical",
+    //     value: ["560", "136"],
+    //     valueLabels: ["Sulfur", "Chloropicrin"]
+    //   },
+    // ],
   },
   {
     label: "Product",
@@ -302,14 +302,14 @@ export const timeseriesViews = [
     dateCol: "monthyear",
     sortKeys: ["monthyear","prodno"],
     labelMapping: "Product",
-    defaultFilterOptions: [
-      {
-        label: "Product",
-        queryParam: "product",
-        value: ["62963", "44330"],
-        valueLabels: ["IAP SUMMER 415 SPRAY OIL", "K-PAM HL"],
-      },
-    ],
+    // defaultFilterOptions: [
+    //   {
+    //     label: "Product",
+    //     queryParam: "product",
+    //     value: ["62963", "44330"],
+    //     valueLabels: ["IAP SUMMER 415 SPRAY OIL", "K-PAM HL"],
+    //   },
+    // ],
   },
   // TODO
   // {

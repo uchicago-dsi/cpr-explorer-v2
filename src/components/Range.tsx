@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { FilterSpec, FilterState } from "../types/state";
 import { Switch, Typography } from "@mui/material";
+import { wholePercentFormatter } from "./MapLegend";
 
 function valuetext(value: number) {
   return `${value}`;
@@ -57,6 +58,8 @@ export const RangeSlider: React.FC<{
           <Slider
             getAriaLabel={() => spec.label}
             value={state?.value as number}
+            // TODO change this to part of spec
+            valueLabelFormat={(value) => wholePercentFormatter(+value)}
             // @ts-ignore
             color={active ? "primary" : "default"}
             min={min}
